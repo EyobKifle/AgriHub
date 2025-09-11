@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community - AgriHub</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <nav class="header-content">
+             <div class="title"><a href="index.html">AgriHub</a></div>
+             <ul class="elements">
+                 <li><a href="Community.html">Community</a></li>
+                 <li><a href="News.html">News</a></li>
+                 <li><a href="Marketplace.html">Marketplace</a></li>
+                 <li><a href="Farming-Guidance.html">Farming Guidance</a></li>
+                 <li class="dropdown">
+                     <a href="#" class="dropbtn">Language <i class="fas fa-caret-down"></i></a>
+                     <div class="dropdown-content">
+                         <a href="#">English</a>
+                         <a href="#">አማርኛ (Amharic)</a>
+                         <a href="#">Afaan Oromoo</a>
+                         <a href="#">ትግርኛ (Tigrinya)</a>
+                     </div>
+                 </li>
+                 <li><button><a href="login.html">Login</a></button></li>
+                 <li><button><a href="Signup.html">Signup</a></button></li>
+             </ul>
+             <div class="mobile-menu-toggle">
+                 <i class="fas fa-bars"></i>
+             </div>
+         </nav>
+    </header>
+
+    <main class="main-content page-container">
+        <header class="page-header">
+            <h1>Community Forum</h1>
+            <p>Ask questions and get feedback from other farmers.</p>
+        </header>
+
+        <section class="content-section">
+            <div class="new-post-form">
+                <h3>Start a New Discussion</h3>
+                <textarea placeholder="My seeds aren't growing, what should I do?"></textarea>
+                <button class="cta-button">Post Question</button>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>Active Discussions</h2>
+            <div class="discussion-list">
+                <div class="discussion-item">
+                    <h3><a href="#">Best pesticide for coffee plants?</a></h3>
+                    <p>Posted by Farmer John | 5 Replies</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="index.js"></script>
+</body>
+</html>
