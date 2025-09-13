@@ -286,7 +286,7 @@
 .page-container {
     max-width: 1100px;
     margin: 0 auto;
-    padding: 40px 20px;
+    padding: 20px 10px;
 }
 
 .page-header {
@@ -320,14 +320,14 @@
 .img-placeholder {
     background-color: #cccccc;
     width: 100%;
-    height: 200px;
+    height: 600px0px;
     border-radius: 8px 8px 0 0;
 }
 
 .card-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 30px;
+    gap: 40px;
 }
 
 .card {
@@ -412,6 +412,96 @@
     padding: 15px;
     border-radius: 5px;
     border-left: 4px solid #2b7a0b;
+}
+
+.guidance-category {
+    margin-bottom: 40px;
+}
+
+.guidance-category h2 {
+    font-size: 28px;
+    color: #418d23;
+    margin-bottom: 25px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.guidance-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+}
+
+.guidance-card {
+    background: white;
+    border: 1px solid #e7e7e7;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    color: #333;
+}
+
+.guidance-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(43, 122, 11, 0.2);
+}
+
+.guidance-card .img-placeholder {
+    height: 140px;
+    background-color: #e9e9e9;
+}
+
+.guidance-card-content {
+    padding: 15px 20px;
+    flex-grow: 1;
+}
+
+.guidance-card h3 {
+    font-size: 18px;
+    margin: 0 0 8px 0;
+    color: #2b7a0b;
+}
+
+.guidance-card p {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.5;
+}
+
+/* Guidance Detail Page */
+.guidance-content h3 {
+    font-size: 22px;
+    color: #2b7a0b;
+    margin-top: 30px;
+    margin-bottom: 15px;
+}
+
+.guidance-detail-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    margin-bottom: 35px;
+    overflow: hidden;
+}
+
+.guidance-detail-card .img-placeholder {
+    height: 220px;
+    border-radius: 0; /* Override default radius for this context */
+}
+
+.guidance-detail-card-content {
+    padding: 25px 30px;
+}
+
+.guidance-detail-card-content h3 {
+    margin-top: 0;
+}
+
+.guidance-detail-card-content ol, .guidance-detail-card-content ul {
+    padding-left: 25px;
 }
 
 .discussion-item h3 a {
