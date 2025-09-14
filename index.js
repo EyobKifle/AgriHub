@@ -26,17 +26,44 @@ function initializeHeaderScripts() {
             }
         });
     }
+    // Initialize dark mode toggle
+    const toggleSwitch = document.querySelector('.dark-mode-toggle');
+    if (toggleSwitch) {
+        toggleSwitch.addEventListener('change', () => {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+            toggleSwitch.checked = document.body.classList.contains('dark-mode');
+        });
+
+        // Apply saved theme preference
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-mode');
+            toggleSwitch.checked = true;
+        } else {
+            document.body.classList.remove('dark-mode');
+            toggleSwitch.checked = false;
+        }
+    }
 }
+
 
 // This function fetches the header.html file and injects it into the placeholder.
 function loadHeader() {
     const headerPlaceholder = document.getElementById('header-placeholder');
     if (headerPlaceholder) {
         fetch('header.html')
-            .then(response => response.text())
+            .then(response => {
+                if (!response.ok){
+                throw new Error('Falied to load header.html');
+            } 
+            return response.text();
+        })
             .then(data => {
                 headerPlaceholder.innerHTML = data;
                 initializeHeaderScripts(); // Run the scripts for the newly loaded header
+            })
+           .catch(error => {
+                console.error('Error loading header:', error);
             });
     }
 }
