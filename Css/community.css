@@ -1,0 +1,202 @@
+.community {
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.community h1 {
+    color: #2e7d32;
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+
+.community p {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.community-actions .btn.start {
+    background-color: #2e7d32;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.content-container {
+    display: flex;
+    gap: 20px;
+}
+
+.sidebar {
+    flex: 1;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.sidebar h2 {
+    color: #2e7d32;
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.sidebar ul li a {
+    color: #2e7d32;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.sidebar ul li span {
+    float: right;
+    color: #666;
+}
+
+.community-stats h3 {
+    color: #2e7d32;
+    font-size: 20px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.community-stats p {
+    font-size: 16px;
+    margin: 5px 0;
+    color: #333;
+}
+
+.community-stats span {
+    margin-right: 5px;
+}
+
+.main-content {
+    flex: 3;
+}
+
+.search-filter {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.search-filter input[type="text"] {
+    padding: 10px;
+    width: 70%;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.search-filter select {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.new-discussion {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.new-discussion h2 {
+    color: #2e7d32;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.new-discussion p {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.new-discussion form input[type="text"],
+.new-discussion form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    resize: vertical;
+}
+
+.new-discussion form textarea {
+    height: 100px;
+}
+
+.new-discussion .btn.post {
+    background-color: #2e7d32;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.discussions .discussion-card {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.discussion-card .category {
+    background-color: #2e7d32;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-size: 12px;
+}
+
+.discussion-card .time {
+    color: #666;
+    font-size: 12px;
+    float: right;
+}
+
+.discussion-card h3 {
+    color: #2e7d32;
+    font-size: 20px;
+    margin: 10px 0;
+}
+
+.discussion-card p {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.discussion-card .author {
+    font-size: 14px;
+    color: #333;
+}
+
+.discussion-card .tags {
+    color: #666;
+    font-size: 12px;
+}
+
+.discussion-card .interaction {
+    font-size: 14px;
+    color: #333;
+}
+
+.discussion-card .interaction span {
+    margin-right: 10px;
+}

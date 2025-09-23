@@ -3,36 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>News - AgriHub</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>News</title>
+    <!-- Global Styles (for Header, Footer, etc.) -->
+    <link rel="stylesheet" href="Css/header.css">
+    <link rel="stylesheet" href="Css/footer.css"> <!-- Assuming a footer.css exists -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="Css/news.css">
 </head>
 <body>
-    <header class="header" id="header-placeholder">
-        <!-- The header content will be loaded here by JavaScript -->
-    </header>
+    <!-- Header Placeholder -->
+    <div id="header-placeholder"></div>
 
-    <main class="main-content page-container">
-        <header class="page-header">
-            <h1>Farming News</h1>
-            <p>The latest updates and occurrences in the agricultural industry.</p>
-        </header>
-
-        <section class="content-section">
-            <div class="article-list">
-                <div class="article-item">
-                    <div class="img-placeholder"></div>
-                    <div class="article-content">
-                        <h3>New Government Subsidies for Small-Scale Farmers</h3>
-                        <p>The Ministry of Agriculture announced a new program aimed at supporting... <a href="#">Read More</a></p>
-                        <span class="article-meta">Published on: 2024-05-20</span>
-                    </div>
-                </div>
+    <section class="news">
+        <h1>Agricultural News</h1>
+        <p>Stay updated with the latest news, policies, and developments in Ethiopian agriculture</p>
+        <div class="categories">
+            <h2>Categories</h2>
+            <ul>
+                <li>All News</li>
+                <li>Policy</li>
+                <li>Market</li>
+                <li>Research</li>
+                <li>Technology</li>
+                <li>Weather</li>
+            </ul>
+        </div>
+        <div class="trending">
+            <h2>Trending Topics</h2>
+            <p>#CoffeeExports #DroughtResistant #AgricultureSubsidy #DigitalFarming #TeffResearch</p>
+        </div>
+        <div class="articles">
+            <h2>Latest News</h2>
+            <div class="article-card">
+                <img src="https://via.placeholder.com/300x200" alt="Government Building">
+                <h3>Government Announces New Agricultural Subsidies for 2024</h3>
+                <p>The Ethiopian government has announced a comprehensive subsidy program to support smallholder farmers with seeds, fertilizers, and equipment.</p>
+                <p>Ministry of Agriculture • 2 hours ago</p>
             </div>
-        </section>
-    </main>
-    
-    <footer id="footer-placeholder"></footer>
-    <script src="index.js"></script>
+            <div class="article-card">
+                <img src="https://via.placeholder.com/300x200" alt="Coffee Farm">
+                <h3>Coffee Prices Reach Record High in International Markets</h3>
+                <p>Ethiopian coffee exports are benefiting from rising global prices, with Sidama and Yirgacheffe varieties leading the surge.</p>
+                <p>Ethiopian Coffee Association • 5 hours ago</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Placeholder -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Script to load header and footer -->
+    <script src="js/main.js"></script>
 </body>
 </html>

@@ -1,0 +1,79 @@
+.marketplace {
+    padding: 50px 20px;
+    text-align: center;
+}
+
+.marketplace h1 {
+    color: #2e7d32;
+    font-size: 36px;
+}
+
+.marketplace p {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.marketplace-actions .btn.list {
+    background-color: #2e7d32;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.categories {
+    display: inline-block;
+    text-align: left;
+    margin: 20px 0;
+}
+
+.categories ul {
+    list-style: none;
+    padding: 0;
+}
+
+.categories li {
+    padding: 10px;
+    color: #2e7d32;
+}
+
+.categories li span {
+    float: right;
+}
+
+.products h2 {
+    color: #2e7d32;
+    font-size: 28px;
+}
+
+.product-card {
+    display: inline-block;
+    width: 200px;
+    margin: 20px;
+    padding: 15px;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.product-card img {
+    width: 100%;
+}
+
+.product-card h3 {
+    font-size: 18px;
+    margin: 10px 0;
+}
+
+.product-card p {
+    font-size: 14px;
+    margin: 5px 0;
+}
+
+.btn.buy {
+    background-color: #2e7d32;
+    color: white;
+    padding: 5px 10px;
+    text-decoration: none;
+    border-radius: 5px;
+}

@@ -3,41 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Community - AgriHub</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Community</title>
+    <!-- Global Styles (for Header, Footer, etc.) -->
+    <link rel="stylesheet" href="Css/header.css">
+    <link rel="stylesheet" href="Css/footer.css"> <!-- Assuming a footer.css exists -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="Css/community.css">
 </head>
 <body>
-    <header class="header" id="header-placeholder">
-        <!-- The header content will be loaded here by JavaScript -->
-    </header>
+    <!-- Header Placeholder -->
+    <div id="header-placeholder"></div>
 
-    <main class="main-content page-container">
-        <header class="page-header">
-            <h1>Community Forum</h1>
-            <p>Ask questions and get feedback from other farmers.</p>
-        </header>
-
-        <section class="content-section">
-            <div class="new-post-form">
-                <h3>Start a New Discussion</h3>
-                <textarea placeholder="My seeds aren't growing, what should I do?"></textarea>
-                <button class="cta-button">Post Question</button>
-            </div>
-        </section>
-
-        <section class="content-section">
-            <h2>Active Discussions</h2>
-            <div class="discussion-list">
-                <div class="discussion-item">
-                    <h3><a href="#">Best pesticide for coffee plants?</a></h3>
-                    <p>Posted by Farmer John | 5 Replies</p>
+    <section class="community">
+        <h1>Community Forum</h1>
+        <p>Connect with fellow farmers, share knowledge, and get answers to your questions</p>
+        <div class="content-container">
+            <div class="sidebar">
+                <h2>Categories</h2>
+                <ul>
+                    <li><a href="#">All Discussions <span>(156)</span></a></li>
+                    <li><a href="#">Crop Management <span>(45)</span></a></li>
+                    <li><a href="#">Livestock <span>(32)</span></a></li>
+                    <li><a href="#">Market Info <span>(28)</span></a></li>
+                    <li><a href="#">Pest Control <span>(24)</span></a></li>
+                    <li><a href="#">Water Management <span>(18)</span></a></li>
+                    <li><a href="#">Equipment <span>(9)</span></a></li>
+                </ul>
+                <div class="community-stats">
+                    <h3>Community Stats</h3>
+                    <p><span>👥</span> 2,847 Active Members</p>
+                    <p><span>💬</span> 156 Discussions</p>
+                    <p><span>👍</span> 1,234 Helpful Answers</p>
                 </div>
             </div>
-        </section>
-    </main>
+            <div class="main-content">
+                <div class="search-filter">
+                    <input type="text" placeholder="Search discussions...">
+                    <select>
+                        <option value="">Filter</option>
+                    </select>
+                </div>
+                <div class="new-discussion">
+                    <h2>Start a New Discussion</h2>
+                    <p>Share your knowledge or ask a question to the community</p>
+                    <form>
+                        <input type="text" placeholder="Discussion title...">
+                        <textarea placeholder="What would you like to discuss?"></textarea>
+                        <input type="text" placeholder="Add tags (comma separated)">
+                        <button type="submit" class="btn post">Post Discussion</button>
+                    </form>
+                </div>
+                <div class="discussions">
+                    <div class="discussion-card">
+                        <span class="category">Crop Management</span>
+                        <span class="time">© 2 hours ago</span>
+                        <h3>Best practices for teff cultivation in highland areas</h3>
+                        <p>I've been growing teff for 5 years and want to share some techniques that have improved my yields...</p>
+                        <p class="author">by Alemayhu T. <span class="tags">teff, highland, cultivation</span></p>
+                        <div class="interaction">
+                            <span>👍 12</span>
+                            <span>💬 24</span>
+                        </div>
+                    </div>
+                    <div class="discussion-card">
+                        <span class="category">Pest Control</span>
+                        <span class="time">© 4 hours ago</span>
+                        <h3>Organic pest control methods for vegetable gardens</h3>
+                        <p>Looking for natural alternatives to chemical pesticides. What has worked for your vegetable crops?</p>
+                        <p class="author">by Meron K. <span class="tags">organic, pest-control, vegetables</span></p>
+                        <div class="interaction">
+                            <span>👍 8</span>
+                            <span>💬 18</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    <footer id="footer-placeholder"></footer>
-    <script src="index.js"></script>
+
+    <!-- Footer Placeholder -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Script to load header and footer -->
+    <script src="main.js"></script>
 </body>
 </html>

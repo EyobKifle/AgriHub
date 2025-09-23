@@ -3,53 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Marketplace - AgriHub</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Marketplace</title>
+    <!-- Global Styles (for Header, Footer, etc.) -->
+    <link rel="stylesheet" href="Css/header.css">
+    <link rel="stylesheet" href="Css/footer.css"> <!-- Assuming a footer.css exists -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="Css/marketplace.css">
 </head>
 <body>
-    <header class="header" id="header-placeholder">
-        <!-- The header content will be loaded here by JavaScript -->
-    </header>
+    <!-- Header Placeholder -->
+    <div id="header-placeholder"></div>
 
-    <main class="main-content page-container">
-        <header class="page-header">
-            <h1>Marketplace</h1>
-            <p>Buy, sell, or rent products and equipment.</p>
-        </header>
-
-        <section class="content-section">
-            <h2>Products for Sale</h2>
-            <div class="card-grid">
-                <div class="card">
-                    <div class="img-placeholder"></div>
-                    <h3>Fresh Maize</h3>
-                    <p class="price">1,500 ETB / quintal</p>
-                    <a href="#" class="card-button">View Product</a>
-                </div>
-                <div class="card">
-                    <div class="img-placeholder"></div>
-                    <h3>Organic Teff</h3>
-                    <p class="price">8,000 ETB / quintal</p>
-                    <a href="#" class="card-button">View Product</a>
-                </div>
+    <section class="marketplace">
+        <h1>Marketplace</h1>
+        <p>Buy and sell agricultural products, or rent farming equipment from trusted vendors</p>
+        <div class="marketplace-actions">
+            <a href="/list-product" class="btn list">List Product</a>
+        </div>
+        <div class="categories">
+            <h2>Categories</h2>
+            <ul>
+                <li>All Products <span>(234)</span></li>
+                <li>Grains <span>(45)</span></li>
+                <li>Coffee <span>(32)</span></li>
+                <li>Vegetables <span>(28)</span></li>
+                <li>Equipment <span>(24)</span></li>
+                <li>Fertilizers <span>(18)</span></li>
+                <li>Seeds <span>(12)</span></li>
+            </ul>
+        </div>
+        <div class="products">
+            <h2>Featured Products</h2>
+            <div class="product-card">
+                <img src="https://via.placeholder.com/150" alt="Fresh Organic Teff">
+                <h3>Fresh Organic Teff - Premium Grade</h3>
+                <p>850 ETB/kg, 950 ETB/kg</p>
+                <p>⭐ 4.8 (24)</p>
+                <p>Addis Ababa, Ethiopia</p>
+                <p>500kg available</p>
+                <a href="#" class="btn buy">Buy Now</a>
             </div>
-        </section>
-
-        <section class="content-section">
-            <h2>Equipment for Rent</h2>
-            <div class="card-grid">
-                <div class="card">
-                    <div class="img-placeholder"></div>
-                    <h3>Tractor Rental</h3>
-                    <p class="price">5,000 ETB / day</p>
-                    <a href="#" class="card-button">View Rental</a>
-                </div>
+            <div class="product-card">
+                <img src="https://via.placeholder.com/150" alt="Irrigation System - Drip Kit">
+                <h3>Irrigation System - Drip Kit</h3>
+                <p>3,800 ETB/set</p>
+                <p>⭐ 4.8 (15)</p>
+                <p>Dire Dawa, Ethiopia</p>
+                <p>25 sets available</p>
+                <a href="#" class="btn buy">Buy Now</a>
             </div>
-        </section>
-    </main>
+        </div>
+    </section>
 
-    <footer id="footer-placeholder"></footer>
-    <script src="index.js"></script>
+    <!-- Footer Placeholder -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Script to load header and footer -->
+    <script src="js/main.js"></script>
 </body>
 </html>
