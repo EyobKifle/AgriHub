@@ -5,20 +5,20 @@
 }
 
 .community h1 {
-    color: #2e7d32;
+    color: var(--light-green);
     font-size: 36px;
     margin-bottom: 10px;
 }
 
 .community p {
     font-size: 18px;
-    color: #666;
+    color: var(--text-light);
     margin-bottom: 20px;
 }
 
 .community-actions .btn.start {
-    background-color: #2e7d32;
-    color: white;
+    background-color: var(--light-green);
+    color: var(--white);
     padding: 10px 20px;
     text-decoration: none;
     border-radius: 5px;
@@ -32,14 +32,14 @@
 
 .sidebar {
     flex: 1;
-    background-color: #fff;
+    background-color: var(--white);
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 .sidebar h2 {
-    color: #2e7d32;
+    color: var(--light-green);
     font-size: 24px;
     margin-bottom: 15px;
 }
@@ -51,22 +51,22 @@
 
 .sidebar ul li {
     padding: 10px 0;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .sidebar ul li a {
-    color: #2e7d32;
+    color: var(--light-green);
     text-decoration: none;
     font-size: 16px;
 }
 
 .sidebar ul li span {
     float: right;
-    color: #666;
+    color: var(--text-light);
 }
 
 .community-stats h3 {
-    color: #2e7d32;
+    color: var(--light-green);
     font-size: 20px;
     margin-top: 20px;
     margin-bottom: 10px;
@@ -75,7 +75,7 @@
 .community-stats p {
     font-size: 16px;
     margin: 5px 0;
-    color: #333;
+    color: var(--text-dark);
 }
 
 .community-stats span {
@@ -95,18 +95,18 @@
 .search-filter input[type="text"] {
     padding: 10px;
     width: 70%;
-    border: 1px solid #ddd;
+    border: 1px solid var(--border-color);
     border-radius: 5px;
 }
 
 .search-filter select {
     padding: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--border-color);
     border-radius: 5px;
 }
 
 .new-discussion {
-    background-color: #fff;
+    background-color: var(--white);
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
@@ -114,14 +114,14 @@
 }
 
 .new-discussion h2 {
-    color: #2e7d32;
+    color: var(--light-green);
     font-size: 24px;
     margin-bottom: 10px;
 }
 
 .new-discussion p {
     font-size: 16px;
-    color: #666;
+    color: var(--text-light);
     margin-bottom: 15px;
 }
 
@@ -130,7 +130,7 @@
     width: 100%;
     padding: 10px;
     margin-bottom: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--border-color);
     border-radius: 5px;
     resize: vertical;
 }
@@ -140,8 +140,8 @@
 }
 
 .new-discussion .btn.post {
-    background-color: #2e7d32;
-    color: white;
+    background-color: var(--light-green);
+    color: var(--white);
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
@@ -149,7 +149,7 @@
 }
 
 .discussions .discussion-card {
-    background-color: #fff;
+    background-color: var(--white);
     padding: 15px;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
@@ -157,46 +157,90 @@
 }
 
 .discussion-card .category {
-    background-color: #2e7d32;
-    color: white;
+    background-color: var(--light-green);
+    color: var(--white);
     padding: 5px 10px;
     border-radius: 3px;
     font-size: 12px;
 }
 
 .discussion-card .time {
-    color: #666;
+    color: var(--text-light);
     font-size: 12px;
     float: right;
 }
 
 .discussion-card h3 {
-    color: #2e7d32;
+    color: var(--light-green);
     font-size: 20px;
     margin: 10px 0;
 }
 
 .discussion-card p {
     font-size: 14px;
-    color: #666;
+    color: var(--text-light);
     margin-bottom: 10px;
 }
 
 .discussion-card .author {
     font-size: 14px;
-    color: #333;
+    color: var(--text-dark);
 }
 
 .discussion-card .tags {
-    color: #666;
+    color: var(--text-light);
     font-size: 12px;
 }
 
 .discussion-card .interaction {
     font-size: 14px;
-    color: #333;
+    color: var(--text-dark);
 }
 
 .discussion-card .interaction span {
     margin-right: 10px;
+}
+
+/* --- Responsive Design --- */
+@media (max-width: 992px) {
+    .content-container {
+        flex-direction: column;
+        gap: 40px;
+    }
+}
+
+/* --- Dark Mode Styles --- */
+body.dark-mode .community p,
+body.dark-mode .sidebar ul li span,
+body.dark-mode .new-discussion p,
+body.dark-mode .discussion-card p,
+body.dark-mode .discussion-card .time,
+body.dark-mode .discussion-card .tags {
+    color: #bbb;
+}
+
+body.dark-mode .sidebar,
+body.dark-mode .new-discussion,
+body.dark-mode .discussions .discussion-card {
+    background-color: #1f1f1f;
+    box-shadow: 0 2px 5px rgba(255,255,255,0.05);
+}
+
+body.dark-mode .sidebar ul li {
+    border-bottom-color: #333;
+}
+
+body.dark-mode .community-stats p,
+body.dark-mode .discussion-card .author,
+body.dark-mode .discussion-card .interaction {
+    color: #e0e0e0;
+}
+
+body.dark-mode .search-filter input,
+body.dark-mode .search-filter select,
+body.dark-mode .new-discussion form input,
+body.dark-mode .new-discussion form textarea {
+    background-color: #333;
+    border-color: #555;
+    color: #e0e0e0;
 }
