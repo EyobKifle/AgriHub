@@ -507,6 +507,7 @@
 .discussion-item h3 a {
     color: #418d23;
 }
+<<<<<<< HEAD:Css/styles.css
 
 /* =================== Footer =================== */
 .footer-section {
@@ -584,6 +585,8 @@
     }
 }
 
+=======
+>>>>>>> 7201595f83fc5a35ce12dfa36d8ad3e3767d8169:styles.css
 /* =================== Dark Mode =================== */
 body.dark-mode {
     background: #121212;
@@ -725,3 +728,7 @@ body.dark-mode .cta-button:hover {
 .switch input:checked + .slider:before {
   transform: translateX(30px);
 }
+<<<<<<< HEAD:Css/styles.css
+=======
+
+>>>>>>> 7201595f83fc5a35ce12dfa36d8ad3e3767d8169:styles.css
