@@ -1,58 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>News</title>
-    <!-- Global Styles (for Header, Footer, etc.) -->
-    <link rel="stylesheet" href="Css/header.css">
-    <link rel="stylesheet" href="Css/footer.css"> <!-- Assuming a footer.css exists -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="Css/news.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AgriHub - News</title>
+  <link rel="stylesheet" href="news.css">
 </head>
 <body>
-    <!-- Header Placeholder -->
-    <div id="header-placeholder"></div>
+  <header class="header">
+    <div class="container">
+      <div class="logo">
+        <span class="logo-icon">A</span>
+        AgriHub
+      </div>
+      
+      <nav class="nav">
+        <a href="#" class="nav-item active">Community</a>
+        <a href="#" class="nav-item">News</a>
+        <a href="#" class="nav-item">Marketplace</a>
+        <a href="#" class="nav-item">Farming Guidance</a>
+      </nav>
 
-    <section class="news">
+      <div class="header-actions">
+        <div class="language-selector">
+          Language
+          <span class="dropdown-icon">▼</span>
+        </div>
+        <button class="refresh-btn">↻</button>
+        <button class="login-btn">Login</button>
+        <button class="signup-btn">Sign Up</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container">
+      <div class="page-header">
         <h1>Agricultural News</h1>
         <p>Stay updated with the latest news, policies, and developments in Ethiopian agriculture</p>
-        <div class="categories">
-            <h2>Categories</h2>
-            <ul>
-                <li>All News</li>
-                <li>Policy</li>
-                <li>Market</li>
-                <li>Research</li>
-                <li>Technology</li>
-                <li>Weather</li>
+      </div>
+
+      <div class="content-grid">
+        <aside class="sidebar">
+          <div class="sidebar-section">
+            <h3>Categories</h3>
+            <ul class="category-list">
+              <li><a href="#" class="category-item active">All News</a></li>
+              <li><a href="#" class="category-item">Policy</a></li>
+              <li><a href="#" class="category-item">Market</a></li>
+              <li><a href="#" class="category-item">Research</a></li>
+              <li><a href="#" class="category-item">Technology</a></li>
+              <li><a href="#" class="category-item">Weather</a></li>
             </ul>
-        </div>
-        <div class="trending">
-            <h2>Trending Topics</h2>
-            <p>#CoffeeExports #DroughtResistant #AgricultureSubsidy #DigitalFarming #TeffResearch</p>
-        </div>
-        <div class="articles">
-            <h2>Latest News</h2>
-            <div class="article-card">
-                <img src="https://via.placeholder.com/300x200" alt="Government Building">
-                <h3>Government Announces New Agricultural Subsidies for 2024</h3>
-                <p>The Ethiopian government has announced a comprehensive subsidy program to support smallholder farmers with seeds, fertilizers, and equipment.</p>
-                <p>Ministry of Agriculture • 2 hours ago</p>
+          </div>
+
+          <div class="sidebar-section">
+            <h3>Trending Topics</h3>
+            <div class="trending-tags">
+              <span class="tag">#CoffeeExports</span>
+              <span class="tag">#DroughtResistant</span>
+              <span class="tag">#AgricultureSubsidy</span>
+              <span class="tag">#DigitalFarming</span>
+              <span class="tag">#TeffResearch</span>
             </div>
-            <div class="article-card">
-                <img src="https://via.placeholder.com/300x200" alt="Coffee Farm">
+          </div>
+        </aside>
+
+        <section class="main-content">
+          <div class="featured-article">
+            <div class="featured-badge">Featured</div>
+            <div class="article-image">
+              <img src="./images/688202.png" alt="Featured article image">
+            </div>
+            <div class="article-content">
+              <div class="article-category">Policy</div>
+              <h2>Government Announces New Agricultural Subsidies for 2024</h2>
+              <p>The Ethiopian government has announced a comprehensive subsidy program to support smallholder farmers with seeds, fertilizers, and equipment.</p>
+              <div class="article-meta">
+                <div class="author">Ministry of Agriculture</div>
+                <div class="time">2 hours ago</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="latest-news">
+            <h2>Latest News</h2>
+            <div class="news-item">
+              <div class="news-image">
+                <img src="./images/img.jpg" alt="News article image">
+              </div>
+              <div class="news-content">
+                <div class="news-category">Market</div>
                 <h3>Coffee Prices Reach Record High in International Markets</h3>
                 <p>Ethiopian coffee exports are benefiting from rising global prices, with Sidama and Yirgacheffe varieties leading the surge.</p>
-                <p>Ethiopian Coffee Association • 5 hours ago</p>
+                <div class="news-meta">
+                  <div class="author">Ethiopian Coffee Association</div>
+                  <div class="time">5 hours ago</div>
+                </div>
+              </div>
             </div>
-        </div>
-    </section>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
 
-    <!-- Footer Placeholder -->
-    <div id="footer-placeholder"></div>
-
-    <!-- Script to load header and footer -->
-    <script src="Javascript/main.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
