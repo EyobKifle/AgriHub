@@ -1,12 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Discussion</title>
-  <link rel="stylesheet" href="../Css/discussion.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Chat</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
 </head>
 <body>
+    <header class="header">
+        <div class="container">
+            <a href="#" class="back-btn">← Back</a>
+            <h1>Community Chat</h1>
+        </div>
+    </header>
 
+    <section class="chat-area">
+        <div class="container">
+            <div class="chat-messages">
+                <div class="message received">
+                    <span class="user-info">User123</span>
+                    <div class="content">
+                        Hey everyone, just wanted to share some thoughts on the project!
+                    </div>
+                    <span class="timestamp">10:15 AM</span>
+                </div>
+                <div class="message sent">
+                    <span class="user-info">You</span>
+                    <div class="content">
+                        Nice! I uploaded a PDF with some ideas.
+                    </div>
+                    <div class="content">
+                        <a href="#" class="file-link">Project_Ideas.pdf</a>
+                    </div>
+                    <span class="timestamp">10:20 AM</span>
+                </div>
+                <div class="message received">
+                    <span class="user-info">JaneDoe</span>
+                    <div class="content">
+                        Looks great! Here's an image for reference.
+                    </div>
+                    <img src="https://placehold.co/300x200/1E4620/FFF?text=Reference+Image" alt="Reference Image">
+                    <span class="timestamp">10:25 AM</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="chat-input">
+        <div class="container">
+            <form>
+                        <label for="file-upload">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                </label>
+                <input type="text" placeholder="Type a message...">
+        
+                <input id="file-upload" type="file" accept="image/*,.pdf,.doc,.docx">
+                <button type="submit">Send</button>
+            </form>
+        </div>
+    </section>
+
+    <div id="footer-placeholder"></div>
+    <script type="module" src="../Js/site.js"></script>
+    <script type="module" src="../Js/header.js"></script>
+    <script type="module" src="../Js/footer.js"></script>
 </body>
 </html>

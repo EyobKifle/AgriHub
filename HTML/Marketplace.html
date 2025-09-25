@@ -5,60 +5,94 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Marketplace</title>
     <!-- Global Styles (for Header, Footer, etc.) -->
-    <link rel="stylesheet" href="Css/header.css">
-    <link rel="stylesheet" href="Css/footer.css"> <!-- Assuming a footer.css exists -->
+    <link rel="stylesheet" href="../Css/header.css">
+    <link rel="stylesheet" href="../Css/footer.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="Css/marketplace.css">
+    <link rel="stylesheet" href="../Css/marketplace.css"> <!-- Corrected Path -->
 </head>
 <body>
     <!-- Header Placeholder -->
     <div id="header-placeholder"></div>
 
-    <section class="marketplace">
-        <h1>Marketplace</h1>
-        <p>Buy and sell agricultural products, or rent farming equipment from trusted vendors</p>
-        <div class="marketplace-actions">
-            <a href="/list-product" class="btn list">List Product</a>
-        </div>
-        <div class="categories">
-            <h2>Categories</h2>
-            <ul>
-                <li>All Products <span>(234)</span></li>
-                <li>Grains <span>(45)</span></li>
-                <li>Coffee <span>(32)</span></li>
-                <li>Vegetables <span>(28)</span></li>
-                <li>Equipment <span>(24)</span></li>
-                <li>Fertilizers <span>(18)</span></li>
-                <li>Seeds <span>(12)</span></li>
-            </ul>
-        </div>
-        <div class="products">
-            <h2>Featured Products</h2>
-            <div class="product-card">
-                <img src="https://via.placeholder.com/150" alt="Fresh Organic Teff">
+    <main>
+      <div class="container">
+        <header class="page-header">
+          <h1>Marketplace</h1>
+          <p>Buy and sell agricultural products or rent farming equipment from trusted vendors.</p>
+        </header>
+
+        <div class="marketplace-layout">
+          <!-- Sidebar for Filters -->
+          <aside class="marketplace-sidebar">
+            <div class="sidebar-section">
+              <a href="/list-product" class="btn btn-primary full-width">+ List a Product</a>
+            </div>
+            <div class="sidebar-section">
+              <h3>Categories</h3>
+              <ul class="category-list">
+                <li data-category="all" class="active">All Products <span>(234)</span></li>
+                <li data-category="grains">Grains <span>(45)</span></li>
+                <li data-category="coffee">Coffee <span>(32)</span></li>
+                <li data-category="vegetables">Vegetables <span>(28)</span></li>
+                <li data-category="equipment">Equipment <span>(24)</span></li>
+                <li data-category="fertilizers">Fertilizers <span>(18)</span></li>
+                <li data-category="seeds">Seeds <span>(12)</span></li>
+              </ul>
+            </div>
+            <div class="sidebar-section">
+              <h3>Price Range (ETB)</h3>
+              <div class="price-range">
+                <input type="number" placeholder="Min" min="0" />
+                <input type="number" placeholder="Max" />
+              </div>
+              <button class="btn btn-secondary full-width">Apply Filter</button>
+            </div>
+          </aside>
+
+          <!-- Main Content for Products -->
+          <div class="main-content">
+            <div class="search-bar">
+              <input type="text" placeholder="Search products..." />
+              <select>
+                <option value="latest">Sort by: Latest</option>
+                <option value="price-asc">Sort by: Price Low to High</option>
+                <option value="price-desc">Sort by: Price High to Low</option>
+              </select>
+            </div>
+
+            <div class="products-grid">
+              <div class="product-card" data-category="grains">
+                <div class="product-badges">
+                  <span class="badge featured">Featured</span>
+                  <span class="badge sale">Sale</span>
+                </div>
+                <img src="https://placehold.co/400x300/e85d04/FFF?text=Organic+Teff" alt="Fresh Organic Teff" />
                 <h3>Fresh Organic Teff - Premium Grade</h3>
-                <p>850 ETB/kg, 950 ETB/kg</p>
-                <p>⭐ 4.8 (24)</p>
-                <p>Addis Ababa, Ethiopia</p>
-                <p>500kg available</p>
-                <a href="#" class="btn buy">Buy Now</a>
-            </div>
-            <div class="product-card">
-                <img src="https://via.placeholder.com/150" alt="Irrigation System - Drip Kit">
+                <p class="price">ETB 850 / kg</p>
+                <p class="rating">⭐ 4.8 (24)</p>
+                <p class="location">Addis Ababa, Ethiopia</p>
+                <a href="#" class="btn btn-primary">View Details</a>
+              </div>
+              <div class="product-card" data-category="equipment">
+                <div class="product-badges">
+                  <span class="badge featured">Featured</span>
+                </div>
+                <img src="https://placehold.co/400x300/2a9d8f/FFF?text=Drip+Irrigation" alt="Irrigation System - Drip Kit" />
                 <h3>Irrigation System - Drip Kit</h3>
-                <p>3,800 ETB/set</p>
-                <p>⭐ 4.8 (15)</p>
-                <p>Dire Dawa, Ethiopia</p>
-                <p>25 sets available</p>
-                <a href="#" class="btn buy">Buy Now</a>
+                <p class="price">ETB 3,800 / set</p>
+                <p class="rating">⭐ 4.8 (15)</p>
+                <p class="location">Dire Dawa, Ethiopia</p>
+                <a href="#" class="btn btn-primary">View Details</a>
+              </div>
+              <!-- Add more product cards here -->
             </div>
+          </div>
         </div>
-    </section>
+      </div>
+    </main>
 
     <!-- Footer Placeholder -->
     <div id="footer-placeholder"></div>
-
-    <!-- Script to load header and footer -->
-    <script src="Javascript/main.js"></script>
+    <script type="module" src="../Js/site.js"></script>
 </body>
 </html>

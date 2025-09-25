@@ -260,13 +260,6 @@
             margin-bottom: 1.5rem;
         }
 
-        .hero-text p {
-            font-size: 1.125rem;
-            color: var(--text-light);
-            max-width: 500px;
-            margin-bottom: 2rem;
-        }
-        
         .hero-actions {
             display: flex;
             gap: 1rem;
@@ -340,7 +333,7 @@
 
 /* --- Dark Mode Styles --- */
 body.dark-mode {
-    background-color: #121212;
+ background-color: #516843;
     color: #e0e0e0;
 }
 
@@ -351,7 +344,7 @@ body.dark-mode .header {
 
 body.dark-mode .nav-links a,
 body.dark-mode .dropdown .dropbtn {
-    color: #bbb;
+    color: #d1dad0;
 }
 
 body.dark-mode .nav-links a:hover,
@@ -360,8 +353,8 @@ body.dark-mode .nav-links a.active {
 }
 
 body.dark-mode .dropdown-content {
-    background-color: #2a2a2a;
-    border-color: #333;
+    background-color: #4e4c4c;
+    border-color: #484747;
 }
 
 body.dark-mode .dropdown-content a {
@@ -369,7 +362,7 @@ body.dark-mode .dropdown-content a {
 }
 
 body.dark-mode .dropdown-content a:hover {
-    background-color: #3a3a3a;
+    background-color: #8eb284;
     color: var(--white);
 }
 

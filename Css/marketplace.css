@@ -1,15 +1,28 @@
+
 .marketplace {
-    padding: 50px 20px;
-    text-align: center;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: #f9f1e7;
+    text-align: left;
+    ;
 }
 
 .marketplace h1 {
     color: #2e7d32;
     font-size: 36px;
+    margin-bottom: 10px;
 }
 
 .marketplace p {
-    font-size: 18px;
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.marketplace-actions {
+    display: flex;
+    justify-content: flex-end;
     margin-bottom: 20px;
 }
 
@@ -19,12 +32,25 @@
     padding: 10px 20px;
     text-decoration: none;
     border-radius: 5px;
+    font-size: 14px;
 }
 
 .categories {
+    width: 200px;
+    background: #fff;
+    padding: 1px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     display: inline-block;
-    text-align: left;
-    margin: 20px 0;
+    vertical-align: top;
+    margin-right: 20px;
+    box-sizing: border-box;
+}
+
+.categories h2 {
+    font-size: 20px;
+    color: #2e7d32;
+    margin-bottom: 10px;
 }
 
 .categories ul {
@@ -33,47 +59,169 @@
 }
 
 .categories li {
-    padding: 10px;
+    cursor: pointer;
+    padding: 10px 0;
     color: #2e7d32;
+    border-bottom: 1px solid #ddd;
+    font-size: 15px;
+    transition: 0.2s;
+   position: relative;
+}
+.categories li:hover {
+    color: #1b5e20;
+}
+
+.categories li.active {
+    font-weight: bold;
+    color: #1b5e20;
 }
 
 .categories li span {
     float: right;
+    color: #2e7d32;
+}
+
+.price-range {
+   width: 200px;
+   background: #fff;
+   position: relative;
+}
+
+.price-range h3 {
+    font-size: 16px;
+    color: #2e7d32;
+    margin-bottom: 10px;
+}
+
+.price-range input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.price-range button {
+    background-color: #2e7d32;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.product-section {
+    display: inline-block;
+    width: 70%;
+    vertical-align: top;
+}
+
+.search-filter {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.search-filter input[type="text"] {
+    width: 70%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.search-filter select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
 }
 
 .products h2 {
     color: #2e7d32;
     font-size: 28px;
+    margin-bottom: 10px;
 }
 
 .product-card {
-    display: inline-block;
     width: 200px;
-    margin: 20px;
+    margin: 10px;
     padding: 15px;
-    background-color: white;
+    background-color: #fff;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    display: inline-block;
+    vertical-align: top;
+    text-align: center;
+    position: relative;
 }
 
 .product-card img {
     width: 100%;
+    height: auto;
 }
 
 .product-card h3 {
-    font-size: 18px;
+    font-size: 16px;
     margin: 10px 0;
+    color: #333;
 }
 
 .product-card p {
     font-size: 14px;
     margin: 5px 0;
+    color: #666;
+}
+
+.product-card .price {
+    color: #2e7d32;
+    font-weight: bold;
+}
+
+.product-card .rating {
+    color: #f4a261;
+}
+
+.product-card .location {
+    color: #666;
+}
+
+.product-card .availability {
+    color: #666;
 }
 
 .btn.buy {
     background-color: #2e7d32;
     color: white;
-    padding: 5px 10px;
+    padding: 8px 15px;
     text-decoration: none;
     border-radius: 5px;
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.badge {
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    font-size: 12px;
+    position: absolute;
+    top: 10px;
+}
+
+.badge.featured {
+    background-color: #f4a261;
+    color: white;
+    left: 10px;
+}
+
+.badge.sale {
+    background-color: #d32f2f;
+    color: white;
+    right: 10px;
 }

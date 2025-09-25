@@ -1,171 +1,242 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="Css/Homepage.css">
-    <link rel="stylesheet" href="Css/header.css">
-    <link rel="stylesheet" href="Css/footer.css">
-    <title>AgriHub - Empowering Ethiopian Farmers</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-
-
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../Css/Homepage.css" />
+    <link rel="stylesheet" href="../Css/header.css" />
+    <link rel="stylesheet" href="../Css/footer.css" />
+    <title>AgriHub</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
     <!-- Header Placeholder -->
     <div id="header-placeholder"></div>
 
     <main>
-        <section class="hero">
-            <div class="hero-text">
-                <h1>Welcome to <span class="highlight">AgriHub</span></h1>
-                <p>Your all-in-one platform for modern farming. Connect with buyers, access resources, and grow with Ethiopia’s farming community.</p>
-                <div class="hero-buttons">
-                    <a href="#marketplace" class="btn primary">Explore Marketplace</a>
-                    <a href="#cta" class="btn secondary">Join Now</a>
-                </div>
+      <section class="home-hero" id="hero-section">
+        <div class="home-hero-overlay">
+          <div class="home-hero-content">
+            <h1>Welcome to <span class="highlight">AgriHub</span></h1>
+            <p>
+              Your all-in-one platform for modern farming. Connect with buyers,
+              access resources, and grow with Ethiopia’s farming community.
+            </p>
+            <div class="hero-buttons">
+              <a href="#marketplace" class="btn primary">Explore Marketplace</a>
+              <a href="#cta" class="btn secondary">Join Now</a>
             </div>
-        </section>
+          </div>
+        </div>
+      </section>
 
-        <section id="features">
-            <div class="container">
-                <div class="section-header">
-                    <h2>Core Features</h2>
-                    <p>Everything you need to thrive in modern agriculture.</p>
-                </div>
-                <div class="grid">
-                    <div class="card feature-card">
-                        <i class="fa-solid fa-store"></i>
-                        <h3>Direct Marketplace</h3>
-                        <p>Sell your produce directly to buyers and suppliers without middlemen. Get fair prices for your hard work.</p>
-                    </div>
-                    <div class="card feature-card">
-                        <i class="fa-solid fa-newspaper"></i>
-                        <h3>Latest News & Tips</h3>
-                        <p>Stay updated with the latest agricultural news, weather forecasts, and expert farming techniques.</p>
-                    </div>
-                    <div class="card feature-card">
-                        <i class="fa-solid fa-users"></i>
-                        <h3>Farmer Community</h3>
-                        <p>Connect with fellow farmers, ask questions, share knowledge, and build a strong support network.</p>
-                    </div>
-                </div>
+      <section id="features">
+        <div class="container">
+          <div class="section-header">
+            <h2>Core Features</h2>
+            <p>Everything you need to thrive in modern agriculture.</p>
+          </div>
+          <div class="grid">
+            <div class="card feature-card">
+              <i class="fa-solid fa-store"></i>
+              <h3>Direct Marketplace</h3>
+              <p>
+                Sell your produce directly to buyers and suppliers without
+                middlemen. Get fair prices for your hard work.
+              </p>
             </div>
-        </section>
-        
-        <section id="how-it-works">
-            <div class="container">
-                <div class="section-header">
-                    <h2>Getting Started is Easy</h2>
-                    <p>Join our network in three simple steps.</p>
-                </div>
-                <div class="grid">
-                    <div class="card step-card">
-                        <i class="fa-solid fa-user-plus"></i>
-                        <h3>1. Create Your Account</h3>
-                        <p>Sign up for free in minutes. Tell us about your farm and what you produce or need.</p>
-                    </div>
-                    <div class="card step-card">
-                        <i class="fa-solid fa-magnifying-glass-dollar"></i>
-                        <h3>2. List or Find Products</h3>
-                        <p>Easily list your produce for sale in the marketplace or browse for seeds, tools, and supplies.</p>
-                    </div>
-                    <div class="card step-card">
-                        <i class="fa-solid fa-handshake-simple"></i>
-                        <h3>3. Connect & Transact</h3>
-                        <p>Communicate directly with buyers or sellers to arrange logistics and complete your transaction securely.</p>
-                    </div>
-                </div>
+            <div class="card feature-card">
+              <i class="fa-solid fa-newspaper"></i>
+              <h3>Latest News & Tips</h3>
+              <p>
+                Stay updated with the latest agricultural news, weather
+                forecasts, and expert farming techniques.
+              </p>
             </div>
-        </section>
-        
-        <section id="marketplace">
-            <div class="container">
-                <div class="section-header">
-                    <h2>Fresh on the Market</h2>
-                    <p>Discover high-quality produce and supplies from farms across Ethiopia.</p>
-                </div>
-                <div class="grid">
-                    <article class="card product-card">
-                        
-                        <img src="https://placehold.co/400x300/e85d04/FFF?text=Teff+Grain" alt="Teff Grain">
-                        <h3>High-Quality Teff Grain</h3>
-                        <p class="price">ETB 3,500 / Quintal</p>
-                        <p>Premium grade Teff from the Gojjam region, perfect for injera.</p>
-                        <a href="#" class="btn">View Product</a>
-                    </article>
-                    <article class="card product-card">
-                        
-                        <img src="https://placehold.co/400x300/2a9d8f/FFF?text=Coffee+Beans" alt="Coffee Beans">
-                        <h3>Yirgacheffe Coffee Beans</h3>
-                        <p class="price">ETB 8,000 / Quintal</p>
-                        <p>Sun-dried, organic Arabica coffee beans with a distinct floral aroma.</p>
-                        <a href="#" class="btn">View Product</a>
-                    </article>
-                    <article class="card product-card">
-                        
-                        <img src="https://placehold.co/400x300/264653/FFF?text=Organic+Fertilizer" alt="Organic Fertilizer">
-                        <h3>Organic Compost Fertilizer</h3>
-                        <p class="price">ETB 1,200 / 50kg Bag</p>
-                        <p>Nutrient-rich compost to improve soil health and crop yield.</p>
-                        <a href="#" class="btn">View Product</a>
-                    </article>
-                </div>
+            <div class="card feature-card">
+              <i class="fa-solid fa-users"></i>
+              <h3>Farmer Community</h3>
+              <p>
+                Connect with fellow farmers, ask questions, share knowledge, and
+                build a strong support network.
+              </p>
             </div>
-        </section>
+          </div>
+        </div>
+      </section>
 
-        <section id="news">
-            <div class="container">
-                <div class="section-header">
-                    <h2>News & Updates</h2>
-                    <p>The latest insights and information for the Ethiopian agricultural sector.</p>
-                </div>
-                <div class="grid">
-                    <article class="card news-card">
-                        
-                        <img src="https://placehold.co/400x300/457b9d/FFF?text=New+Irrigation" alt="Irrigation System">
-                        <p class="meta">By AgriHub Staff | September 23, 2025</p>
-                        <h3>New Irrigation Techniques Boost Crop Yields in the Rift Valley</h3>
-                        <p>Farmers are adopting innovative water management systems to combat changing weather patterns...</p>
-                        <a href="#">Read More &raquo;</a>
-                    </article>
-                    <article class="card news-card">
-                        
-                        <img src="https://placehold.co/400x300/d62828/FFF?text=Coffee+Exports" alt="Coffee Exports">
-                        <p class="meta">By Ministry of Agriculture | September 21, 2025</p>
-                        <h3>Ethiopian Coffee Exports See a 15% Increase This Quarter</h3>
-                        <p>A new report highlights the growing international demand for specialty Ethiopian coffee beans...</p>
-                        <a href="#">Read More &raquo;</a>
-                    </article>
-                    <article class="card news-card">
-                        
-                        <img src="https://placehold.co/400x300/fca311/FFF?text=AgriTech" alt="Farmer with Phone">
-                        <p class="meta">By Tech Today | September 19, 2025</p>
-                        <h3>How Digital Tools Like AgriHub Are Transforming Farming</h3>
-                        <p>Digital platforms are connecting farmers to markets and information like never before, increasing efficiency...</p>
-                        <a href="#">Read More &raquo;</a>
-                    </article>
-                </div>
+      <section id="how-it-works">
+        <div class="container">
+          <div class="section-header">
+            <h2>Getting Started is Easy</h2>
+            <p>Join our network in three simple steps.</p>
+          </div>
+          <div class="grid">
+            <div class="card step-card">
+              <i class="fa-solid fa-user-plus"></i>
+              <h3>1. Create Your Account</h3>
+              <p>
+                Sign up for free in minutes. Tell us about your farm and what
+                you produce or need.
+              </p>
             </div>
-        </section>
-
-        <section id="cta">
-            <div class="container">
-                <h2>Join Thousands of Farmers Thriving with AgriHub</h2>
-                <p>Create your free account today and start selling your produce, accessing vital information, and connecting with a nationwide community.</p>
-                <a href="#" class="btn primary">Sign Up for Free</a>
+            <div class="card step-card">
+              <i class="fa-solid fa-magnifying-glass-dollar"></i>
+              <h3>2. List or Find Products</h3>
+              <p>
+                Easily list your produce for sale in the marketplace or browse
+                for seeds, tools, and supplies.
+              </p>
             </div>
-        </section>
+            <div class="card step-card">
+              <i class="fa-solid fa-handshake-simple"></i>
+              <h3>3. Connect & Transact</h3>
+              <p>
+                Communicate directly with buyers or sellers to arrange logistics
+                and complete your transaction securely.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
 
+      <section id="marketplace">
+        <div class="container">
+          <div class="section-header">
+            <h2>Fresh on the Market</h2>
+            <p>
+              Discover high-quality produce and supplies from farms across
+              Ethiopia.
+            </p>
+          </div>
+          <div class="grid">
+            <article class="card product-card">
+              <img
+                src="https://placehold.co/400x300/e85d04/FFF?text=Teff+Grain"
+                alt="Teff Grain"
+              />
+              <h3>High-Quality Teff Grain</h3>
+              <p class="price">ETB 3,500 / Quintal</p>
+              <p>
+                Premium grade Teff from the Gojjam region, perfect for injera.
+              </p>
+              <a href="#" class="btn">View Product</a>
+            </article>
+            <article class="card product-card">
+              <img
+                src="https://placehold.co/400x300/2a9d8f/FFF?text=Coffee+Beans"
+                alt="Coffee Beans"
+              />
+              <h3>Yirgacheffe Coffee Beans</h3>
+              <p class="price">ETB 8,000 / Quintal</p>
+              <p>
+                Sun-dried, organic Arabica coffee beans with a distinct floral
+                aroma.
+              </p>
+              <a href="#" class="btn">View Product</a>
+            </article>
+            <article class="card product-card">
+              <img
+                src="https://placehold.co/400x300/264653/FFF?text=Organic+Fertilizer"
+                alt="Organic Fertilizer"
+              />
+              <h3>Organic Compost Fertilizer</h3>
+              <p class="price">ETB 1,200 / 50kg Bag</p>
+              <p>
+                Nutrient-rich compost to improve soil health and crop yield.
+              </p>
+              <a href="#" class="btn">View Product</a>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="news">
+        <div class="container">
+          <div class="section-header">
+            <h2>News & Updates</h2>
+            <p>
+              The latest insights and information for the Ethiopian agricultural
+              sector.
+            </p>
+          </div>
+          <div class="grid">
+            <article class="card news-card">
+              <img
+                src="https://placehold.co/400x300/457b9d/FFF?text=New+Irrigation"
+                alt="Irrigation System"
+              />
+              <p class="meta">By AgriHub Staff | September 23, 2025</p>
+              <h3>
+                New Irrigation Techniques Boost Crop Yields in the Rift Valley
+              </h3>
+              <p>
+                Farmers are adopting innovative water management systems to
+                combat changing weather patterns...
+              </p>
+              <a href="#">Read More &raquo;</a>
+            </article>
+            <article class="card news-card">
+              <img
+                src="https://placehold.co/400x300/d62828/FFF?text=Coffee+Exports"
+                alt="Coffee Exports"
+              />
+              <p class="meta">
+                By Ministry of Agriculture | September 21, 2025
+              </p>
+              <h3>Ethiopian Coffee Exports See a 15% Increase This Quarter</h3>
+              <p>
+                A new report highlights the growing international demand for
+                specialty Ethiopian coffee beans...
+              </p>
+              <a href="#">Read More &raquo;</a>
+            </article>
+            <article class="card news-card">
+              <img
+                src="https://placehold.co/400x300/fca311/FFF?text=AgriTech"
+                alt="Farmer with Phone"
+              />
+              <p class="meta">By Tech Today | September 19, 2025</p>
+              <h3>How Digital Tools Like AgriHub Are Transforming Farming</h3>
+              <p>
+                Digital platforms are connecting farmers to markets and
+                information like never before, increasing efficiency...
+              </p>
+              <a href="#">Read More &raquo;</a>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="cta">
+        <div class="container">
+          <h2>Join Thousands of Farmers Thriving with AgriHub</h2>
+          <p>
+            Create your free account today and start selling your produce,
+            accessing vital information, and connecting with a nationwide
+            community.
+          </p>
+          <a href="#" class="btn primary">Sign Up for Free</a>
+        </div>
+      </section>
     </main>
 
     <!-- Footer Placeholder -->
     <div id="footer-placeholder"></div>
 
-    <!-- Script to load header and footer -->
-    <script src="Javascript/main.js"></script>
-</body>
+    <script type="module" src="../Js/site.js"></script>
+    <!-- Homepage-specific scripts -->
+    <script type="module">
+      import { initializeImageSlider } from '../Js/imageSlider.js';
+      // Run scripts that are specific to the homepage
+      initializeImageSlider();
+    </script>
+  </body>
 </html>
