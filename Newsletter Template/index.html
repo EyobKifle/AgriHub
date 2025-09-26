@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Newsletter Builder - AgriHub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-newspaper"></i>
+                <span>AgriHub Newsletter Builder</span>
+            </div>
+            <div class="header-actions">
+                <button class="toolbar-btn" id="undoBtn" title="Undo" disabled>
+                    <i class="fas fa-undo"></i>
+                </button>
+                <button class="toolbar-btn" id="redoBtn" title="Redo" disabled>
+                    <i class="fas fa-redo"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Rest of the HTML remains exactly the same -->
+        <div class="builder">
+            <aside class="sidebar">
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-shapes"></i> Elements</h3>
+                    <div class="tool" data-type="heading">
+                        <i class="fas fa-heading"></i>
+                        <span>Heading</span>
+                    </div>
+                    <div class="tool" data-type="paragraph">
+                        <i class="fas fa-paragraph"></i>
+                        <span>Paragraph</span>
+                    </div>
+                    <div class="tool" data-type="image">
+                        <i class="fas fa-image"></i>
+                        <span>Image</span>
+                    </div>
+                    <div class="tool" data-type="button">
+                        <i class="fas fa-hand-pointer"></i>
+                        <span>Button</span>
+                    </div>
+                    <div class="tool" data-type="divider">
+                        <i class="fas fa-minus"></i>
+                        <span>Divider</span>
+                    </div>
+                    <div class="tool" data-type="two-col">
+                        <i class="fas fa-columns"></i>
+                        <span>Two Columns</span>
+                    </div>
+                    <div class="tool" data-type="spacer">
+                        <i class="fas fa-arrows-alt-v"></i>
+                        <span>Spacer</span>
+                    </div>
+                    <div class="tool" data-type="social">
+                        <i class="fas fa-share-alt"></i>
+                        <span>Social Links</span>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-th-large"></i> Templates</h3>
+                    <div class="templates">
+                        <div class="template" data-template="simple">
+                            <div class="template-preview simple-preview">
+                                <i class="fas fa-file-alt"></i>
+                            </div>
+                            <span>Simple</span>
+                        </div>
+                        <div class="template" data-template="promotional">
+                            <div class="template-preview promotional-preview">
+                                <i class="fas fa-bullhorn"></i>
+                            </div>
+                            <span>Promotional</span>
+                        </div>
+                        <div class="template" data-template="news">
+                            <div class="template-preview news-preview">
+                                <i class="fas fa-newspaper"></i>
+                            </div>
+                            <span>News</span>
+                        </div>
+                        <div class="template" data-template="event">
+                            <div class="template-preview event-preview">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
+                            <span>Event</span>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <div class="editor">
+                <div class="toolbar">
+                    <button class="toolbar-btn" id="addBlockBtn">
+                        <i class="fas fa-plus"></i>
+                        <span>Add Block</span>
+                    </button>
+                    <button class="toolbar-btn" id="clearBtn">
+                        <i class="fas fa-trash"></i>
+                        <span>Clear All</span>
+                    </button>
+                    <div class="toolbar-spacer"></div>
+                    <button class="toolbar-btn" id="mobilePreviewBtn">
+                        <i class="fas fa-mobile-alt"></i>
+                        <span>Mobile Preview</span>
+                    </button>
+                    <button class="toolbar-btn primary" id="helpBtn">
+                        <i class="fas fa-question-circle"></i>
+                        <span>Help</span>
+                    </button>
+                </div>
+
+                <div class="canvas-container">
+                    <div class="canvas" id="canvas">
+                        <div class="block-placeholder" id="emptyState">
+                            <i class="fas fa-plus-circle"></i>
+                            <h3>Your Newsletter is Empty</h3>
+                            <p>Drag elements from the sidebar or click "Add Block" to get started.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="settings" id="settings">
+                    <div class="settings-header">
+                        <h3><i class="fas fa-cog"></i> Block Settings</h3>
+                        <button class="toolbar-btn" id="duplicateBtn">
+                            <i class="fas fa-copy"></i>
+                            <span>Duplicate</span>
+                        </button>
+                    </div>
+                    <div id="settingsContent">Select a block to edit its properties.</div>
+                </div>
+                
+                <div class="actions">
+                    <button class="preview-btn" id="previewBtn">
+                        <i class="fas fa-eye"></i>
+                        <span>Preview</span>
+                    </button>
+                    <button class="save-btn" id="saveBtn">
+                        <i class="fas fa-save"></i>
+                        <span>Save Draft</span>
+                    </button>
+                    <button class="export-btn" id="exportBtn">
+                        <i class="fas fa-download"></i>
+                        <span>Export HTML</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <button class="close" id="closeModal">&times;</button>
+            <h2>Newsletter Preview</h2>
+            
+            <div class="modal-tabs">
+                <div class="modal-tab active" data-tab="preview">Preview</div>
+                <div class="modal-tab" data-tab="html">HTML Code</div>
+                <div class="modal-tab" data-tab="css">CSS Code</div>
+            </div>
+            
+            <div class="tab-content active" id="previewTab">
+                <div class="preview-container" id="previewArea"></div>
+            </div>
+            
+            <div class="tab-content" id="htmlTab">
+                <div class="code-container" id="htmlCode"></div>
+            </div>
+            
+            <div class="tab-content" id="cssTab">
+                <div class="code-container" id="cssCode"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Operation completed successfully!</span>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
