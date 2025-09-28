@@ -1,15 +1,3 @@
-:root {
-    --primary-dark: #05190A;
-    --white: #fff;
-    --white-transparent: rgba(255, 255, 255, 0.2);
-    --black-transparent: rgba(0, 0, 0, 0.5);
-    --blur: blur(10px);
-    --shadow: 0 0 30px rgba(0, 0, 0, 0.5);
-    --text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-    --text-shadow-light: 1px 1px 2px rgba(0, 0, 0, 0.5);
-    --header-height: 68px;
-    --gap: 20px;
-}
 
 * {
     margin: 0;

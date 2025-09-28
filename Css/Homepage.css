@@ -107,7 +107,10 @@ section {
 
 .card {
     background: var(--white);
+    color: black;
+    height: auto;
     border: 1px solid var(--border-color);
+    border-radius: 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
     padding: 20px;
     text-align: center;
@@ -130,7 +133,7 @@ section {
 
 .section-header p {
     font-size: 1.1rem;
-    color: var(--text-light);
+    color: black;
 }
 
 /* --- Features Section --- */
@@ -145,21 +148,13 @@ section {
 }
 
 /* How It Works Section */
-#how-it-works {
-    background-color: var(--white);
-}
-
 .step-card i {
     font-size: 3rem;
     color: var(--accent-orange);
     margin-bottom: 1rem;
 }
 
-/* --- Marketplace Preview Section --- */
-#marketplace {
-    background-color: var(--light-bg);
-}
-
+/* --- Marketplace --- */
 .product-card {
     text-align: left;
 }

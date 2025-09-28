@@ -10,62 +10,137 @@
   <link rel="stylesheet" href="../Css/news.css">
 </head>
 <body>
-     <div id="header-placeholder"></div>
+  <div id="header-placeholder"></div>
+
   <main class="main">
     <div class="container">
       <div class="page-header">
         <h1>Agricultural News</h1>
         <p>Stay updated with the latest news, policies, and developments in Ethiopian agriculture</p>
       </div>
-
+ 
       <div class="content-grid">
         <aside class="sidebar">
           <div class="sidebar-section">
             <h3>Categories</h3>
-            <ul class="category-list">
-              <li><a href="#" class="category-item active">All News</a></li>
-              <li><a href="#" class="category-item">Policy</a></li>
-              <li><a href="#" class="category-item">Market</a></li>
-              <li><a href="#" class="category-item">Research</a></li>
-              <li><a href="#" class="category-item">Technology</a></li>
-              <li><a href="#" class="category-item">Weather</a></li>
+            <ul id="category-list" class="category-list">
+              <li><a href="#" class="category-item active" data-category="all">All News</a></li>
+              <li><a href="#" class="category-item" data-category="policy">Policy</a></li>
+              <li><a href="#" class="category-item" data-category="market">Market</a></li>
+              <li><a href="#" class="category-item" data-category="research">Research</a></li>
+              <li><a href="#" class="category-item" data-category="technology">Technology</a></li>
+              <li><a href="#" class="category-item" data-category="weather">Weather</a></li>
             </ul>
           </div>
-
+ 
           <div class="sidebar-section">
             <h3>Trending Topics</h3>
-            <div class="trending-tags">
-              <span class="tag">#CoffeeExports</span>
-              <span class="tag">#DroughtResistant</span>
-              <span class="tag">#AgricultureSubsidy</span>
-              <span class="tag">#DigitalFarming</span>
-              <span class="tag">#TeffResearch</span>
+            <div id="trending-tags" class="trending-tags">
+              <span class="tag" data-tag="coffee">#CoffeeExports</span>
+              <span class="tag" data-tag="drought">#DroughtResistant</span>
+              <span class="tag" data-tag="subsidy">#AgricultureSubsidy</span>
+              <span class="tag" data-tag="digital">#DigitalFarming</span>
+              <span class="tag" data-tag="teff">#TeffResearch</span>
             </div>
           </div>
         </aside>
-
+ 
         <section class="main-content">
-          <div class="featured-article">
-            <div class="featured-badge">Featured</div>
-            <div class="article-image">
-              <img src="./images/688202.png" alt="Featured article image">
-            </div>
-            <div class="article-content">
-              <div class="article-category">Policy</div>
-              <h2>Government Announces New Agricultural Subsidies for 2024</h2>
-              <p>The Ethiopian government has announced a comprehensive subsidy program to support smallholder farmers with seeds, fertilizers, and equipment.</p>
-              <div class="article-meta">
-                <div class="author">Ministry of Agriculture</div>
-                <div class="time">2 hours ago</div>
+          <div id="news-container">
+            <!-- Featured Article -->
+            <article class="news-card featured" data-category="policy" data-tags="subsidy,government">
+              <div class="featured-badge">Featured</div>
+              <div class="card-image">
+                <img src="https://placehold.co/800x400/1E4620/FFF?text=New+Subsidies" alt="Featured article image">
               </div>
+              <div class="card-content">
+                <div class="card-category">Policy</div>
+                <h2>Government Announces New Agricultural Subsidies for 2024</h2>
+                <p>The Ethiopian government has announced a comprehensive subsidy program to support smallholder farmers with seeds, fertilizers, and equipment.</p>
+                <div class="card-meta">
+                  <span class="author">Ministry of Agriculture</span>
+                  <span class="time">2 hours ago</span>
+                </div>
+              </div>
+            </article>
+ 
+            <!-- Latest News Grid -->
+            <div id="latest-news-grid" class="latest-news-grid">
+              <article class="news-card" data-category="market" data-tags="coffee,exports">
+                <div class="card-image">
+                  <img src="https://placehold.co/400x250/D97706/FFF?text=Coffee+Prices" alt="News article image">
+                </div>
+                <div class="card-content">
+                  <div class="card-category">Market</div>
+                  <h3>Coffee Prices Reach Record High in International Markets</h3>
+                  <p>Ethiopian coffee exports are benefiting from rising global prices, with Sidama and Yirgacheffe varieties leading the surge.</p>
+                  <div class="card-meta">
+                    <span class="author">Ethiopian Coffee Association</span>
+                    <span class="time">5 hours ago</span>
+                  </div>
+                </div>
+              </article>
+ 
+              <article class="news-card" data-category="research" data-tags="drought,teff">
+                <div class="card-image">
+                  <img src="https://placehold.co/400x250/2a9d8f/FFF?text=Teff+Research" alt="News article image">
+                </div>
+                <div class="card-content">
+                  <div class="card-category">Research</div>
+                  <h3>New Drought-Resistant Teff Variety Shows Promise in Trials</h3>
+                  <p>Researchers at the Ethiopian Institute of Agricultural Research have developed a new teff strain that requires 30% less water.</p>
+                  <div class="card-meta">
+                    <span class="author">EIAR</span>
+                    <span class="time">1 day ago</span>
+                  </div>
+                </div>
+              </article>
+ 
+              <article class="news-card" data-category="technology" data-tags="digital,mobile">
+                <div class="card-image">
+                  <img src="https://placehold.co/400x250/264653/FFF?text=Digital+Farming" alt="News article image">
+                </div>
+                <div class="card-content">
+                  <div class="card-category">Technology</div>
+                  <h3>Mobile App Connects Farmers Directly to Weather Alerts</h3>
+                  <p>A new mobile application is providing real-time weather forecasts and pest alerts to over 50,000 farmers in the Oromia region.</p>
+                  <div class="card-meta">
+                    <span class="author">AgriTech Today</span>
+                    <span class="time">2 days ago</span>
+                  </div>
+                </div>
+              </article>
+ 
+              <article class="news-card" data-category="weather" data-tags="weather,forecast">
+                <div class="card-image">
+                  <img src="https://placehold.co/400x250/fca311/FFF?text=Rainfall+Forecast" alt="News article image">
+                </div>
+                <div class="card-content">
+                  <div class="card-category">Weather</div>
+                  <h3>Above-Average Rainfall Expected for Upcoming 'Belg' Season</h3>
+                  <p>The National Meteorology Agency predicts favorable conditions for the short rainy season, boosting prospects for maize and sorghum crops.</p>
+                  <div class="card-meta">
+                    <span class="author">NMA</span>
+                    <span class="time">3 days ago</span>
+                  </div>
+                </div>
+              </article>
+            </div>
+            <div id="empty-state" class="empty-state" hidden>
+              <p>No news articles match the current filter.</p>
             </div>
           </div>
-
-          <div class="latest-news">
-            <h2>Latest News</h2>
-            <div class="news-item">
-              <div class="news-image">
-                <img src="./images/img.jpg" alt="News article image">
+        </section>
+      </div>
+    </div>
+  </main>
+ 
+  <div id="footer-placeholder"></div>
+ 
+  <script type="module" src="../Js/site.js"></script>
+  <script type="module" src="../Js/news.js"></script>
+</body>
+</html>
               </div>
               <div class="news-content">
                 <div class="news-category">Market</div>

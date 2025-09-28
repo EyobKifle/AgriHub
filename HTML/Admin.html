@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard - AgriHub</title>
+  <link rel="stylesheet" href="../Css/header.css" />
+  <link rel="stylesheet" href="../Css/footer.css" />
+  <link rel="stylesheet" href="../Css/dashboard.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body>
+  <div id="header-placeholder"></div>
+
+  <main>
+    <div class="container dashboard">
+      <header class="dashboard-header">
+        <h1>Admin Dashboard</h1>
+        <p class="muted">Manage users, products, and site content</p>
+      </header>
+
+      <section class="cards">
+        <a class="card" href="#users">
+          <div class="icon"><i class="fa-solid fa-user-group"></i></div>
+          <div class="card-body">
+            <h3>Users</h3>
+            <p>View, edit, or remove user accounts.</p>
+          </div>
+        </a>
+        <a class="card" href="#products">
+          <div class="icon"><i class="fa-solid fa-wheat-awn"></i></div>
+          <div class="card-body">
+            <h3>Products</h3>
+            <p>Review marketplace listings.</p>
+          </div>
+        </a>
+        <a class="card" href="#reports">
+          <div class="icon"><i class="fa-solid fa-chart-line"></i></div>
+          <div class="card-body">
+            <h3>Reports</h3>
+            <p>Insights and activity logs.</p>
+          </div>
+        </a>
+      </section>
+
+      <section id="users" class="panel">
+        <div class="panel-header">
+          <h2>Manage Users</h2>
+          <div class="actions">
+            <a href="#" class="btn btn-secondary">Add User</a>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Alemayehu T.</td>
+                <td>alemayehu@example.com</td>
+                <td>Seller</td>
+                <td>
+                  <a href="#" class="link">Edit</a> ·
+                  <a href="#" class="link danger">Remove</a>
+                </td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Meron K.</td>
+                <td>meron@example.com</td>
+                <td>Buyer</td>
+                <td>
+                  <a href="#" class="link">Edit</a> ·
+                  <a href="#" class="link danger">Remove</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="products" class="panel">
+        <div class="panel-header">
+          <h2>Manage Products</h2>
+          <div class="actions">
+            <a href="Marketplace.html" class="btn btn-secondary">Go to Marketplace</a>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>101</td>
+                <td>Organic Teff</td>
+                <td>Grains</td>
+                <td>ETB 850/kg</td>
+                <td>Active</td>
+                <td>
+                  <a href="#" class="link">Edit</a> ·
+                  <a href="#" class="link danger">Remove</a>
+                </td>
+              </tr>
+              <tr>
+                <td>102</td>
+                <td>Drip Irrigation Kit</td>
+                <td>Equipment</td>
+                <td>ETB 3,800</td>
+                <td>Pending</td>
+                <td>
+                  <a href="#" class="link">Approve</a> ·
+                  <a href="#" class="link danger">Reject</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div id="footer-placeholder"></div>
+  <script type="module" src="../Js/site.js"></script>
+</body>
+</html>

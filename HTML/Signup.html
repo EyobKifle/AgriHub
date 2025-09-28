@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up - AgriHub</title>
+  <link rel="stylesheet" href="../Css/header.css" />
+  <link rel="stylesheet" href="../Css/footer.css" />
+  <link rel="stylesheet" href="../Css/forms.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body>
+  <div id="header-placeholder"></div>
+
+  <main>
+    <div class="container auth-container">
+      <section class="auth-card">
+        <header class="auth-header">
+          <h1>Create an account</h1>
+          <p class="muted">Join AgriHub to connect and trade</p>
+        </header>
+        <form class="auth-form" action="#" method="post">
+          <div class="form-grid">
+            <div class="form-field">
+              <label for="name">Full name</label>
+              <input type="text" id="name" name="name" placeholder="Your Name" required />
+            </div>
+            <div class="form-field">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" placeholder="you@example.com" required />
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-field">
+              <label for="password">Password</label>
+              <input type="password" id="password" name="password" placeholder="••••••••" required />
+            </div>
+            <div class="form-field">
+              <label for="confirm">Confirm password</label>
+              <input type="password" id="confirm" name="confirm" placeholder="••••••••" required />
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary full-width">Create Account</button>
+          <div class="auth-links">
+            <span>Already have an account? <a href="Login.html">Login</a></span>
+          </div>
+        </form>
+      </section>
+    </div>
+  </main>
+
+  <div id="footer-placeholder"></div>
+  <script type="module" src="../Js/site.js"></script>
+</body>
+</html>

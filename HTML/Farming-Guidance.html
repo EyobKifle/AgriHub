@@ -1,136 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Farming Guidance - AgriHub</title>
-    <!-- Global Styles (for Header, Footer, etc.) -->
-    <link rel="stylesheet" href="../Css/header.css">
-    <link rel="stylesheet" href="../Css/footer.css"> <!-- Assuming a footer.css exists -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="../Css/styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Farming Guidance - AgriHub</title>
+  <!-- Global Styles (Header, Footer) -->
+  <link rel="stylesheet" href="../Css/header.css" />
+  <link rel="stylesheet" href="../Css/footer.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <!-- Guidance Styles -->
+  <link rel="stylesheet" href="../Css/guidance.css" />
 </head>
 <body>
-    <!-- Header Placeholder -->
-    <div id="header-placeholder"></div>
+  <!-- Header Placeholder -->
+  <div id="header-placeholder"></div>
 
-    <main class="main-content page-container">
-        <header class="page-header">
-            <h1>Farming Guidance</h1>
-            <p>Learn new skills and improve your knowledge with our guides. Click on a topic to learn more.</p>
-        </header>
+  <main>
+    <div class="container">
+      <header class="page-header">
+        <h1>Farming Guidance</h1>
+        <p>Master content map for Ethiopian farming: crops, livestock, techniques, health & safety, business, innovation, and policy. Click any topic to open details.</p>
+      </header>
 
-        <section class="content-section guidance-category">
-            <h2>Soil Management</h2>
-            <div class="guidance-card-grid">
-                <a href="guidance-soil-preparation.html" class="guidance-card">
-                    <div class="img-placeholder"></div>
-                    <div class="guidance-card-content">
-                        <h3>Soil Preparation</h3>
-                        <p>Good soil is the foundation for a strong harvest. Learn how to clear, plough, and enrich your land to help your crops grow healthy and strong.</p>
-                    </div>
-                </a>
-                <a href="#" class="guidance-card">
-                    <div class="img-placeholder"></div>
-                    <div class="guidance-card-content">
-                        <h3>Composting</h3>
-                        <p>Turn kitchen scraps and farm waste into rich, dark compost that acts as free fertilizer for your crops.</p>
-                    </div>
-                </a>
-                <a href="#" class="guidance-card">
-                    <div class="img-placeholder"></div>
-                    <div class="guidance-card-content">
-                        <h3>Soil Conservation</h3>
-                        <p>Heavy rains can wash away your best soil. Learn simple techniques like terracing to protect your land for the future.</p>
-                    </div>
-                </a>
-            </div>
-        </section>
+      <!-- Dynamic Guidance Root -->
+      <div id="guide-root" aria-live="polite"></div>
+    </div>
+  </main>
 
-        <section class="content-section guidance-category">
-            <h2>Water Management</h2>
-            <div class="guidance-card-grid">
-                <a href="#" class="guidance-card">
-                    <div class="img-placeholder"></div>
-                    <div class="guidance-card-content">
-                        <h3>Small-Scale Irrigation</h3>
-                        <p>Discover affordable irrigation methods that can help you grow more, even with limited water.</p>
-                    </div>
-                </a>
-                <a href="#" class="guidance-card">
-                    <div class="img-placeholder"></div>
-                    <div class="guidance-card-content">
-                        <h3>Rainwater Harvesting</h3>
-                        <p>Every drop of rain is precious. Learn how to collect and store rainwater during the wet season for when it's dry.</p>
-                    </div>
-                </a>
-            </div>
-        </section>
+  <!-- Footer Placeholder -->
+  <div id="footer-placeholder"></div>
 
-        <section class="content-section guidance-category">
-            <h2>Dairy & Livestock</h2>
-            <div class="guidance-card-grid">
-                <a href="#" class="guidance-card">
-                    <div class="img-placeholder"></div>
-                    <div class="guidance-card-content">
-                        <h3>Dairy Farming</h3>
-                        <p>Learn the essentials of raising cows for milk production, from feeding to health management.</p>
-                    </div>
-                </a>
-                <a href="#" class="guidance-card">
-                    <div class="img-placeholder"></div>
-                    <div class="guidance-card-content">
-                        <h3>Cattle Rearing</h3>
-                        <p>Cattle provide milk, meat, and power. Learn how to feed, house, and care for your cattle to keep them healthy and productive.</p>
-                    </div>
-                </a>
-                <a href="#" class="guidance-card">
-                    <div class="img-placeholder"></div>
-                    <div class="guidance-card-content">
-                        <h3>Sheep & Goats</h3>
-                        <p>Sheep and goats are a great source of income and food. Discover the best ways to manage their health, breeding, and housing.</p>
-                    </div>
-                </a>
-            </div>
-        </section>
-
-        <section class="content-section guidance-category">
-            <h2>Poultry</h2>
-            <div class="guidance-card-grid">
-                <a href="guidance-poultry-farming.html" class="guidance-card">
-                    <div class="img-placeholder"></div>
-                    <div class="guidance-card-content">
-                        <h3>Poultry Farming</h3>
-                        <p>Raising chickens for eggs and meat is a fast way to earn money. Learn how to build a safe coop and protect your flock from diseases.</p>
-                    </div>
-                </a>
-            </div>
-        </section>
-
-        <section class="content-section guidance-category">
-            <h2>Seeds & Crop Choice</h2>
-            <div class="guidance-card-grid">
-                <a href="#" class="guidance-card">
-                    <div class="img-placeholder"></div>
-                    <div class="guidance-card-content">
-                        <h3>Seed Selection</h3>
-                        <p>Choosing the right seeds is one of the most important decisions you will make. Learn how to select high-quality, disease-free seeds that are right for your area and will give you a better yield.</p>
-                    </div>
-                </a>
-                <a href="#" class="guidance-card">
-                    <div class="img-placeholder"></div>
-                    <div class="guidance-card-content">
-                        <h3>Planting & Spacing</h3>
-                        <p>Proper spacing ensures each plant gets enough sunlight, water, and nutrients.</p>
-                    </div>
-                </a>
-            </div>
-        </section>
-    </main>
-
-    <footer id="footer-placeholder"></footer>
-    <script type="module" src="../Js/site.js"></script>
-    <script type="module" src="../Js/header.js"></script>
-    <script type="module" src="../Js/footer.js"></script>
+  <!-- Global scripts (loads header/footer) -->
+  <script type="module" src="../Js/site.js"></script>
+  <!-- Guidance interactions -->
+  <script type="module" src="../Js/guidance.js"></script>
 </body>
 </html>
