@@ -37,13 +37,9 @@ body { background: var(--light-bg); color: var(--text-dark); }
 .link { color: var(--primary-green); text-decoration: none; }
 .link:hover { text-decoration: underline; }
 .link.danger { color: #b91c1c; }
-
 @media (min-width: 720px) { .cards { grid-template-columns: repeat(3, 1fr); } }
 
 /* Dark mode */
-body.dark-mode { background: #1f1f1f; color: #e0e0e0; }
-body.dark-mode .card, body.dark-mode .panel { background: #2a2a2a; border-color: #3a3a3a; }
 body.dark-mode .card .icon { background: #1f3822; }
-body.dark-mode .table-responsive { border-color: #3a3a3a; }
-body.dark-mode .table-responsive thead th { background: #333; color: #eee; }
-body.dark-mode .btn-secondary { background: #333; color: #fff; border-color: #666; }
+body.dark-mode .table-responsive { border-color: var(--dark-border); }
+body.dark-mode .table-responsive thead th { background: var(--dark-border); color: var(--dark-text-primary); }

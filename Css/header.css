@@ -8,6 +8,14 @@
             --border-color: #E5E7EB;
             --white: #FFFFFF;
             --accent-orange: #D97706;
+
+            /* Dark Mode Variables */
+            --dark-bg: #18230F; /* Darkest green for background */
+            --dark-surface: #27391C; /* Lighter green for cards/panels */
+            --dark-border: #ffffff; /* Mid-range green for borders */
+            --dark-accent: #1F7D53; /* Brightest green for links and highlights */
+            --dark-text-primary: #E0E0E0; /* Light gray for main text */
+            --dark-text-secondary: #a7b3a9; /* Dimmer gray for secondary text */
         }
 
         * {
@@ -23,10 +31,10 @@
             line-height: 1.6;
         }
 
-        .container {
+        .header-container {
             max-width: 100%;
-            padding: 0 10px;
-            margin: 0px 3px 3px 4px;
+            padding: 0 20px;
+            margin: 0 auto;
         }
 
         a {
@@ -43,7 +51,7 @@
             border-bottom: 1px solid var(--border-color);
         }
 
-        .header .container {
+        .header .header-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -332,42 +340,50 @@
 }
 
 /* --- Dark Mode Styles --- */
-    body.dark-mode {
-    background-color: #516843;
-        color: #e0e0e0;
-    }
+body.dark-mode {
+    background-color: var(--dark-bg);
+    color: var(--dark-text-primary);
+}
 
-    body.dark-mode .header {
-        background-color: #1f1f1f;
-        border-bottom-color: #333;
-    }
+body.dark-mode .header {
+    background-color: var(--dark-surface);
+    border-bottom-color: var(--dark-border);
+}
 
-    body.dark-mode .nav-links a,
-    body.dark-mode .dropdown .dropbtn {
-        color: #d1dad0;
-    }
+body.dark-mode .nav-links a,
+body.dark-mode .dropdown .dropbtn {
+    color: var(--dark-text-secondary);
+}
 
-    body.dark-mode .nav-links a:hover,
-    body.dark-mode .nav-links a.active {
-        color: var(--white);
-    }
+body.dark-mode .nav-links a:hover,
+body.dark-mode .nav-links a.active {
+    color: var(--dark-text-primary);
+}
 
-    body.dark-mode .dropdown-content {
-        background-color: #4e4c4c;
-        border-color: #484747;
-    }
+body.dark-mode .dropdown-content {
+    background-color: var(--dark-surface);
+    border-color: var(--dark-border);
+}
 
-    body.dark-mode .dropdown-content a {
-        color: #bbb;
-    }
+body.dark-mode .dropdown-content a {
+    color: var(--dark-text-secondary);
+}
 
-    body.dark-mode .dropdown-content a:hover {
-        background-color: #8eb284;
-        color: var(--white);
-    }
+body.dark-mode .dropdown-content a:hover {
+    background-color: var(--dark-accent);
+    color: var(--white);
+}
 
-    body.dark-mode .btn-secondary {
-        background-color: #333;
-        color: var(--white);
-        border-color: #555;
-    }
+body.dark-mode .btn-secondary {
+    background-color: var(--dark-surface);
+    color: var(--dark-text-primary);
+    border-color: var(--dark-border);
+}
+
+body.dark-mode .btn-secondary:hover {
+    background-color: var(--dark-border);
+}
+
+/* Generic dark mode styles for components not in their own CSS file */
+body.dark-mode .card, body.dark-mode .panel { background: var(--dark-surface); border-color: var(--dark-border); }
+body.dark-mode p, body.dark-mode .muted, body.dark-mode .text-light { color: var(--dark-text-secondary); }

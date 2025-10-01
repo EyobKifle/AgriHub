@@ -1,4 +1,8 @@
-document.addEventListener('DOMContentLoaded', () => {
+/**
+ * This file controls the filtering logic for the News page.
+ * It allows users to filter articles by category or by tag.
+ */
+export const initializeNewsPage = () => {
   const categoryList = document.getElementById('category-list');
   const trendingTags = document.getElementById('trending-tags');
   const newsCards = document.querySelectorAll('.news-card');
@@ -11,19 +15,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /**
    * Filters news articles based on a given filter type and value.
-   * @param {string} type - The type of filter ('category' or 'tag').
-   * @param {string} value - The value to filter by (e.g., 'policy', 'coffee').
+   * It hides or shows cards based on the selection.
    */
   const filterNews = (type, value) => {
     let hasVisibleCards = false;
 
     newsCards.forEach(card => {
       let shouldShow = false;
+
+      // If the filter is 'all', every card should be shown.
       if (value === 'all') {
         shouldShow = true;
+      // If filtering by category, check if the card's category matches.
       } else if (type === 'category') {
         shouldShow = card.dataset.category === value;
+      // If filtering by tag, check if the card's tags include the selected tag.
       } else if (type === 'tag') {
+        // The tags are stored as a comma-separated string, so we split them into an array.
         const cardTags = card.dataset.tags.split(',');
         shouldShow = cardTags.includes(value);
       }
@@ -34,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // Show or hide the empty state message
+    // If no cards are visible after filtering, show the "empty state" message.
     emptyState.hidden = hasVisibleCards;
   };
 
@@ -44,11 +52,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const target = e.target.closest('.category-item');
     if (!target) return;
 
-    // Update active state for categories
+    // First, remove the 'active' class from all category items.
     categoryList.querySelectorAll('.category-item').forEach(item => item.classList.remove('active'));
+    // Then, add the 'active' class to the one that was clicked.
     target.classList.add('active');
 
-    // Remove active state from tags
+    // Since a category was clicked, we should clear any active tag filter.
     trendingTags.querySelectorAll('.tag').forEach(tag => tag.classList.remove('active'));
 
     const category = target.dataset.category;
@@ -62,24 +71,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const tagValue = target.dataset.tag;
 
-    // If the clicked tag is already active, reset to "All News"
+    // This is a toggle feature: if you click an active tag again, it turns off the filter.
     if (target.classList.contains('active')) {
       target.classList.remove('active');
-      // Find and activate "All News"
+      // Find and re-activate the "All News" category to show all articles.
       const allNewsCategory = categoryList.querySelector('[data-category="all"]');
       if (allNewsCategory) {
         categoryList.querySelectorAll('.category-item').forEach(item => item.classList.remove('active'));
         allNewsCategory.classList.add('active');
         filterNews('category', 'all');
       }
+    // If the clicked tag was not active...
     } else {
-      // Update active state for tags
+      // First, remove the 'active' class from all other tags.
       trendingTags.querySelectorAll('.tag').forEach(tag => tag.classList.remove('active'));
+      // Then, add the 'active' class to the one that was clicked.
       target.classList.add('active');
-      // Reset category to "All News" visually
+
+      // Visually reset the category list to "All News" so it's clear the tag is the active filter.
       categoryList.querySelectorAll('.category-item').forEach(item => item.classList.remove('active'));
       categoryList.querySelector('[data-category="all"]').classList.add('active');
       filterNews('tag', tagValue);
     }
   });
-});
+};

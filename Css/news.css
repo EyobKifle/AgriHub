@@ -1,28 +1,25 @@
 /* --- Root variables are assumed to be in a global stylesheet like header.css --- */
  
 .main {
-  padding: 1rem 0;
+  padding: 2rem 5rem;
 }
  
 .page-header {
   text-align: left;
-  margin-bottom: 2.5rem;
-  padding-bottom: 1.5rem;
+  margin-bottom: 1rem ;
+  padding-bottom: 0.5rem;
   border-bottom: 1px solid var(--border-color);
 }
  
 .page-header h1 {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   color: var(--primary-green);
-  margin-bottom: 0.5rem;
 }
  
 .page-header p {
   color: var(--text-light);
-  text-align: left;
-  font-size: 1.rem;
-  max-width: 600px;
-  margin: 0 auto;
+  font-size: 1rem;
+  max-width: 900px;
 }
  
 .content-grid {
@@ -112,7 +109,7 @@
   flex-direction: column;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-.news-card:hover {
+.news-card:hover, .news-card:focus-within {
   transform: translateY(-4px);
   box-shadow: 0 8px 16px rgba(0,0,0,0.07);
 }

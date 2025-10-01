@@ -267,7 +267,7 @@ button {
 }
 
 button:hover {
-  background: #1bd524;
+  background: rgb(63, 146, 63);
 }
 
 .forgot-password {

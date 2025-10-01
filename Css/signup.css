@@ -1,0 +1,140 @@
+/* VARIABLES (shared with header/footer) */
+:root {
+  --primary-green: #1E4620;
+  --light-green: rgb(42, 119, 42);
+  --light-bg: #FBF9F4;
+  --text-dark: #1C1C1C;
+  --text-light: #555;
+  --border-color: #E5E7EB;
+  --white: #FFFFFF;
+  --accent-orange: #D97706;
+}
+
+/* Container */
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 120px 20px;
+  align-items: flex-start; /* Align to top */
+}
+
+/* Card */
+.auth-card {
+  background: var(--white);
+  padding: 2rem;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 520px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  border: 1px solid var(--border-color);
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 1.5rem; /* Matches subtitle margin */
+}
+
+.auth-header h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--light-green);
+}
+
+.auth-header p.muted {
+  font-size: 0.95rem;
+  color: var(--text-light);
+}
+
+/* Form */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-field label {
+  margin-bottom: 0.4rem;
+  font-size: 0.9rem; /* Matches */
+  font-weight: 600; /* Updated */
+  color: var(--text-dark);
+}
+
+.form-field input {
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px; /* Updated */
+  font-size: 1rem;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+.form-field input:focus {
+  outline: none;
+  border-color: var(--light-green);
+  box-shadow: 0 0 6px rgba(42, 119, 42, 0.25); /* Updated */
+}
+
+/* Button */
+.btn {
+  padding: 0.9rem; /* Updated */
+  border-radius: 8px; /* Updated */
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: background 0.3s;
+}
+
+.btn-primary {
+  background-color: var(--light-green);
+  color: var(--white);
+}
+
+.btn-primary:hover {
+  background: rgb(63, 146, 63);
+  transform: translateY(-1px);
+}
+
+.full-width {
+  width: 100%;
+}
+
+/* Links */
+.auth-links {
+  text-align: center;
+  margin-top: 1.2rem;
+  font-size: 0.95rem;
+  color: var(--text-light);
+}
+
+.auth-links a {
+  color: var(--light-green);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.auth-links a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 500px) {
+  .auth-card { padding: 1.5rem; }
+  .auth-header h1 { font-size: 1.5rem; }
+}

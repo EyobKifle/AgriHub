@@ -211,36 +211,53 @@
 
 /* --- Dark Mode Styles --- */
 body.dark-mode .community p,
-body.dark-mode .sidebar ul li span,
 body.dark-mode .new-discussion p,
 body.dark-mode .discussion-card p,
 body.dark-mode .discussion-card .time,
 body.dark-mode .discussion-card .tags {
-    color: #bbb;
+    color: var(--dark-text-secondary);
 }
 
 body.dark-mode .sidebar,
 body.dark-mode .new-discussion,
 body.dark-mode .discussions .discussion-card {
-    background-color: #1f1f1f;
+    background-color: var(--dark-surface);
+    border-color: var(--dark-border);
     box-shadow: 0 2px 5px rgba(255,255,255,0.05);
 }
 
 body.dark-mode .sidebar ul li {
-    border-bottom-color: #333;
+    border-bottom-color: var(--dark-border);
 }
 
 body.dark-mode .community-stats p,
 body.dark-mode .discussion-card .author,
 body.dark-mode .discussion-card .interaction {
-    color: #e0e0e0;
+    color: var(--dark-text-primary);
+}
+
+body.dark-mode .community h1,
+body.dark-mode .sidebar h2,
+body.dark-mode .sidebar ul li a,
+body.dark-mode .community-stats h3,
+body.dark-mode .new-discussion h2,
+body.dark-mode .discussion-card h3 a {
+    color: var(--light-green); /* Use the lighter, more vibrant green for accents */
+}
+
+body.dark-mode .sidebar ul li span {
+    color: var(--dark-text-secondary);
 }
 
 body.dark-mode .search-filter input,
 body.dark-mode .search-filter select,
 body.dark-mode .new-discussion form input,
 body.dark-mode .new-discussion form textarea {
-    background-color: #333;
-    border-color: #555;
-    color: #e0e0e0;
+    background-color: var(--dark-border);
+    border-color: var(--dark-border);
+    color: var(--dark-text-primary);
+}
+
+body.dark-mode .new-discussion .btn.post:hover {
+    background-color: rgb(63, 146, 63); /* A slightly brighter green for hover */
 }

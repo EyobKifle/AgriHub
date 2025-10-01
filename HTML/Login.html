@@ -1,56 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login - AgriHub</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <title>Login - AgriHub</title>
+ <link rel="stylesheet" href="../Css/login.css" />
   <link rel="stylesheet" href="../Css/header.css" />
-  <link rel="stylesheet" href="../Css/login.css" />
+  <link rel="stylesheet" href="../Css/footer.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-</head>
-<body>
-  <header class="header">
-    <div class="container header-container">
-      <a href="HomePage.html" class="logo"><i class="fa-solid fa-leaf"></i> AgriHub</a>
-      <nav class="nav-links">
-        <a href="Community.html"><i class="fa-solid fa-users"></i> Community</a>
-        <a href="News.html"><i class="fa-regular fa-newspaper"></i> News</a>
-        <a href="Marketplace.html"><i class="fa-solid fa-store"></i> Marketplace</a>
-        <a href="Farming-Guidance.html"><i class="fa-solid fa-book-open"></i> Farming Guidance</a>
-      </nav>
-      <div class="header-actions">
-        <ul class="header-controls">
-          <li class="dropdown">
-            <a href="#" class="dropbtn">Language <i class="fas fa-caret-down"></i></a>
-            <div class="dropdown-content">
-              <a href="#">English</a>
-              <a href="#">አማርኛ (Amharic)</a>
-              <a href="#">Afaan Oromoo</a>
-              <a href="#">ትግርኛ (Tigrinya)</a>
-            </div>
-          </li>
-          <li>
-            <label class="switch">
-              <input type="checkbox" class="dark-mode-toggle" />
-              <span class="slider"></span>
-            </label>
-          </li>
-        </ul>
-        <div class="header-buttons">
-          <a href="Login.html" class="btn btn-secondary">Login</a>
-          <a href="Signup.html" class="btn btn-primary">Sign Up</a>
-        </div>
-      </div>
-      <div class="mobile-menu-toggle">
-        <i class="fas fa-bars"></i>
-      </div>
-    </div>
-  </header>
-
+  </head>
+  <body>
+   <div id="header-placeholder"></div>
   <!-- LOGIN FORM -->
   <section class="form-container">
     <form action="/login" method="post" class="login-form">
-      <h1 class="title-text">AgriHub</h1>
+      <h1 class="title-text"><i class="fa-solid fa-leaf"></i>AgriHub</h1>
       <p class="subtitle-text">Welcome to AgriHub. Login to your account</p>
 
       <div class="input-box">
@@ -72,6 +36,6 @@
     </form>
   </section>
 
-  <script src="header.js"></script>
+  <script type="module" src="../Js/site.js"></script>
 </body>
 </html>
