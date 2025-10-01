@@ -14,7 +14,7 @@ export const loadHeader = async () => {
       return;
     }
 
-    const response = await fetch('header.html');
+const response = await fetch('../HTML/header.html');
     if (!response.ok) {
       throw new Error(`Failed to load header.html: ${response.status}`);
     }
