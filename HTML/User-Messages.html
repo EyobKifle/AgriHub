@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages - AgriHub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../Css/User-Dashboard.css">
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <i class="fa-solid fa-leaf"></i>
+                <span>AgriHub</span>
+            </div>
+            <ul class="sidebar-nav">
+                <li><a href="User-Dashboard.html"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+                <li><a href="User-Profile.html"><i class="fa-solid fa-user"></i> My Profile</a></li>
+                <li><a href="User-Listings.html"><i class="fa-solid fa-list-check"></i> My Listings</a></li>
+                <li><a href="User-Orders.html"><i class="fa-solid fa-receipt"></i> Order History</a></li>
+                <li><a href="User-Messages.html" class="active"><i class="fa-solid fa-envelope"></i> Messages</a></li>
+                <li><a href="User-Discussions.html"><i class="fa-solid fa-comments"></i> My Discussions</a></li>
+                <li><a href="User-Settings.html"><i class="fa-solid fa-gear"></i> Settings</a></li>
+            </ul>
+             <div class="sidebar-footer">
+                <div class="profile-dropdown">
+                    <img src="" alt="User Avatar">
+                    <div>
+                        <div class="profile-name">John Farmer</div>
+                        <small>Logout</small>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-content no-padding">
+            <div class="messages-layout">
+                <div class="conversations-list">
+                    <div class="messages-header">
+                        <h2>Conversations</h2>
+                        <button class="btn-icon"><i class="fa-solid fa-pen-to-square"></i></button>
+                    </div>
+                    <div class="conversation-item active">
+                        <img src="https://placehold.co/80x80/e9c46a/FFF?text=A" alt="Abebe C.">
+                        <div class="convo-details">
+                            <div class="convo-header">
+                                <span class="convo-name">Abebe C.</span>
+                                <span class="convo-time">3h ago</span>
+                            </div>
+                            <p class="convo-preview">Is the Organic Teff still available? I am interested.</p>
+                        </div>
+                    </div>
+                    <div class="conversation-item">
+                        <img src="https://placehold.co/80x80/f4a261/FFF?text=S" alt="Samson G.">
+                        <div class="convo-details">
+                            <div class="convo-header">
+                                <span class="convo-name">Samson G.</span>
+                                <span class="convo-time">1d ago</span>
+                            </div>
+                            <p class="convo-preview">Thank you for the eggs! They were perfect.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-panel">
+                    <div class="messages-header">
+                        <h2>Abebe C.</h2>
+                        <small>Regarding: Organic Teff</small>
+                    </div>
+                    <div class="chat-messages">
+                        <!-- Chat messages would be rendered here -->
+                        <div class="message received">
+                            <p>Is the Organic Teff still available? I am interested.</p>
+                            <span class="time">3:15 PM</span>
+                        </div>
+                        <div class="message sent">
+                            <p>Yes, it is! How many quintals are you looking for?</p>
+                            <span class="time">3:16 PM</span>
+                        </div>
+                    </div>
+                    <div class="chat-input-area" id="chat-form">
+                        <div id="chat-file-previews" class="chat-file-previews"></div>
+                        <div class="chat-input-controls">
+                            <label for="chat-file-upload" class="btn-icon" title="Attach image">
+                                <i class="fa-solid fa-paperclip"></i>
+                            </label>
+                            <input type="file" id="chat-file-upload" accept="image/*" hidden>
+                            <input type="text" id="chat-message-input" placeholder="Type your message...">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa-solid fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const imageUpload = document.getElementById('chat-file-upload');
+            const previewsContainer = document.getElementById('chat-file-previews');
+
+            imageUpload.addEventListener('change', function() {
+                previewsContainer.innerHTML = ''; // Clear previous previews
+                const file = this.files[0];
+                if (file && file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const previewWrapper = document.createElement('div');
+                        previewWrapper.className = 'chat-preview-item';
+                        previewWrapper.innerHTML = `
+                            <img src="${e.target.result}" alt="Image preview">
+                            <button class="remove-preview">&times;</button>
+                        `;
+                        previewsContainer.appendChild(previewWrapper);
+
+                        previewWrapper.querySelector('.remove-preview').addEventListener('click', () => {
+                            imageUpload.value = ''; // Clear the file input
+                            previewsContainer.innerHTML = ''; // Remove the preview
+                        });
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Add logic here to handle form submission (sending text and image)
+        });
+    </script>
+</body>
+</html>
