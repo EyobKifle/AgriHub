@@ -1,4 +1,5 @@
 import { fetchAndCache } from './cache.js';
+import { translatePageContent } from './translator.js';
 
 /**
  * Loads the shared header content into the page.
@@ -52,6 +53,19 @@ export const initializeHeaderScripts = () => {
     dropbtn.addEventListener('click', (e) => {
       e.preventDefault();
       dropdown.classList.toggle('active');
+    });
+
+    // Add event listener to the dropdown content for language selection
+    dropdown.addEventListener('click', (e) => {
+      const langLink = e.target.closest('[data-lang]');
+      if (langLink) {
+        e.preventDefault();
+        const targetLang = langLink.dataset.lang;
+        console.log(`Language selected: ${targetLang}`);
+        // Call the main translation function
+        translatePageContent(targetLang);
+        dropdown.classList.remove('active'); // Close dropdown after selection
+      }
     });
 
     /**

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - AgriHub Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../Css/Admin-Dashboard.css">
+</head>
+<body>
+    <!-- Header is now outside the container to be full-width -->
+    <header class="main-header-bar">
+        <div class="header-left">
+            <button class="hamburger-menu" id="hamburger-menu" aria-label="Toggle Menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+        <div class="header-center">
+            <div class="logo">
+                <i class="fa-solid fa-leaf"></i>
+                <span>AgriHub</span>
+            </div>
+        </div>
+        <div class="header-right">
+            <a href="Settings.html" class="profile-link" aria-label="User Settings">
+                <div class="profile-avatar">A</div>
+            </a>
+        </div>
+    </header>
+
+    <div class="dashboard-container">
+        <aside class="sidebar" id="sidebar">
+            <ul class="sidebar-nav">
+                <li><a href="Admin-Dashboard.html"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
+                <li><a href="User-Management.html"><i class="fa-solid fa-users"></i> User Management</a></li>
+                <li><a href="Listings-Management.html"><i class="fa-solid fa-store"></i> Listing Management</a></li>
+                <li><a href="News-Management.html"><i class="fa-solid fa-newspaper"></i> News Management</a></li>
+                <li><a href="Reports-Management.html"><i class="fa-solid fa-flag"></i> Reports</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <div class="content-wrapper">
+                <div class="main-header">
+                    <h1>Settings</h1>
+                    <p>Manage your administrator profile and site-wide configurations.</p>
+                </div>
+
+                <div class="settings-grid">
+                    <!-- Admin Profile Card -->
+                    <div class="card">
+                        <h3 class="card-title">Admin Profile</h3>
+                        <form class="settings-form">
+                            <div class="form-group">
+                                <label for="admin-name">Full Name</label>
+                                <input type="text" id="admin-name" value="Admin User">
+                            </div>
+                            <div class="form-group">
+                                <label for="admin-email">Email Address</label>
+                                <input type="email" id="admin-email" value="admin@agrihub.com" disabled>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Save Profile</button>
+                        </form>
+                    </div>
+
+                    <!-- Security Settings Card -->
+                    <div class="card">
+                        <h3 class="card-title">Security Settings</h3>
+                        <form class="settings-form">
+                            <div class="form-group">
+                                <label for="current-password">Current Password</label>
+                                <input type="password" id="current-password" placeholder="••••••••">
+                            </div>
+                            <div class="form-group">
+                                <label for="new-password">New Password</label>
+                                <input type="password" id="new-password" placeholder="••••••••">
+                            </div>
+                            <div class="form-group">
+                                <label for="confirm-password">Confirm New Password</label>
+                                <input type="password" id="confirm-password" placeholder="••••••••">
+                            </div>
+                            <div class="form-group form-group-toggle">
+                                <label for="2fa-toggle">Two-Factor Authentication (2FA)</label>
+                                <label class="switch">
+                                    <input type="checkbox" id="2fa-toggle">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Update Password</button>
+                        </form>
+                    </div>
+
+                    <!-- Platform Configuration Card -->
+                    <div class="card">
+                        <h3 class="card-title">Platform Configuration</h3>
+                        <form class="settings-form">
+                            <div class="form-group">
+                                <label for="transaction-fee">Marketplace Transaction Fee (%)</label>
+                                <input type="number" id="transaction-fee" value="5" min="0" max="100">
+                            </div>
+                            <div class="form-group">
+                                <label for="listing-limit">User Listing Limit</label>
+                                <input type="number" id="listing-limit" value="10" min="1">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Save Configuration</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="logout-section">
+                    <p class="form-text">End your current session and return to the login page.</p>
+                    <button type="button" class="btn btn-danger"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const hamburger = document.getElementById('hamburger-menu');
+            const container = document.querySelector('.dashboard-container');
+
+            hamburger.addEventListener('click', () => {
+                container.classList.toggle('sidebar-collapsed');
+            });
+        });
+    </script>
+</body>
+</html>

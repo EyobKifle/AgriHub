@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports Management - AgriHub Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../Css/Admin-Dashboard.css">
+</head>
+<body>
+    <!-- Header is now outside the container to be full-width -->
+    <header class="main-header-bar">
+        <div class="header-left">
+            <button class="hamburger-menu" id="hamburger-menu" aria-label="Toggle Menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+        <div class="header-center">
+            <div class="logo">
+                <i class="fa-solid fa-leaf"></i>
+                <span>AgriHub</span>
+            </div>
+        </div>
+        <div class="header-right">
+            <a href="Settings.html" class="profile-link" aria-label="User Settings">
+                <div class="profile-avatar">A</div>
+            </a>
+        </div>
+    </header>
+
+    <div class="dashboard-container">
+        <aside class="sidebar" id="sidebar">
+            <ul class="sidebar-nav">
+                <li><a href="Admin-Dashboard.html"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
+                <li><a href="User-Management.html"><i class="fa-solid fa-users"></i> User Management</a></li>
+                <li><a href="Listings-Management.html"><i class="fa-solid fa-store"></i> Listing Management</a></li>
+                <li><a href="News-Management.html"><i class="fa-solid fa-newspaper"></i> News Management</a></li>
+                <li><a href="Reports-Management.html" class="active"><i class="fa-solid fa-flag"></i> Reports</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <div class="content-wrapper">
+                <div class="main-header">
+                    <h1>Reports Management</h1>
+                    <p>Review and resolve user-submitted reports from the forum and marketplace.</p>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">Placeholder Content</h3>
+                    <p>This is the placeholder page for Reports Management. The main table for managing user reports will be built here.</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const hamburger = document.getElementById('hamburger-menu');
+            const container = document.querySelector('.dashboard-container');
+
+            hamburger.addEventListener('click', () => {
+                container.classList.toggle('sidebar-collapsed');
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriHub - Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../Css/Admin-Dashboard.css">
+</head>
+<body>
+
+    <!-- Header is now outside the container to be full-width -->
+    <header class="main-header-bar">
+        <div class="header-left">
+            <button class="hamburger-menu" id="hamburger-menu" aria-label="Toggle Menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+        <div class="header-center">
+            <div class="logo">
+                <i class="fa-solid fa-leaf"></i>
+                <span>AgriHub</span>
+            </div>
+        </div>
+        <div class="header-right">
+            <a href="Settings.html" class="profile-link" aria-label="User Settings">
+                <div class="profile-avatar">A</div>
+            </a>
+        </div>
+    </header>
+
+    <div class="dashboard-container">
+        <aside class="sidebar" id="sidebar">
+            <ul class="sidebar-nav">
+                <li><a href="Admin-Dashboard.html" class="active"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
+                <li><a href="User-Management.html"><i class="fa-solid fa-users"></i> User Management</a></li>
+                <li><a href="Listings-Management.html"><i class="fa-solid fa-store"></i> Listing Management</a></li>
+                <li><a href="News-Management.html"><i class="fa-solid fa-newspaper"></i> News Management</a></li>
+                <li><a href="Reports-Management.html"><i class="fa-solid fa-flag"></i> Reports</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+         
+            <div class="content-wrapper">
+                <div class="main-header">
+                    <h1>Dashboard</h1>
+                    <p>Welcome back, Admin! Here's an overview of your platform.</p>
+                </div>
+                <div class="cards-grid chart-grid">
+                    <div class="card">
+                        <h3 class="card-title">User Growth (Last 6 Months)</h3>
+                        <div class="chart-container">[Chart.js: User Growth]</div>
+                    </div>
+                    <div class="card">
+                        <h3 class="card-title">Listing Categories</h3>
+                        <div class="chart-container">[Chart.js: Doughnut Chart]</div>
+                    </div>
+                </div>
+                <div class="cards-grid summary-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">Total Users</span>
+                            <span class="card-icon icon-users"><i class="fa-solid fa-users"></i></span>
+                        </div>
+                        <div class="card-value">1,250</div>
+                        <div class="card-footer">+12% this month</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">Active Listings</span>
+                            <span class="card-icon icon-listings"><i class="fa-solid fa-store"></i></span>
+                        </div>
+                        <div class="card-value">320</div>
+                        <div class="card-footer">+30 new today</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">Pending Reports</span>
+                            <span class="card-icon icon-news"><i class="fa-solid fa-flag"></i></span>
+                        </div>
+                        <div class="card-value">4</div>
+                        <div class="card-footer">Action required</div>
+                    </div>
+                </div>
+
+                <!-- Recent Items Section -->
+                <div class="recent-items-grid">
+                    <div class="card list-card">
+                        <h3 class="card-title">Recent Users</h3>
+                        <ul class="recent-list">
+                            <li><a href="#">John Farmer</a><span>Joined: 2025-09-15</span></li>
+                            <li><a href="#">Jane Appleseed</a><span>Joined: 2025-09-14</span></li>
+                            <li><a href="#">Sam Cropson</a><span>Joined: 2025-09-14</span></li>
+                            <li><a href="#">Abebe Bikila</a><span>Joined: 2025-09-13</span></li>
+                        </ul>
+                        <a href="#" class="view-all-link">View All Users &rarr;</a>
+                    </div>
+                    <div class="card list-card">
+                        <h3 class="card-title">Recent Listings</h3>
+                        <ul class="recent-list">
+                            <li><a href="#">Organic Teff</a><span>By: J. Farmer</span></li>
+                            <li><a href="#">Used Tractor Tire</a><span>By: S. Cropson</span></li>
+                            <li><a href="#">Fresh Eggs</a><span>By: Local Farms Co.</span></li>
+                            <li><a href="#">Irrigation Pump</a><span>By: A. Bikila</span></li>
+                        </ul>
+                        <a href="#" class="view-all-link">View All Listings &rarr;</a>
+                    </div>
+                    <div class="card list-card">
+                        <h3 class="card-title">Forum Reports</h3>
+                        <ul class="recent-list">
+                            <li><a href="#">Spam Post</a><span>Reported by: J. Appleseed</span></li>
+                            <li><a href="#">Inappropriate Language</a><span>Reported by: A. Bikila</span></li>
+                            <li><a href="#">Off-topic Content</a><span>Reported by: S. Cropson</span></li>
+                        </ul>
+                        <a href="#" class="view-all-link">Manage Reports &rarr;</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const hamburger = document.getElementById('hamburger-menu');
+            const container = document.querySelector('.dashboard-container');
+
+            hamburger.addEventListener('click', () => {
+                container.classList.toggle('sidebar-collapsed');
+            });
+        });
+    </script>
+</body>
+</html>

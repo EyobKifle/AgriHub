@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management - AgriHub Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../Css/Admin-Dashboard.css">
+</head>
+<body>
+    <!-- Header is now outside the container to be full-width -->
+    <header class="main-header-bar">
+        <div class="header-left">
+            <button class="hamburger-menu" id="hamburger-menu" aria-label="Toggle Menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+        <div class="header-center">
+            <div class="logo">
+                <i class="fa-solid fa-leaf"></i>
+                <span>AgriHub</span>
+            </div>
+        </div>
+        <div class="header-right">
+            <a href="Settings.html" class="profile-link" aria-label="User Settings">
+                <div class="profile-avatar">A</div>
+            </a>
+        </div>
+    </header>
+
+    <div class="dashboard-container">
+        <aside class="sidebar" id="sidebar">
+            <ul class="sidebar-nav">
+                <li><a href="Admin-Dashboard.html"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
+                <li><a href="User-Management.html" class="active"><i class="fa-solid fa-users"></i> User Management</a></li>
+                <li><a href="Listings-Management.html"><i class="fa-solid fa-store"></i> Listing Management</a></li>
+                <li><a href="News-Management.html"><i class="fa-solid fa-newspaper"></i> News Management</a></li>
+                <li><a href="Reports-Management.html"><i class="fa-solid fa-flag"></i> Reports</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <div class="content-wrapper">
+                <div class="main-header">
+                    <h1>User Management</h1>
+                    <p>View, edit, or manage user profiles and their activities.</p>
+                </div>
+
+                <!-- Page Controls: Search, Filter, Actions -->
+                <div class="page-controls">
+                    <div class="search-filter-group">
+                        <input type="text" class="search-input" placeholder="Search users by name or email...">
+                        <select class="filter-select" aria-label="Filter by role">
+                            <option value="">All Roles</option>
+                            <option value="admin">Admin</option>
+                            <option value="seller">Seller</option>
+                            <option value="buyer">Buyer</option>
+                        </select>
+                        <select class="filter-select" aria-label="Filter by status">
+                            <option value="">All Statuses</option>
+                            <option value="active">Active</option>
+                            <option value="pending">Pending</option>
+                            <option value="banned">Banned</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary"><i class="fa-solid fa-plus"></i> Add User</button>
+                </div>
+
+                <!-- User Data Table -->
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" aria-label="Select all users"></th>
+                                <th>User</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Joined Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="checkbox" aria-label="Select user"></td>
+                                <td>
+                                    <div class="user-info">
+                                        <div class="user-avatar" style="background-color: #2a9d8f;">J</div>
+                                        <div>
+                                            <div class="user-name">John Farmer</div>
+                                            <div class="user-email">john.f@example.com</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>Seller</td>
+                                <td><span class="status status-active">Active</span></td>
+                                <td>2025-08-15</td>
+                                <td class="action-buttons">
+                                    <button title="View Profile"><i class="fa-solid fa-eye"></i></button>
+                                    <button title="Edit User"><i class="fa-solid fa-pen"></i></button>
+                                    <button title="Ban User"><i class="fa-solid fa-ban"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" aria-label="Select user"></td>
+                                <td>
+                                    <div class="user-info">
+                                        <div class="user-avatar" style="background-color: #e9c46a;">M</div>
+                                        <div>
+                                            <div class="user-name">Meron K.</div>
+                                            <div class="user-email">meron.k@example.com</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>Buyer</td>
+                                <td><span class="status status-pending">Pending</span></td>
+                                <td>2025-09-01</td>
+                                <td class="action-buttons">
+                                    <button title="View Profile"><i class="fa-solid fa-eye"></i></button>
+                                    <button title="Edit User"><i class="fa-solid fa-pen"></i></button>
+                                    <button title="Ban User"><i class="fa-solid fa-ban"></i></button>
+                                </td>
+                            </tr>
+                            <!-- More user rows would be added here dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const hamburger = document.getElementById('hamburger-menu');
+            const container = document.querySelector('.dashboard-container');
+
+            hamburger.addEventListener('click', () => {
+                container.classList.toggle('sidebar-collapsed');
+            });
+        });
+    </script>
+</body>
+</html>
