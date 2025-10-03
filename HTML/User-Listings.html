@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Listings - AgriHub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../Css/User-Dashboard.css">
+</head>
+<body>
+    <!-- Full-width Header -->
+    <header class="main-header-bar">
+        <div class="header-left">
+            <button class="hamburger-menu" id="hamburger-menu" aria-label="Toggle Menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+        <div class="header-center">
+            <div class="logo">
+                <i class="fa-solid fa-leaf"></i>
+                <span>AgriHub</span>
+            </div>
+        </div>
+        <div class="header-right">
+            <a href="User-Profile.html" class="profile-link" aria-label="User Profile">
+                <div class="profile-avatar">J</div>
+            </a>
+        </div>
+    </header>
+    
+    <div class="dashboard-container">
+        <aside class="sidebar" id="sidebar">
+            <ul class="sidebar-nav">
+                <li><a href="User-Dashboard.html"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+                <li><a href="User-Profile.html"><i class="fa-solid fa-user"></i> My Profile</a></li>
+                <li><a href="User-Listings.html" class="active"><i class="fa-solid fa-list-check"></i> My Listings</a></li>
+                <li><a href="User-Orders.html"><i class="fa-solid fa-receipt"></i> Order History</a></li>
+                <li><a href="User-Messages.html"><i class="fa-solid fa-envelope"></i> Messages</a></li>
+                <li><a href="User-Discussions.html"><i class="fa-solid fa-comments"></i> My Discussions</a></li>
+                <li><a href="User-Settings.html"><i class="fa-solid fa-gear"></i> Settings</a></li>
+            </ul>
+             <div class="sidebar-footer">
+                <div class="profile-dropdown">
+                    
+                    <div>
+                        <div class="profile-name">John Farmer</div>
+                        <small>Logout</small>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="main-header">
+                <h1>My Listings</h1>
+                <p>View, edit, or delete the products you have listed for sale.</p>
+            </div>
+
+            <div class="page-controls">
+                <div class="search-filter-group">
+                    <!-- Filters for listings could be added here later -->
+                </div>
+                <button class="btn btn-primary" id="add-listing-btn"><i class="fa-solid fa-plus"></i> Add New Listing</button>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="product-info">
+                                    <img class="product-thumbnail" src="https://placehold.co/80x60/2a9d8f/FFF?text=Teff" alt="Organic Teff">
+                                    <span>Organic Teff</span>
+                                </div>
+                            </td>
+                            <td>Grains</td>
+                            <td>ETB 4,500 / Quintal</td>
+                            <td><span class="status status-active">Active</span></td>
+                            <td class="action-buttons">
+                                <button title="Edit Listing"><i class="fa-solid fa-pen"></i></button>
+                                <button title="Delete Listing"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="product-info">
+                                    <img class="product-thumbnail" src="https://placehold.co/80x60/e9c46a/FFF?text=Eggs" alt="Fresh Eggs">
+                                    <span>Farm Fresh Eggs</span>
+                                </div>
+                            </td>
+                            <td>Produce</td>
+                            <td>ETB 15 / pc</td>
+                            <td><span class="status status-sold">Sold</span></td>
+                            <td class="action-buttons">
+                                <button title="View Details"><i class="fa-solid fa-eye"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="product-info">
+                                    <img class="product-thumbnail" src="https://placehold.co/80x60/f4a261/FFF?text=Tire" alt="Tractor Tire">
+                                    <span>Used Tractor Tire</span>
+                                </div>
+                            </td>
+                            <td>Equipment</td>
+                            <td>ETB 3,000</td>
+                            <td><span class="status status-pending">Pending Approval</span></td>
+                            <td class="action-buttons">
+                                <button title="Edit Listing"><i class="fa-solid fa-pen"></i></button>
+                                <button title="Delete Listing"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </main>
+    </div>
+    
+    <!-- Add New Listing Modal -->
+    <div class="modal-overlay" id="add-listing-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Listing</h2>
+                <button class="close-modal" id="close-modal-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="new-listing-form">
+                    <div class="form-group">
+                        <label for="product-name">Product Name</label>
+                        <input type="text" id="product-name" placeholder="e.g., Organic Teff" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="product-category">Category</label>
+                        <select id="product-category" required>
+                            <option value="" disabled selected>Select a category</option>
+                            <option value="grains">Grains</option>
+                            <option value="produce">Produce</option>
+                            <option value="equipment">Equipment</option>
+                            <option value="coffee">Coffee</option>
+                            <option value="fertilizers">Fertilizers</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="product-price">Price (ETB)</label>
+                        <input type="number" id="product-price" placeholder="e.g., 3000" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="product-description">Description</label>
+                        <textarea id="product-description" rows="4" placeholder="Provide details about your product..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Product Image</label>
+                        <label for="product-image-upload" class="image-upload-box">
+                            <div id="image-preview">
+                                <i class="fa-solid fa-cloud-arrow-up"></i>
+                                <span>Click to upload or drag & drop</span>
+                            </div>
+                        </label>
+                        <input type="file" id="product-image-upload" accept="image/*" hidden>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancel-modal-btn">Cancel</button>
+                <button type="submit" form="new-listing-form" class="btn btn-primary">Save Listing</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Hamburger Menu
+            const hamburger = document.getElementById('hamburger-menu');
+            const container = document.querySelector('.dashboard-container');
+            hamburger.addEventListener('click', () => {
+                container.classList.toggle('sidebar-collapsed');
+            });
+
+            const addListingBtn = document.getElementById('add-listing-btn');
+            const modal = document.getElementById('add-listing-modal');
+            const closeModalBtns = [document.getElementById('close-modal-btn'), document.getElementById('cancel-modal-btn')];
+
+            addListingBtn.addEventListener('click', () => modal.classList.add('active'));
+            
+            const closeModal = () => modal.classList.remove('active');
+            closeModalBtns.forEach(btn => btn.addEventListener('click', closeModal));
+
+            // Close modal if clicking on the overlay
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+
+            // Image preview logic
+            const imageUpload = document.getElementById('product-image-upload');
+            const imagePreview = document.getElementById('image-preview');
+            imageUpload.addEventListener('change', function() {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        imagePreview.innerHTML = `<img src="${e.target.result}" alt="Product preview">`;
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

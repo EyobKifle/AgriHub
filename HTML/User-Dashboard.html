@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriHub - User Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../Css/User-Dashboard.css">
+</head>
+<body>
+    <!-- Full-width Header -->
+    <header class="main-header-bar">
+        <div class="header-left">
+            <button class="hamburger-menu" id="hamburger-menu" aria-label="Toggle Menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+        <div class="header-center">
+            <div class="logo">
+                <i class="fa-solid fa-leaf"></i>
+                <span>AgriHub</span>
+            </div>
+        </div>
+        <div class="header-right">
+            <a href="User-Profile.html" class="profile-link" aria-label="User Profile">
+                <div class="profile-avatar">J</div>
+            </a>
+        </div>
+    </header>
+    
+    <div class="dashboard-container">
+        <aside class="sidebar" id="sidebar">
+            <ul class="sidebar-nav">
+                <li><a href="User-Dashboard.html" class="active"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+                <li><a href="User-Profile.html"><i class="fa-solid fa-user"></i> My Profile</a></li>
+                <li><a href="User-Listings.html"><i class="fa-solid fa-list-check"></i> My Listings</a></li>
+                <li><a href="User-Orders.html"><i class="fa-solid fa-receipt"></i> Order History</a></li>
+                <li><a href="User-Messages.html"><i class="fa-solid fa-envelope"></i> Messages</a></li>
+                <li><a href="User-Discussions.html"><i class="fa-solid fa-comments"></i> My Discussions</a></li>
+                <li><a href="User-Settings.html"><i class="fa-solid fa-gear"></i> Settings</a></li>
+            </ul>
+             <div class="sidebar-footer">
+                <div class="profile-dropdown">
+                    <div>
+                        <div class="profile-name">John Farmer</div>
+                        <small>Logout</small>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="main-header">
+                <h1>Welcome back, John!</h1>
+                <p>Here's what's new on AgriHub today.</p>
+            </div>
+
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Active Listings</span>
+                        <span class="card-icon icon-listings"><i class="fa-solid fa-list-check"></i></span>
+                    </div>
+                    <div class="card-value">5</div>
+                    <div class="card-footer">Manage your products</div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Unread Messages</span>
+                        <span class="card-icon icon-users"><i class="fa-solid fa-envelope"></i></span>
+                    </div>
+                    <div class="card-value">2</div>
+                    <div class="card-footer">From 2 buyers</div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Sales This Month</span>
+                        <span class="card-icon icon-news"><i class="fa-solid fa-newspaper"></i></span>
+                    </div>
+                    <div class="card-value">ETB 4,500</div>
+                    <div class="card-footer">+15% from last month</div>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <div class="main-header">
+                    <h2>Recent Activity</h2>
+                    <p>Here's what has happened recently on your account.</p>
+                </div>
+                <div class="card activity-feed">
+                    <ul class="recent-list">
+                        <li><i class="fa-solid fa-tag activity-icon sale"></i><div>Your listing "Organic Teff" was sold.</div><span class="time">1h ago</span></li>
+                        <li><i class="fa-solid fa-envelope activity-icon message"></i><div>You have a new message from "Abebe C."</div><span class="time">3h ago</span></li>
+                        <li><i class="fa-solid fa-star activity-icon review"></i><div>You received a 5-star review for "Fresh Eggs".</div><span class="time">1d ago</span></li>
+                        <li><i class="fa-solid fa-plus activity-icon listing"></i><div>You listed a new product: "Used Tractor Tire".</div><span class="time">2d ago</span></li>
+                    </ul>
+                </div>
+            </div>
+
+        </main>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const hamburger = document.getElementById('hamburger-menu');
+            const container = document.querySelector('.dashboard-container');
+
+            hamburger.addEventListener('click', () => {
+                container.classList.toggle('sidebar-collapsed');
+            });
+        });
+    </script>
+</body>
+</html>

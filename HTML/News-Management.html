@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News Management - AgriHub Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../Css/Admin-Dashboard.css">
+</head>
+<body>
+    <!-- Header is now outside the container to be full-width -->
+    <header class="main-header-bar">
+        <div class="header-left">
+            <button class="hamburger-menu" id="hamburger-menu" aria-label="Toggle Menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+        <div class="header-center">
+            <div class="logo">
+                <i class="fa-solid fa-leaf"></i>
+                <span>AgriHub</span>
+            </div>
+        </div>
+        <div class="header-right">
+            <a href="Settings.html" class="profile-link" aria-label="User Settings">
+                <div class="profile-avatar">A</div>
+            </a>
+        </div>
+    </header>
+
+    <div class="dashboard-container">
+        <aside class="sidebar" id="sidebar">
+            <ul class="sidebar-nav">
+                <li><a href="Admin-Dashboard.html"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
+                <li><a href="User-Management.html"><i class="fa-solid fa-users"></i> User Management</a></li>
+                <li><a href="Listings-Management.html"><i class="fa-solid fa-store"></i> Listing Management</a></li>
+                <li><a href="News-Management.html" class="active"><i class="fa-solid fa-newspaper"></i> News Management</a></li>
+                <li><a href="Reports-Management.html"><i class="fa-solid fa-flag"></i> Reports</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <div class="content-wrapper">
+                <div class="main-header">
+                    <h1>News Management</h1>
+                    <p>Create, edit, and publish articles.</p>
+                </div>
+
+                <!-- Page Controls -->
+                <div class="page-controls">
+                    <a href="../Newsletter Template/index.html" class="btn btn-primary">
+                        <i class="fa-solid fa-plus"></i> Create News
+                    </a>
+                </div>
+
+                <!-- News Management Grid -->
+                <div class="admin-news-grid">
+                    <article class="news-card">
+                        <div class="card-image">
+                            <img src="https://placehold.co/400x250/1E4620/FFF?text=New+Subsidies" alt="News article image">
+                            <div class="card-admin-overlay">
+                                <button class="btn btn-secondary btn-sm" title="Edit Post"><i class="fa-solid fa-pen"></i></button>
+                                <button class="btn btn-danger btn-sm" title="Delete Post"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-meta-top">
+                                <span class="card-category">Policy</span>
+                                <span class="status status-active">Published</span>
+                            </div>
+                            <h3>Government Announces New Agricultural Subsidies</h3>
+                            <div class="card-meta">
+                                <span class="author">Admin</span>
+                                <span class="time">2 hours ago</span>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="news-card">
+                        <div class="card-image">
+                            <img src="https://placehold.co/400x250/D97706/FFF?text=Coffee+Prices" alt="News article image">
+                            <div class="card-admin-overlay">
+                                <button class="btn btn-secondary btn-sm" title="Edit Post"><i class="fa-solid fa-pen"></i></button>
+                                <button class="btn btn-danger btn-sm" title="Delete Post"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-meta-top">
+                                <span class="card-category">Market</span>
+                                <span class="status status-active">Published</span>
+                            </div>
+                            <h3>Coffee Prices Reach Record High</h3>
+                            <div class="card-meta">
+                                <span class="author">Admin</span>
+                                <span class="time">5 hours ago</span>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="news-card">
+                        <div class="card-image">
+                            <img src="https://placehold.co/400x250/6c757d/FFF?text=Draft+Article" alt="News article image">
+                            <div class="card-admin-overlay">
+                                <button class="btn btn-secondary btn-sm" title="Edit Post"><i class="fa-solid fa-pen"></i></button>
+                                <button class="btn btn-danger btn-sm" title="Delete Post"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-meta-top">
+                                <span class="card-category">Research</span>
+                                <span class="status status-pending">Draft</span>
+                            </div>
+                            <h3>New Teff Variety (Draft)</h3>
+                            <div class="card-meta">
+                                <span class="author">Admin</span>
+                                <span class="time">1 day ago</span>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const hamburger = document.getElementById('hamburger-menu');
+            const container = document.querySelector('.dashboard-container');
+
+            hamburger.addEventListener('click', () => {
+                container.classList.toggle('sidebar-collapsed');
+            });
+        });
+    </script>
+</body>
+</html>

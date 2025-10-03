@@ -1,6 +1,10 @@
-let footerCache = null;
+import { fetchAndCache } from './cache.js';
 
-// Load footer.html into the footer-placeholder
+/**
+ * Loads the shared footer content into the page.
+ * It uses the `fetchAndCache` function to download the footer once and
+ * load it from a saved copy on subsequent page loads for speed.
+ */
 export const loadFooter = async () => {
   const placeholder = document.getElementById('footer-placeholder');
   if (!placeholder) {
@@ -9,18 +13,8 @@ export const loadFooter = async () => {
   }
 
   try {
-    if (footerCache) {
-      placeholder.innerHTML = footerCache;
-      return;
-    }
-
-    const response = await fetch('footer.html');
-    if (!response.ok) {
-      throw new Error(`Failed to load footer.html: ${response.status}`);
-    }
-    const data = await response.text();
+    const data = await fetchAndCache('footerHTML', '../HTML/footer.html');
     placeholder.innerHTML = data;
-    footerCache = data;
   } catch (error) {
     console.error('Error loading footer:', error);
     placeholder.innerHTML = '<p>Error loading footer. Please try again later.</p>';

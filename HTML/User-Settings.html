@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - AgriHub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../Css/User-Dashboard.css">
+</head>
+<body>
+    <!-- Full-width Header -->
+    <header class="main-header-bar">
+        <div class="header-left">
+            <button class="hamburger-menu" id="hamburger-menu" aria-label="Toggle Menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+        <div class="header-center">
+            <div class="logo">
+                <i class="fa-solid fa-leaf"></i>
+                <span>AgriHub</span>
+            </div>
+        </div>
+        <div class="header-right">
+            <a href="User-Profile.html" class="profile-link" aria-label="User Profile">
+                <div class="profile-avatar">J</div>
+            </a>
+        </div>
+    </header>
+    
+    <div class="dashboard-container">
+        <aside class="sidebar" id="sidebar">
+            <ul class="sidebar-nav">
+                <li><a href="User-Dashboard.html"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+                <li><a href="User-Profile.html"><i class="fa-solid fa-user"></i> My Profile</a></li>
+                <li><a href="User-Listings.html"><i class="fa-solid fa-list-check"></i> My Listings</a></li>
+                <li><a href="User-Orders.html"><i class="fa-solid fa-receipt"></i> Order History</a></li>
+                <li><a href="User-Messages.html"><i class="fa-solid fa-envelope"></i> Messages</a></li>
+                <li><a href="User-Discussions.html"><i class="fa-solid fa-comments"></i> My Discussions</a></li>
+                <li><a href="User-Settings.html" class="active"><i class="fa-solid fa-gear"></i> Settings</a></li>
+            </ul>
+             <div class="sidebar-footer">
+                <div class="profile-dropdown">
+                    
+                    <div>
+                        <div class="profile-name">John Farmer</div>
+                        <small>Logout</small>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="main-header">
+                <h1>Settings</h1>
+                <p>Manage your account preferences and site settings.</p>
+            </div>
+
+            <div class="settings-grid">
+                <!-- Notification Settings -->
+                <div class="card">
+                    <h3 class="card-title">Notifications</h3>
+                    <form class="settings-form">
+                        <div class="form-group form-group-toggle">
+                            <label for="email-notifications">Email Notifications</label>
+                            <label class="switch">
+                                <input type="checkbox" id="email-notifications" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <p class="form-text">Receive updates about your listings and messages via email.</p>
+                    </form>
+                </div>
+
+                <!-- Appearance Settings -->
+                <div class="card">
+                    <h3 class="card-title">Appearance</h3>
+                    <form class="settings-form">
+                        <div class="form-group form-group-toggle">
+                            <label for="dark-mode-toggle">Dark Mode</label>
+                            <label class="switch">
+                                <input type="checkbox" id="dark-mode-toggle">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <p class="form-text">Switch between light and dark themes.</p>
+                    </form>
+                </div>
+
+                <!-- Language Settings -->
+                <div class="card">
+                    <h3 class="card-title">Language</h3>
+                    <form class="settings-form">
+                        <div class="form-group">
+                            <label for="language-select">Preferred Language</label>
+                            <select id="language-select">
+                                <option value="en">English</option>
+                                <option value="am">Amharic (አማርኛ)</option>
+                            </select>
+                        </div>
+                        <p class="form-text">Choose the language for your dashboard interface.</p>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const hamburger = document.getElementById('hamburger-menu');
+            const container = document.querySelector('.dashboard-container');
+
+            hamburger.addEventListener('click', () => {
+                container.classList.toggle('sidebar-collapsed');
+            });
+        });
+    </script>
+</body>
+</html>

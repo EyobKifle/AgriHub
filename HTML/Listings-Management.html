@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listing Management - AgriHub Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../Css/Admin-Dashboard.css">
+</head>
+<body>
+    <!-- Header is now outside the container to be full-width -->
+    <header class="main-header-bar">
+        <div class="header-left">
+            <button class="hamburger-menu" id="hamburger-menu" aria-label="Toggle Menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+        <div class="header-center">
+            <div class="logo">
+                <i class="fa-solid fa-leaf"></i>
+                <span>AgriHub</span>
+            </div>
+        </div>
+        <div class="header-right">
+            <a href="Settings.html" class="profile-link" aria-label="User Settings">
+                <div class="profile-avatar">A</div>
+            </a>
+        </div>
+    </header>
+
+    <div class="dashboard-container">
+        <aside class="sidebar" id="sidebar">
+            <ul class="sidebar-nav">
+                <li><a href="Admin-Dashboard.html"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
+                <li><a href="User-Management.html"><i class="fa-solid fa-users"></i> User Management</a></li>
+                <li><a href="Listings-Management.html" class="active"><i class="fa-solid fa-store"></i> Listing Management</a></li>
+                <li><a href="News-Management.html"><i class="fa-solid fa-newspaper"></i> News Management</a></li>
+                <li><a href="Reports-Management.html"><i class="fa-solid fa-flag"></i> Reports</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <div class="content-wrapper">
+                <div class="main-header">
+                    <h1>Listing Management</h1>
+                    <p>Review, approve, or remove marketplace listings.</p>
+                </div>
+
+                <div class="page-controls">
+                    <div class="search-filter-group">
+                        <input type="text" class="search-input" placeholder="Search listings...">
+                        <select class="filter-select" aria-label="Filter by status">
+                            <option value="">All Statuses</option>
+                            <option value="pending">Pending</option>
+                            <option value="active">Active</option>
+                            <option value="rejected">Rejected</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Seller</th>
+                                <th>Category</th>
+                                <th>Price (ETB)</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Used Tractor Tire</td>
+                                <td>John Farmer</td>
+                                <td>Equipment</td>
+                                <td>3,000</td>
+                                <td><span class="status status-pending">Pending</span></td>
+                                <td class="action-buttons">
+                                    <button title="Approve"><i class="fa-solid fa-check"></i></button>
+                                    <button title="Reject"><i class="fa-solid fa-times"></i></button>
+                                    <button title="Delete"><i class="fa-solid fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Organic Teff</td>
+                                <td>Alemayehu T.</td>
+                                <td>Grains</td>
+                                <td>4,500 / Quintal</td>
+                                <td><span class="status status-active">Active</span></td>
+                                <td class="action-buttons">
+                                    <button title="View Listing"><i class="fa-solid fa-eye"></i></button>
+                                    <button title="Delete"><i class="fa-solid fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const hamburger = document.getElementById('hamburger-menu');
+            const container = document.querySelector('.dashboard-container');
+
+            hamburger.addEventListener('click', () => {
+                container.classList.toggle('sidebar-collapsed');
+            });
+        });
+    </script>
+</body>
+</html>
