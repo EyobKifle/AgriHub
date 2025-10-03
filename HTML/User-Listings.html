@@ -8,13 +8,28 @@
     <link rel="stylesheet" href="../Css/User-Dashboard.css">
 </head>
 <body>
-
-    <div class="dashboard-container">
-        <aside class="sidebar">
-            <div class="sidebar-header">
+    <!-- Full-width Header -->
+    <header class="main-header-bar">
+        <div class="header-left">
+            <button class="hamburger-menu" id="hamburger-menu" aria-label="Toggle Menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+        <div class="header-center">
+            <div class="logo">
                 <i class="fa-solid fa-leaf"></i>
                 <span>AgriHub</span>
             </div>
+        </div>
+        <div class="header-right">
+            <a href="User-Profile.html" class="profile-link" aria-label="User Profile">
+                <div class="profile-avatar">J</div>
+            </a>
+        </div>
+    </header>
+    
+    <div class="dashboard-container">
+        <aside class="sidebar" id="sidebar">
             <ul class="sidebar-nav">
                 <li><a href="User-Dashboard.html"><i class="fa-solid fa-house"></i> Dashboard</a></li>
                 <li><a href="User-Profile.html"><i class="fa-solid fa-user"></i> My Profile</a></li>
@@ -26,7 +41,7 @@
             </ul>
              <div class="sidebar-footer">
                 <div class="profile-dropdown">
-                    <img src="" alt="User Avatar">
+                    
                     <div>
                         <div class="profile-name">John Farmer</div>
                         <small>Logout</small>
@@ -164,6 +179,13 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Hamburger Menu
+            const hamburger = document.getElementById('hamburger-menu');
+            const container = document.querySelector('.dashboard-container');
+            hamburger.addEventListener('click', () => {
+                container.classList.toggle('sidebar-collapsed');
+            });
+
             const addListingBtn = document.getElementById('add-listing-btn');
             const modal = document.getElementById('add-listing-modal');
             const closeModalBtns = [document.getElementById('close-modal-btn'), document.getElementById('cancel-modal-btn')];

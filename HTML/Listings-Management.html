@@ -45,10 +45,59 @@
                     <h1>Listing Management</h1>
                     <p>Review, approve, or remove marketplace listings.</p>
                 </div>
-                <div class="card">
-                    <h3 class="card-title">Placeholder Content</h3>
-                    <p>This is the placeholder page for Listing Management. The main table for managing product listings will be built here.</p>
+
+                <div class="page-controls">
+                    <div class="search-filter-group">
+                        <input type="text" class="search-input" placeholder="Search listings...">
+                        <select class="filter-select" aria-label="Filter by status">
+                            <option value="">All Statuses</option>
+                            <option value="pending">Pending</option>
+                            <option value="active">Active</option>
+                            <option value="rejected">Rejected</option>
+                        </select>
+                    </div>
                 </div>
+
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Seller</th>
+                                <th>Category</th>
+                                <th>Price (ETB)</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Used Tractor Tire</td>
+                                <td>John Farmer</td>
+                                <td>Equipment</td>
+                                <td>3,000</td>
+                                <td><span class="status status-pending">Pending</span></td>
+                                <td class="action-buttons">
+                                    <button title="Approve"><i class="fa-solid fa-check"></i></button>
+                                    <button title="Reject"><i class="fa-solid fa-times"></i></button>
+                                    <button title="Delete"><i class="fa-solid fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Organic Teff</td>
+                                <td>Alemayehu T.</td>
+                                <td>Grains</td>
+                                <td>4,500 / Quintal</td>
+                                <td><span class="status status-active">Active</span></td>
+                                <td class="action-buttons">
+                                    <button title="View Listing"><i class="fa-solid fa-eye"></i></button>
+                                    <button title="Delete"><i class="fa-solid fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
             </div>
         </main>
     </div>

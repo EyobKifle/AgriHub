@@ -8,13 +8,28 @@
     <link rel="stylesheet" href="../Css/User-Dashboard.css">
 </head>
 <body>
-
-    <div class="dashboard-container">
-        <aside class="sidebar">
-            <div class="sidebar-header">
+    <!-- Full-width Header -->
+    <header class="main-header-bar">
+        <div class="header-left">
+            <button class="hamburger-menu" id="hamburger-menu" aria-label="Toggle Menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+        <div class="header-center">
+            <div class="logo">
                 <i class="fa-solid fa-leaf"></i>
                 <span>AgriHub</span>
             </div>
+        </div>
+        <div class="header-right">
+            <a href="User-Profile.html" class="profile-link" aria-label="User Profile">
+                <div class="profile-avatar">J</div>
+            </a>
+        </div>
+    </header>
+    
+    <div class="dashboard-container">
+        <aside class="sidebar" id="sidebar">
             <ul class="sidebar-nav">
                 <li><a href="User-Dashboard.html"><i class="fa-solid fa-house"></i> Dashboard</a></li>
                 <li><a href="User-Profile.html" class="active"><i class="fa-solid fa-user"></i> My Profile</a></li>
@@ -26,7 +41,7 @@
             </ul>
              <div class="sidebar-footer">
                 <div class="profile-dropdown">
-                    <img src="" alt="User Avatar">
+                    
                     <div>
                         <div class="profile-name">John Farmer</div>
                         <small>Logout</small>
@@ -41,13 +56,81 @@
                 <p>View and edit your personal information and farm details.</p>
             </div>
 
-            <div class="card">
-                <h3 class="card-title">Profile Information</h3>
-                <p>This is the placeholder page for managing your profile. Forms for editing your name, contact info, location, and profile picture will be built here.</p>
+            <div class="profile-layout">
+                <!-- Profile Picture Card -->
+                <div class="card profile-picture-card">
+                    <h3 class="card-title">Profile Picture</h3>
+                    <div class="profile-picture-preview">
+                        <img src="https://placehold.co/150x150/2a9d8f/FFF?text=J" alt="Current profile picture" id="profile-image-preview">
+                    </div>
+                    <label for="profile-image-upload" class="btn btn-secondary full-width">Upload New Picture</label>
+                    <input type="file" id="profile-image-upload" accept="image/*" hidden>
+                    <p class="form-text">For best results, use an image at least 200x200px in .jpg or .png format.</p>
+                </div>
+
+                <!-- Profile Details Card -->
+                <div class="card profile-details-card">
+                    <h3 class="card-title">Personal & Farm Information</h3>
+                    <form id="profile-form" class="settings-form">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="full-name">Full Name</label>
+                                <input type="text" id="full-name" value="John Farmer" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email Address</label>
+                                <input type="email" id="email" value="john.farmer@example.com" disabled>
+                            </div>
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="phone">Phone Number</label>
+                                <input type="tel" id="phone" placeholder="+251 9...">
+                            </div>
+                            <div class="form-group">
+                                <label for="location">Location / Region</label>
+                                <input type="text" id="location" placeholder="e.g., Amhara, Gojjam">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="farm-details">About My Farm (Optional)</label>
+                            <textarea id="farm-details" rows="4" placeholder="Describe your farm, the crops you grow, or your farming practices..."></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
             </div>
 
         </main>
     </div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Hamburger Menu
+            const hamburger = document.getElementById('hamburger-menu');
+            const container = document.querySelector('.dashboard-container');
+            hamburger.addEventListener('click', () => {
+                container.classList.toggle('sidebar-collapsed');
+            });
+
+            // Profile Image Preview
+            const imageUpload = document.getElementById('profile-image-upload');
+            const imagePreview = document.getElementById('profile-image-preview');
+            if (imageUpload && imagePreview) {
+                imageUpload.addEventListener('change', function() {
+                    const file = this.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            imagePreview.src = e.target.result;
+                        }
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>
