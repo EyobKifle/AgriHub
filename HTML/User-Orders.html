@@ -31,20 +31,20 @@
     <div class="dashboard-container">
         <aside class="sidebar" id="sidebar">
             <ul class="sidebar-nav">
-                <li><a href="User-Dashboard.html"><i class="fa-solid fa-house"></i> Dashboard</a></li>
-                <li><a href="User-Profile.html"><i class="fa-solid fa-user"></i> My Profile</a></li>
-                <li><a href="User-Listings.html"><i class="fa-solid fa-list-check"></i> My Listings</a></li>
-                <li><a href="User-Orders.html" class="active"><i class="fa-solid fa-receipt"></i> Order History</a></li>
-                <li><a href="User-Messages.html"><i class="fa-solid fa-envelope"></i> Messages</a></li>
-                <li><a href="User-Discussions.html"><i class="fa-solid fa-comments"></i> My Discussions</a></li>
-                <li><a href="User-Settings.html"><i class="fa-solid fa-gear"></i> Settings</a></li>
+                <li><a href="User-Dashboard.html" data-i18n-key="user.nav.dashboard"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+                <li><a href="User-Profile.html" data-i18n-key="user.nav.profile"><i class="fa-solid fa-user"></i> My Profile</a></li>
+                <li><a href="User-Listings.html" data-i18n-key="user.nav.listings"><i class="fa-solid fa-list-check"></i> My Listings</a></li>
+                <li><a href="User-Orders.html" class="active" data-i18n-key="user.nav.orders"><i class="fa-solid fa-receipt"></i> Order History</a></li>
+                <li><a href="User-Messages.html" data-i18n-key="user.nav.messages"><i class="fa-solid fa-envelope"></i> Messages</a></li>
+                <li><a href="User-Discussions.html" data-i18n-key="user.nav.discussions"><i class="fa-solid fa-comments"></i> My Discussions</a></li>
+                <li><a href="User-Settings.html" data-i18n-key="user.nav.settings"><i class="fa-solid fa-gear"></i> Settings</a></li>
             </ul>
              <div class="sidebar-footer">
                 <div class="profile-dropdown">
                     
                     <div>
                         <div class="profile-name">John Farmer</div>
-                        <small>Logout</small>
+                        <small data-i18n-key="user.nav.logout">Logout</small>
                     </div>
                 </div>
             </div>
@@ -52,20 +52,20 @@
 
         <main class="main-content">
             <div class="main-header">
-                <h1>Order History</h1>
-                <p>Track your past purchases and view transaction details.</p>
+                <h1 data-i18n-key="user.orders.title">Order History</h1>
+                <p data-i18n-key="user.orders.subtitle">Track your past purchases and view transaction details.</p>
             </div>
 
             <div class="table-container">
                 <table class="data-table">
                     <thead>
                         <tr>
-                            <th>Order ID</th>
-                            <th>Date</th>
-                            <th>Items</th>
-                            <th>Total</th>
-                            <th>Status</th>
-                            <th>Actions</th>
+                            <th data-i18n-key="user.orders.table.id">Order ID</th>
+                            <th data-i18n-key="user.orders.table.date">Date</th>
+                            <th data-i18n-key="user.orders.table.items">Items</th>
+                            <th data-i18n-key="user.orders.table.total">Total</th>
+                            <th data-i18n-key="user.orders.table.status">Status</th>
+                            <th data-i18n-key="user.orders.table.actions">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -74,9 +74,9 @@
                             <td>2024-09-10</td>
                             <td>Organic Teff (1 Quintal)</td>
                             <td>ETB 4,500</td>
-                            <td><span class="status status-active">Delivered</span></td>
+                            <td><span class="status status-active" data-i18n-key="user.orders.status.delivered">Delivered</span></td>
                             <td class="action-buttons">
-                                <button title="View Invoice"><i class="fa-solid fa-file-invoice"></i></button>
+                                <button title="View Invoice" data-i18n-title-key="user.orders.actions.viewInvoice"><i class="fa-solid fa-file-invoice"></i></button>
                             </td>
                         </tr>
                         <tr>
@@ -84,9 +84,9 @@
                             <td>2024-08-25</td>
                             <td>Used Tractor Tire (x1)</td>
                             <td>ETB 3,000</td>
-                            <td><span class="status status-active">Delivered</span></td>
+                            <td><span class="status status-active" data-i18n-key="user.orders.status.delivered">Delivered</span></td>
                             <td class="action-buttons">
-                                <button title="View Invoice"><i class="fa-solid fa-file-invoice"></i></button>
+                                <button title="View Invoice" data-i18n-title-key="user.orders.actions.viewInvoice"><i class="fa-solid fa-file-invoice"></i></button>
                             </td>
                         </tr>
                     </tbody>

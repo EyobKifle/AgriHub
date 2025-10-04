@@ -7,44 +7,25 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../Css/User-Dashboard.css">
 </head>
-<body>full implementation of user management,listing amanagement,news amangement and also utilize and news template in news management and also implementation fo reports
-
-    <header class="main-header-bar">
-        <div class="header-left">
-            <button class="hamburger-menu" id="hamburger-menu" aria-label="Toggle Menu">
-                <i class="fa-solid fa-bars"></i>
-            </button>
-        </div>
-        <div class="header-center">
-            <div class="logo">
-                <i class="fa-solid fa-leaf"></i>
-                <span>AgriHub</span>
-            </div>
-        </div>
-        <div class="header-right">
-            <a href="User-Profile.html" class="profile-link" aria-label="User Profile">
-                <div class="profile-avatar">J</div>
-            </a>
-        </div>
-    </header>
-    
+<body>
+  
     <div class="dashboard-container">
         <aside class="sidebar" id="sidebar">
-            <ul class="sidebar-nav">
-                <li><a href="User-Dashboard.html"><i class="fa-solid fa-house"></i> Dashboard</a></li>
-                <li><a href="User-Profile.html"><i class="fa-solid fa-user"></i> My Profile</a></li>
-                <li><a href="User-Listings.html"><i class="fa-solid fa-list-check"></i> My Listings</a></li>
-                <li><a href="User-Orders.html"><i class="fa-solid fa-receipt"></i> Order History</a></li>
-                <li><a href="User-Messages.html" class="active"><i class="fa-solid fa-envelope"></i> Messages</a></li>
-                <li><a href="User-Discussions.html"><i class="fa-solid fa-comments"></i> My Discussions</a></li>
-                <li><a href="User-Settings.html"><i class="fa-solid fa-gear"></i> Settings</a></li>
+            <ul class="sidebar-nav" id="user-sidebar-nav">
+                <li><a href="User-Dashboard.html" data-i18n-key="user.nav.dashboard"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+                <li><a href="User-Profile.html" data-i18n-key="user.nav.profile"><i class="fa-solid fa-user"></i> My Profile</a></li>
+                <li><a href="User-Listings.html" data-i18n-key="user.nav.listings"><i class="fa-solid fa-list-check"></i> My Listings</a></li>
+                <li><a href="User-Orders.html" data-i18n-key="user.nav.orders"><i class="fa-solid fa-receipt"></i> Order History</a></li>
+                <li><a href="User-Messages.html" class="active" data-i18n-key="user.nav.messages"><i class="fa-solid fa-envelope"></i> Messages</a></li>
+                <li><a href="User-Discussions.html" data-i18n-key="user.nav.discussions"><i class="fa-solid fa-comments"></i> My Discussions</a></li>
+                <li><a href="User-Settings.html" data-i18n-key="user.nav.settings"><i class="fa-solid fa-gear"></i> Settings</a></li>
             </ul>
              <div class="sidebar-footer">
                 <div class="profile-dropdown">
                     
                     <div>
                         <div class="profile-name">John Farmer</div>
-                        <small>Logout</small>
+                        <small data-i18n-key="user.nav.logout">Logout</small>
                     </div>
                 </div>
             </div>
@@ -54,8 +35,8 @@
             <div class="messages-layout">
                 <div class="conversations-list">
                     <div class="messages-header">
-                        <h2>Conversations</h2>
-                        <button class="btn-icon"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <h2 data-i18n-key="user.messages.conversations">Conversations</h2>
+                        <button class="btn-icon" data-i18n-title-key="user.messages.newMessage" title="New Message"><i class="fa-solid fa-pen-to-square"></i></button>
                     </div>
                     <div class="conversation-item active">
                         <img src="https://placehold.co/80x80/e9c46a/FFF?text=A" alt="Abebe C.">
@@ -81,7 +62,7 @@
                 <div class="chat-panel">
                     <div class="messages-header">
                         <h2>Abebe C.</h2>
-                        <small>Regarding: Organic Teff</small>
+                        <small data-i18n-key="user.messages.regarding">Regarding: Organic Teff</small>
                     </div>
                     <div class="chat-messages">
                         <!-- Chat messages would be rendered here -->
@@ -97,11 +78,11 @@
                     <div class="chat-input-area" id="chat-form">
                         <div id="chat-file-previews" class="chat-file-previews"></div>
                         <div class="chat-input-controls">
-                            <label for="chat-file-upload" class="btn-icon" title="Attach image">
+                            <label for="chat-file-upload" class="btn-icon" data-i18n-title-key="user.messages.attach" title="Attach image">
                                 <i class="fa-solid fa-paperclip"></i>
                             </label>
                             <input type="file" id="chat-file-upload" accept="image/*" hidden>
-                            <input type="text" id="chat-message-input" placeholder="Type your message...">
+                            <input type="text" id="chat-message-input" data-i18n-placeholder-key="user.messages.placeholder" placeholder="Type your message...">
                             <button type="submit" class="btn btn-primary">
                                 <i class="fa-solid fa-paper-plane"></i>
                             </button>

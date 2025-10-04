@@ -31,19 +31,19 @@
     <div class="dashboard-container">
         <aside class="sidebar" id="sidebar">
             <ul class="sidebar-nav">
-                <li><a href="Admin-Dashboard.html"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
-                <li><a href="User-Management.html"><i class="fa-solid fa-users"></i> User Management</a></li>
-                <li><a href="Listings-Management.html"><i class="fa-solid fa-store"></i> Listing Management</a></li>
-                <li><a href="News-Management.html" class="active"><i class="fa-solid fa-newspaper"></i> News Management</a></li>
-                <li><a href="Reports-Management.html"><i class="fa-solid fa-flag"></i> Reports</a></li>
+                <li><a href="Admin-Dashboard.html" data-i18n-key="admin.nav.dashboard"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
+                <li><a href="User-Management.html" data-i18n-key="admin.nav.userManagement"><i class="fa-solid fa-users"></i> User Management</a></li>
+                <li><a href="Listings-Management.html" data-i18n-key="admin.nav.listingManagement"><i class="fa-solid fa-store"></i> Listing Management</a></li>
+                <li><a href="News-Management.html" class="active" data-i18n-key="admin.nav.newsManagement"><i class="fa-solid fa-newspaper"></i> News Management</a></li>
+                <li><a href="Reports-Management.html" data-i18n-key="admin.nav.reports"><i class="fa-solid fa-flag"></i> Reports</a></li>
             </ul>
         </aside>
 
         <main class="main-content">
             <div class="content-wrapper">
                 <div class="main-header">
-                    <h1>News Management</h1>
-                    <p>Create, edit, and publish articles.</p>
+                    <h1 data-i18n-key="admin.news.title">News Management</h1>
+                    <p data-i18n-key="admin.news.subtitle">Create, edit, and publish articles.</p>
                 </div>
 
                 <!-- Page Controls -->
@@ -59,19 +59,19 @@
                         <div class="card-image">
                             <img src="https://placehold.co/400x250/1E4620/FFF?text=New+Subsidies" alt="News article image">
                             <div class="card-admin-overlay">
-                                <button class="btn btn-secondary btn-sm" title="Edit Post"><i class="fa-solid fa-pen"></i></button>
-                                <button class="btn btn-danger btn-sm" title="Delete Post"><i class="fa-solid fa-trash"></i></button>
+                                <button class="btn btn-secondary btn-sm" data-i18n-title-key="admin.news.editPost" title="Edit Post"><i class="fa-solid fa-pen"></i></button>
+                                <button class="btn btn-danger btn-sm" data-i18n-title-key="admin.news.deletePost" title="Delete Post"><i class="fa-solid fa-trash"></i></button>
                             </div>
                         </div>
                         <div class="card-content">
                             <div class="card-meta-top">
-                                <span class="card-category">Policy</span>
-                                <span class="status status-active">Published</span>
+                                <span class="card-category" data-i18n-key="news.cat.policy">Policy</span>
+                                <span class="status status-active" data-i18n-key="admin.news.status.published">Published</span>
                             </div>
-                            <h3>Government Announces New Agricultural Subsidies</h3>
+                            <h3 data-i18n-key="admin.news.article1.title">Government Announces New Agricultural Subsidies</h3>
                             <div class="card-meta">
-                                <span class="author">Admin</span>
-                                <span class="time">2 hours ago</span>
+                                <span class="author" data-i18n-key="admin.news.author">Admin</span>
+                                <span class="time" data-i18n-key="news.article1.time">2 hours ago</span>
                             </div>
                         </div>
                     </article>
@@ -79,19 +79,19 @@
                         <div class="card-image">
                             <img src="https://placehold.co/400x250/D97706/FFF?text=Coffee+Prices" alt="News article image">
                             <div class="card-admin-overlay">
-                                <button class="btn btn-secondary btn-sm" title="Edit Post"><i class="fa-solid fa-pen"></i></button>
-                                <button class="btn btn-danger btn-sm" title="Delete Post"><i class="fa-solid fa-trash"></i></button>
+                                <button class="btn btn-secondary btn-sm" data-i18n-title-key="admin.news.editPost" title="Edit Post"><i class="fa-solid fa-pen"></i></button>
+                                <button class="btn btn-danger btn-sm" data-i18n-title-key="admin.news.deletePost" title="Delete Post"><i class="fa-solid fa-trash"></i></button>
                             </div>
                         </div>
                         <div class="card-content">
                             <div class="card-meta-top">
-                                <span class="card-category">Market</span>
-                                <span class="status status-active">Published</span>
+                                <span class="card-category" data-i18n-key="news.cat.market">Market</span>
+                                <span class="status status-active" data-i18n-key="admin.news.status.published">Published</span>
                             </div>
-                            <h3>Coffee Prices Reach Record High</h3>
+                            <h3 data-i18n-key="admin.news.article2.title">Coffee Prices Reach Record High</h3>
                             <div class="card-meta">
-                                <span class="author">Admin</span>
-                                <span class="time">5 hours ago</span>
+                                <span class="author" data-i18n-key="admin.news.author">Admin</span>
+                                <span class="time" data-i18n-key="news.article2.time">5 hours ago</span>
                             </div>
                         </div>
                     </article>
@@ -99,19 +99,19 @@
                         <div class="card-image">
                             <img src="https://placehold.co/400x250/6c757d/FFF?text=Draft+Article" alt="News article image">
                             <div class="card-admin-overlay">
-                                <button class="btn btn-secondary btn-sm" title="Edit Post"><i class="fa-solid fa-pen"></i></button>
-                                <button class="btn btn-danger btn-sm" title="Delete Post"><i class="fa-solid fa-trash"></i></button>
+                                <button class="btn btn-secondary btn-sm" data-i18n-title-key="admin.news.editPost" title="Edit Post"><i class="fa-solid fa-pen"></i></button>
+                                <button class="btn btn-danger btn-sm" data-i18n-title-key="admin.news.deletePost" title="Delete Post"><i class="fa-solid fa-trash"></i></button>
                             </div>
                         </div>
                         <div class="card-content">
                             <div class="card-meta-top">
-                                <span class="card-category">Research</span>
-                                <span class="status status-pending">Draft</span>
+                                <span class="card-category" data-i18n-key="news.cat.research">Research</span>
+                                <span class="status status-pending" data-i18n-key="admin.news.status.draft">Draft</span>
                             </div>
-                            <h3>New Teff Variety (Draft)</h3>
+                            <h3 data-i18n-key="admin.news.article3.title">New Teff Variety (Draft)</h3>
                             <div class="card-meta">
-                                <span class="author">Admin</span>
-                                <span class="time">1 day ago</span>
+                                <span class="author" data-i18n-key="admin.news.author">Admin</span>
+                                <span class="time" data-i18n-key="news.article3.time">1 day ago</span>
                             </div>
                         </div>
                     </article>

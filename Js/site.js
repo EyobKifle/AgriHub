@@ -1,11 +1,13 @@
 import { loadHeader, initializeHeaderScripts } from './header.js';
 import { loadFooter } from './footer.js';
+import{ initializeImageSlider } from './imageSlider.js';
+import { initializeI18n, applyTranslationsToPage, updateLangSwitcher } from './i18n.js';
 import { highlightActiveLink } from './navigation.js';
 import { initializeMarketplace } from './marketplace.js';
 import { initializeNewsPage } from './news.js';
 import { initializeGuidancePage } from './guidance.js';
 
-/**
+/*
  * This is the main entry point for the site's global JavaScript.
  * It runs on every page to set up the common elements.
  *
@@ -15,20 +17,44 @@ import { initializeGuidancePage } from './guidance.js';
  * 3. Finally, it highlights the active link in the main navigation.
  */
 const initializeSite = async () => {
-  // We wait for the header to finish loading first.
-  await loadHeader();
-  // Then, we wait for the footer to finish loading.
-  // Loading them one by one is simpler to read than loading them at the same time.
-  await loadFooter();
+  // 1. Initialize i18n to load the correct language from localStorage.
+  await initializeI18n();
 
-  // Now that the header HTML is in place, we can make it interactive.
+  // 2. Load header and footer HTML concurrently.
+  await Promise.all([
+    loadHeader(),
+    loadFooter()
+  ]);
+
+  // 3. Now that the header/footer are in the DOM, apply translations to them.
+  applyTranslationsToPage();
+  updateLangSwitcher(); // Ensure the language dropdown text is correct.
+
+  // 4. Initialize all interactive scripts.
   initializeHeaderScripts();
+  initializeImageSlider();
   // And we can find the links in the nav to highlight the current page.
   highlightActiveLink();
-  // Finally, run any page-specific scripts, like for the marketplace.
-  initializeMarketplace();
-  initializeNewsPage();
-  initializeGuidancePage();
+
+  // 5. Run page-specific scripts.
+  // This improves performance by only executing the code needed for the current page.
+  const currentPage = window.location.pathname.split('/').pop();
+
+  switch (currentPage) {
+    case 'HomePage.html':
+    case '': // Handles the root path (e.g., "www.site.com/")
+      initializeImageSlider();
+      break;
+    case 'Marketplace.html':
+      initializeMarketplace();
+      break;
+    case 'News.html':
+      initializeNewsPage();
+      break;
+    case 'Farming-Guidance.html':
+      initializeGuidancePage();
+      break;
+  }
 };
 
 // This is the standard way to make sure our script runs only after the

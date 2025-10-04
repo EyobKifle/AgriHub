@@ -5,40 +5,52 @@
 
 <header class="header">
     <div class="header-container">
-        <a href="HomePage.html" class="logo"><i class="fa-solid fa-leaf"></i>AgriHub</a>
+        <!-- Logo -->
+        <a href="HomePage.html" class="logo"><i class="fa-solid fa-leaf"></i> AgriHub</a>
+        
+        <!-- Navigation Links -->
         <nav class="nav-links">
-            <a href="Community.html"><i class="fa-solid fa-users"></i> Community</a>
-            <a href="News.html"><i class="fa-regular fa-newspaper"></i> News</a>
-            <a href="Marketplace.html"><i class="fa-solid fa-store"></i> Marketplace</a>
-            <a href="Farming-Guidance.html"><i class="fa-solid fa-book-open"></i> Farming Guidance</a>
-
+            <a href="Community.html" data-i18n-key="header.nav.community"><i class="fa-solid fa-users"></i> Community</a>
+            <a href="News.html" data-i18n-key="header.nav.news"><i class="fa-regular fa-newspaper"></i> News</a>
+            <a href="Marketplace.html" data-i18n-key="header.nav.marketplace"><i class="fa-solid fa-store"></i> Marketplace</a>
+            <a href="Farming-Guidance.html" data-i18n-key="header.nav.guidance"><i class="fa-solid fa-book-open"></i> Farming Guidance</a>
         </nav>
+
+        <!-- Header Actions -->
         <div class="header-actions">
             <ul class="header-controls">
+                <!-- Language Dropdown -->
                 <li class="dropdown">
-                    <a href="#" class="dropbtn">Language <i class="fas fa-caret-down"></i></a>
+                    <a href="#" class="dropbtn" data-i18n-key="header.language">
+                        Language <i class="fas fa-caret-down"></i>
+                    </a>
                     <div class="dropdown-content">
-                        <a href="#">English</a>
-                        <a href="#">አማርኛ (Amharic)</a>
-                        <a href="#">Afaan Oromoo</a>
-                        <a href="#">ትግርኛ (Tigrinya)</a>
+                        <a href="#" data-lang="en" data-i18n-key="lang.en">English</a>
+                        <a href="#" data-lang="am" data-i18n-key="lang.am">Amharic</a>
+                        <a href="#" data-lang="om" data-i18n-key="lang.om">Oromo</a>
+                        <a href="#" data-lang="ti" data-i18n-key="lang.ti">Tigrinya</a>
                     </div>
                 </li>
+
+                <!-- Dark Mode Toggle -->
                 <li>
-                    <label class="switch">
-                        <input type="checkbox" class="dark-mode-toggle" />
-                        <span class="slider"></span>
-                    </label>
+                    <button class="dark-mode-toggle" data-i18n-aria-label-key="header.toggleDarkMode" aria-label="Toggle dark mode">
+                        <i class="fas fa-sun"></i>
+                        <i class="fas fa-moon"></i>
+                    </button>
                 </li>
             </ul>
+
+            <!-- Auth Buttons -->
             <div class="header-buttons">
-                <a href="Login.html" class="btn btn-secondary">Login</a>
-                <a href="Signup.html" class="btn btn-primary">Sign Up</a>
+                <a href="Login.html" class="btn btn-secondary" data-i18n-key="header.login">Login</a>
+                <a href="Signup.html" class="btn btn-primary" data-i18n-key="header.signup">Sign Up</a>
             </div>
         </div>
+
+        <!-- Mobile Menu Toggle -->
         <div class="mobile-menu-toggle">
             <i class="fas fa-bars"></i>
         </div>
-
     </div>
 </header>

@@ -31,39 +31,39 @@
     <div class="dashboard-container">
         <aside class="sidebar" id="sidebar">
             <ul class="sidebar-nav">
-                <li><a href="Admin-Dashboard.html"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
-                <li><a href="User-Management.html" class="active"><i class="fa-solid fa-users"></i> User Management</a></li>
-                <li><a href="Listings-Management.html"><i class="fa-solid fa-store"></i> Listing Management</a></li>
-                <li><a href="News-Management.html"><i class="fa-solid fa-newspaper"></i> News Management</a></li>
-                <li><a href="Reports-Management.html"><i class="fa-solid fa-flag"></i> Reports</a></li>
+                <li><a href="Admin-Dashboard.html" data-i18n-key="admin.nav.dashboard"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
+                <li><a href="User-Management.html" class="active" data-i18n-key="admin.nav.userManagement"><i class="fa-solid fa-users"></i> User Management</a></li>
+                <li><a href="Listings-Management.html" data-i18n-key="admin.nav.listingManagement"><i class="fa-solid fa-store"></i> Listing Management</a></li>
+                <li><a href="News-Management.html" data-i18n-key="admin.nav.newsManagement"><i class="fa-solid fa-newspaper"></i> News Management</a></li>
+                <li><a href="Reports-Management.html" data-i18n-key="admin.nav.reports"><i class="fa-solid fa-flag"></i> Reports</a></li>
             </ul>
         </aside>
 
         <main class="main-content">
             <div class="content-wrapper">
                 <div class="main-header">
-                    <h1>User Management</h1>
-                    <p>View, edit, or manage user profiles and their activities.</p>
+                    <h1 data-i18n-key="admin.users.title">User Management</h1>
+                    <p data-i18n-key="admin.users.subtitle">View, edit, or manage user profiles and their activities.</p>
                 </div>
 
                 <!-- Page Controls: Search, Filter, Actions -->
                 <div class="page-controls">
                     <div class="search-filter-group">
-                        <input type="text" class="search-input" placeholder="Search users by name or email...">
+                        <input type="text" class="search-input" placeholder="Search users by name or email..." data-i18n-placeholder-key="admin.users.searchPlaceholder">
                         <select class="filter-select" aria-label="Filter by role">
-                            <option value="">All Roles</option>
-                            <option value="admin">Admin</option>
-                            <option value="seller">Seller</option>
-                            <option value="buyer">Buyer</option>
+                            <option value="" data-i18n-key="admin.users.filter.allRoles">All Roles</option>
+                            <option value="admin" data-i18n-key="admin.users.role.admin">Admin</option>
+                            <option value="seller" data-i18n-key="admin.users.role.seller">Seller</option>
+                            <option value="buyer" data-i18n-key="admin.users.role.buyer">Buyer</option>
                         </select>
                         <select class="filter-select" aria-label="Filter by status">
-                            <option value="">All Statuses</option>
-                            <option value="active">Active</option>
-                            <option value="pending">Pending</option>
-                            <option value="banned">Banned</option>
+                            <option value="" data-i18n-key="admin.users.filter.allStatuses">All Statuses</option>
+                            <option value="active" data-i18n-key="admin.users.status.active">Active</option>
+                            <option value="pending" data-i18n-key="admin.users.status.pending">Pending</option>
+                            <option value="banned" data-i18n-key="admin.users.status.banned">Banned</option>
                         </select>
                     </div>
-                    <button class="btn btn-primary"><i class="fa-solid fa-plus"></i> Add User</button>
+                    <button class="btn btn-primary" data-i18n-key="admin.users.addUser"><i class="fa-solid fa-plus"></i> Add User</button>
                 </div>
 
                 <!-- User Data Table -->
@@ -71,57 +71,16 @@
                     <table class="data-table">
                         <thead>
                             <tr>
-                                <th><input type="checkbox" aria-label="Select all users"></th>
-                                <th>User</th>
-                                <th>Role</th>
-                                <th>Status</th>
-                                <th>Joined Date</th>
-                                <th>Actions</th>
+                                <th><input type="checkbox" data-i18n-aria-label-key="admin.users.table.selectAll" aria-label="Select all users"></th>
+                                <th data-i18n-key="admin.users.table.user">User</th>
+                                <th data-i18n-key="admin.users.table.role">Role</th>
+                                <th data-i18n-key="admin.users.table.status">Status</th>
+                                <th data-i18n-key="admin.users.table.joined">Joined Date</th>
+                                <th data-i18n-key="admin.users.table.actions">Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td><input type="checkbox" aria-label="Select user"></td>
-                                <td>
-                                    <div class="user-info">
-                                        <div class="user-avatar" style="background-color: #2a9d8f;">J</div>
-                                        <div>
-                                            <div class="user-name">John Farmer</div>
-                                            <div class="user-email">john.f@example.com</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>Seller</td>
-                                <td><span class="status status-active">Active</span></td>
-                                <td>2025-08-15</td>
-                                <td class="action-buttons">
-                                    <button title="View Profile"><i class="fa-solid fa-eye"></i></button>
-                                    <button title="Edit User"><i class="fa-solid fa-pen"></i></button>
-                                    <button title="Ban User"><i class="fa-solid fa-ban"></i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><input type="checkbox" aria-label="Select user"></td>
-                                <td>
-                                    <div class="user-info">
-                                        <div class="user-avatar" style="background-color: #e9c46a;">M</div>
-                                        <div>
-                                            <div class="user-name">Meron K.</div>
-                                            <div class="user-email">meron.k@example.com</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>Buyer</td>
-                                <td><span class="status status-pending">Pending</span></td>
-                                <td>2025-09-01</td>
-                                <td class="action-buttons">
-                                    <button title="View Profile"><i class="fa-solid fa-eye"></i></button>
-                                    <button title="Edit User"><i class="fa-solid fa-pen"></i></button>
-                                    <button title="Ban User"><i class="fa-solid fa-ban"></i></button>
-                                </td>
-                            </tr>
-                            <!-- More user rows would be added here dynamically -->
-                        </tbody>
+                        <!-- User rows will be populated dynamically by JavaScript -->
+                        <tbody id="user-table-body"></tbody>
                     </table>
                 </div>
             </div>

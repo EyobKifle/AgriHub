@@ -52,52 +52,52 @@
 
         <main class="main-content">
             <div class="main-header">
-                <h1>My Profile</h1>
-                <p>View and edit your personal information and farm details.</p>
+                <h1 data-i18n-key="user.profile.title">My Profile</h1>
+                <p data-i18n-key="user.profile.subtitle">View and edit your personal information and farm details.</p>
             </div>
 
             <div class="profile-layout">
                 <!-- Profile Picture Card -->
                 <div class="card profile-picture-card">
-                    <h3 class="card-title">Profile Picture</h3>
+                    <h3 class="card-title" data-i18n-key="user.profile.picture.title">Profile Picture</h3>
                     <div class="profile-picture-preview">
                         <img src="https://placehold.co/150x150/2a9d8f/FFF?text=J" alt="Current profile picture" id="profile-image-preview">
                     </div>
-                    <label for="profile-image-upload" class="btn btn-secondary full-width">Upload New Picture</label>
+                    <label for="profile-image-upload" class="btn btn-secondary full-width" data-i18n-key="user.profile.picture.upload">Upload New Picture</label>
                     <input type="file" id="profile-image-upload" accept="image/*" hidden>
-                    <p class="form-text">For best results, use an image at least 200x200px in .jpg or .png format.</p>
+                    <p class="form-text" data-i18n-key="user.profile.picture.help">For best results, use an image at least 200x200px in .jpg or .png format.</p>
                 </div>
 
                 <!-- Profile Details Card -->
                 <div class="card profile-details-card">
-                    <h3 class="card-title">Personal & Farm Information</h3>
+                    <h3 class="card-title" data-i18n-key="user.profile.details.title">Personal & Farm Information</h3>
                     <form id="profile-form" class="settings-form">
                         <div class="form-grid">
                             <div class="form-group">
-                                <label for="full-name">Full Name</label>
+                                <label for="full-name" data-i18n-key="user.profile.details.name">Full Name</label>
                                 <input type="text" id="full-name" value="John Farmer" required>
                             </div>
                             <div class="form-group">
-                                <label for="email">Email Address</label>
+                                <label for="email" data-i18n-key="user.profile.details.email">Email Address</label>
                                 <input type="email" id="email" value="john.farmer@example.com" disabled>
                             </div>
                         </div>
                         <div class="form-grid">
                             <div class="form-group">
-                                <label for="phone">Phone Number</label>
-                                <input type="tel" id="phone" placeholder="+251 9...">
+                                <label for="phone" data-i18n-key="user.profile.details.phone">Phone Number</label>
+                                <input type="tel" id="phone" data-i18n-placeholder-key="user.profile.details.phonePlaceholder" placeholder="+251 9...">
                             </div>
                             <div class="form-group">
-                                <label for="location">Location / Region</label>
-                                <input type="text" id="location" placeholder="e.g., Amhara, Gojjam">
+                                <label for="location" data-i18n-key="user.profile.details.location">Location / Region</label>
+                                <input type="text" id="location" data-i18n-placeholder-key="user.profile.details.locationPlaceholder" placeholder="e.g., Amhara, Gojjam">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="farm-details">About My Farm (Optional)</label>
-                            <textarea id="farm-details" rows="4" placeholder="Describe your farm, the crops you grow, or your farming practices..."></textarea>
+                            <label for="farm-details" data-i18n-key="user.profile.details.about">About My Farm (Optional)</label>
+                            <textarea id="farm-details" rows="4" data-i18n-placeholder-key="user.profile.details.aboutPlaceholder" placeholder="Describe your farm, the crops you grow, or your farming practices..."></textarea>
                         </div>
                         <div class="form-actions">
-                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                            <button type="submit" class="btn btn-primary" data-i18n-key="user.profile.details.save">Save Changes</button>
                         </div>
                     </form>
                 </div>

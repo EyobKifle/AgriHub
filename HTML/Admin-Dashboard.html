@@ -32,11 +32,11 @@
     <div class="dashboard-container">
         <aside class="sidebar" id="sidebar">
             <ul class="sidebar-nav">
-                <li><a href="Admin-Dashboard.html" class="active"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
-                <li><a href="User-Management.html"><i class="fa-solid fa-users"></i> User Management</a></li>
-                <li><a href="Listings-Management.html"><i class="fa-solid fa-store"></i> Listing Management</a></li>
-                <li><a href="News-Management.html"><i class="fa-solid fa-newspaper"></i> News Management</a></li>
-                <li><a href="Reports-Management.html"><i class="fa-solid fa-flag"></i> Reports</a></li>
+                <li><a href="Admin-Dashboard.html" class="active" data-i18n-key="admin.nav.dashboard"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
+                <li><a href="User-Management.html" data-i18n-key="admin.nav.userManagement"><i class="fa-solid fa-users"></i> User Management</a></li>
+                <li><a href="Listings-Management.html" data-i18n-key="admin.nav.listingManagement"><i class="fa-solid fa-store"></i> Listing Management</a></li>
+                <li><a href="News-Management.html" data-i18n-key="admin.nav.newsManagement"><i class="fa-solid fa-newspaper"></i> News Management</a></li>
+                <li><a href="Reports-Management.html" data-i18n-key="admin.nav.reports"><i class="fa-solid fa-flag"></i> Reports</a></li>
             </ul>
         </aside>
 
@@ -44,76 +44,76 @@
          
             <div class="content-wrapper">
                 <div class="main-header">
-                    <h1>Dashboard</h1>
-                    <p>Welcome back, Admin! Here's an overview of your platform.</p>
+                    <h1 data-i18n-key="admin.dashboard.title">Dashboard</h1>
+                    <p data-i18n-key="admin.dashboard.subtitle">Welcome back, Admin! Here's an overview of your platform.</p>
                 </div>
                 <div class="cards-grid chart-grid">
                     <div class="card">
-                        <h3 class="card-title">User Growth (Last 6 Months)</h3>
+                        <h3 class="card-title" data-i18n-key="admin.dashboard.userGrowth">User Growth (Last 6 Months)</h3>
                         <div class="chart-container">[Chart.js: User Growth]</div>
                     </div>
                     <div class="card">
-                        <h3 class="card-title">Listing Categories</h3>
+                        <h3 class="card-title" data-i18n-key="admin.dashboard.listingCategories">Listing Categories</h3>
                         <div class="chart-container">[Chart.js: Doughnut Chart]</div>
                     </div>
                 </div>
                 <div class="cards-grid summary-grid">
                     <div class="card">
                         <div class="card-header">
-                            <span class="card-title">Total Users</span>
+                            <span class="card-title" data-i18n-key="admin.dashboard.totalUsers">Total Users</span>
                             <span class="card-icon icon-users"><i class="fa-solid fa-users"></i></span>
                         </div>
                         <div class="card-value">1,250</div>
-                        <div class="card-footer">+12% this month</div>
+                        <div class="card-footer"><span data-i18n-key="admin.dashboard.totalUsersFooter">+12% this month</span></div>
                     </div>
                     <div class="card">
                         <div class="card-header">
-                            <span class="card-title">Active Listings</span>
+                            <span class="card-title" data-i18n-key="admin.dashboard.activeListings">Active Listings</span>
                             <span class="card-icon icon-listings"><i class="fa-solid fa-store"></i></span>
                         </div>
                         <div class="card-value">320</div>
-                        <div class="card-footer">+30 new today</div>
+                        <div class="card-footer"><span data-i18n-key="admin.dashboard.activeListingsFooter">+30 new today</span></div>
                     </div>
                     <div class="card">
                         <div class="card-header">
-                            <span class="card-title">Pending Reports</span>
+                            <span class="card-title" data-i18n-key="admin.dashboard.pendingReports">Pending Reports</span>
                             <span class="card-icon icon-news"><i class="fa-solid fa-flag"></i></span>
                         </div>
                         <div class="card-value">4</div>
-                        <div class="card-footer">Action required</div>
+                        <div class="card-footer"><span data-i18n-key="admin.dashboard.pendingReportsFooter">Action required</span></div>
                     </div>
                 </div>
 
                 <!-- Recent Items Section -->
                 <div class="recent-items-grid">
                     <div class="card list-card">
-                        <h3 class="card-title">Recent Users</h3>
+                        <h3 class="card-title" data-i18n-key="admin.dashboard.recentUsers">Recent Users</h3>
                         <ul class="recent-list">
-                            <li><a href="#">John Farmer</a><span>Joined: 2025-09-15</span></li>
-                            <li><a href="#">Jane Appleseed</a><span>Joined: 2025-09-14</span></li>
-                            <li><a href="#">Sam Cropson</a><span>Joined: 2025-09-14</span></li>
-                            <li><a href="#">Abebe Bikila</a><span>Joined: 2025-09-13</span></li>
+                            <li><a href="#">John Farmer</a><span data-i18n-key="admin.dashboard.joined">Joined: 2025-09-15</span></li>
+                            <li><a href="#">Jane Appleseed</a><span data-i18n-key="admin.dashboard.joined">Joined: 2025-09-14</span></li>
+                            <li><a href="#">Sam Cropson</a><span data-i18n-key="admin.dashboard.joined">Joined: 2025-09-14</span></li>
+                            <li><a href="#">Abebe Bikila</a><span data-i18n-key="admin.dashboard.joined">Joined: 2025-09-13</span></li>
                         </ul>
-                        <a href="#" class="view-all-link">View All Users &rarr;</a>
+                        <a href="#" class="view-all-link" data-i18n-key="admin.dashboard.viewAllUsers">View All Users &rarr;</a>
                     </div>
                     <div class="card list-card">
-                        <h3 class="card-title">Recent Listings</h3>
+                        <h3 class="card-title" data-i18n-key="admin.dashboard.recentListings">Recent Listings</h3>
                         <ul class="recent-list">
-                            <li><a href="#">Organic Teff</a><span>By: J. Farmer</span></li>
-                            <li><a href="#">Used Tractor Tire</a><span>By: S. Cropson</span></li>
-                            <li><a href="#">Fresh Eggs</a><span>By: Local Farms Co.</span></li>
-                            <li><a href="#">Irrigation Pump</a><span>By: A. Bikila</span></li>
+                            <li><a href="#">Organic Teff</a><span data-i18n-key="admin.dashboard.by">By: J. Farmer</span></li>
+                            <li><a href="#">Used Tractor Tire</a><span data-i18n-key="admin.dashboard.by">By: S. Cropson</span></li>
+                            <li><a href="#">Fresh Eggs</a><span data-i18n-key="admin.dashboard.by">By: Local Farms Co.</span></li>
+                            <li><a href="#">Irrigation Pump</a><span data-i18n-key="admin.dashboard.by">By: A. Bikila</span></li>
                         </ul>
-                        <a href="#" class="view-all-link">View All Listings &rarr;</a>
+                        <a href="#" class="view-all-link" data-i18n-key="admin.dashboard.viewAllListings">View All Listings &rarr;</a>
                     </div>
                     <div class="card list-card">
-                        <h3 class="card-title">Forum Reports</h3>
+                        <h3 class="card-title" data-i18n-key="admin.dashboard.forumReports">Forum Reports</h3>
                         <ul class="recent-list">
-                            <li><a href="#">Spam Post</a><span>Reported by: J. Appleseed</span></li>
-                            <li><a href="#">Inappropriate Language</a><span>Reported by: A. Bikila</span></li>
-                            <li><a href="#">Off-topic Content</a><span>Reported by: S. Cropson</span></li>
+                            <li><a href="#">Spam Post</a><span data-i18n-key="admin.dashboard.reportedBy">Reported by: J. Appleseed</span></li>
+                            <li><a href="#">Inappropriate Language</a><span data-i18n-key="admin.dashboard.reportedBy">Reported by: A. Bikila</span></li>
+                            <li><a href="#">Off-topic Content</a><span data-i18n-key="admin.dashboard.reportedBy">Reported by: S. Cropson</span></li>
                         </ul>
-                        <a href="#" class="view-all-link">Manage Reports &rarr;</a>
+                        <a href="#" class="view-all-link" data-i18n-key="admin.dashboard.manageReports">Manage Reports &rarr;</a>
                     </div>
                 </div>
             </div>

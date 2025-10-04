@@ -10,8 +10,8 @@
 <body>
   <header class="header">
     <div class="container header-inner">
-      <a href="Community.html" class="back-btn">← Back</a>
-      <h1>Community Chat</h1>
+      <a href="Community.html" class="back-btn" data-i18n-key="discussion.backButton">← Back</a>
+      <h1 data-i18n-key="discussion.title">Community Chat</h1>
     </div>
   </header>
 
@@ -24,16 +24,16 @@
   <section class="chat-input">
     <div class="container">
       <form id="chat-form" autocomplete="off">
-        <label for="file-upload" class="file-btn" title="Attach file">
+        <label for="file-upload" class="file-btn" data-i18n-title-key="discussion.attachFile" title="Attach file">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
             <polyline points="17 8 12 3 7 8"></polyline>
             <line x1="12" y1="3" x2="12" y2="15"></line>
           </svg>
         </label>
-        <input id="message-input" type="text" placeholder="Type a message..." aria-label="Message" required />
+        <input id="message-input" type="text" data-i18n-placeholder-key="discussion.messagePlaceholder" placeholder="Type a message..." data-i18n-aria-label-key="discussion.messageLabel" aria-label="Message" required />
         <input id="file-upload" type="file" accept="image/*,.pdf" multiple />
-        <button type="submit" class="send-btn">Send</button>
+        <button type="submit" class="send-btn" data-i18n-key="discussion.sendButton">Send</button>
       </form>
       <div id="file-previews" class="file-previews" aria-live="polite"></div>
     </div>

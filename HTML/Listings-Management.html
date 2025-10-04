@@ -42,18 +42,18 @@
         <main class="main-content">
             <div class="content-wrapper">
                 <div class="main-header">
-                    <h1>Listing Management</h1>
-                    <p>Review, approve, or remove marketplace listings.</p>
+                    <h1 data-i18n-key="admin.listings.title">Listing Management</h1>
+                    <p data-i18n-key="admin.listings.subtitle">Review, approve, or remove marketplace listings.</p>
                 </div>
 
                 <div class="page-controls">
                     <div class="search-filter-group">
-                        <input type="text" class="search-input" placeholder="Search listings...">
+                        <input type="text" class="search-input" data-i18n-placeholder-key="admin.listings.searchPlaceholder" placeholder="Search listings...">
                         <select class="filter-select" aria-label="Filter by status">
-                            <option value="">All Statuses</option>
-                            <option value="pending">Pending</option>
-                            <option value="active">Active</option>
-                            <option value="rejected">Rejected</option>
+                            <option value="" data-i18n-key="admin.listings.filter.all">All Statuses</option>
+                            <option value="pending" data-i18n-key="admin.listings.status.pending">Pending</option>
+                            <option value="active" data-i18n-key="admin.listings.status.active">Active</option>
+                            <option value="rejected" data-i18n-key="admin.listings.status.rejected">Rejected</option>
                         </select>
                     </div>
                 </div>
@@ -62,12 +62,12 @@
                     <table class="data-table">
                         <thead>
                             <tr>
-                                <th>Product</th>
-                                <th>Seller</th>
-                                <th>Category</th>
-                                <th>Price (ETB)</th>
-                                <th>Status</th>
-                                <th>Actions</th>
+                                <th data-i18n-key="admin.listings.table.product">Product</th>
+                                <th data-i18n-key="admin.listings.table.seller">Seller</th>
+                                <th data-i18n-key="admin.listings.table.category">Category</th>
+                                <th data-i18n-key="admin.listings.table.price">Price (ETB)</th>
+                                <th data-i18n-key="admin.listings.table.status">Status</th>
+                                <th data-i18n-key="admin.listings.table.actions">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -76,11 +76,11 @@
                                 <td>John Farmer</td>
                                 <td>Equipment</td>
                                 <td>3,000</td>
-                                <td><span class="status status-pending">Pending</span></td>
+                                <td><span class="status status-pending" data-i18n-key="admin.listings.status.pending">Pending</span></td>
                                 <td class="action-buttons">
-                                    <button title="Approve"><i class="fa-solid fa-check"></i></button>
-                                    <button title="Reject"><i class="fa-solid fa-times"></i></button>
-                                    <button title="Delete"><i class="fa-solid fa-trash"></i></button>
+                                    <button data-i18n-title-key="admin.listings.actions.approve" title="Approve"><i class="fa-solid fa-check"></i></button>
+                                    <button data-i18n-title-key="admin.listings.actions.reject" title="Reject"><i class="fa-solid fa-times"></i></button>
+                                    <button data-i18n-title-key="admin.listings.actions.delete" title="Delete"><i class="fa-solid fa-trash"></i></button>
                                 </td>
                             </tr>
                             <tr>
@@ -88,10 +88,10 @@
                                 <td>Alemayehu T.</td>
                                 <td>Grains</td>
                                 <td>4,500 / Quintal</td>
-                                <td><span class="status status-active">Active</span></td>
+                                <td><span class="status status-active" data-i18n-key="admin.listings.status.active">Active</span></td>
                                 <td class="action-buttons">
-                                    <button title="View Listing"><i class="fa-solid fa-eye"></i></button>
-                                    <button title="Delete"><i class="fa-solid fa-trash"></i></button>
+                                    <button data-i18n-title-key="admin.listings.actions.view" title="View Listing"><i class="fa-solid fa-eye"></i></button>
+                                    <button data-i18n-title-key="admin.listings.actions.delete" title="Delete"><i class="fa-solid fa-trash"></i></button>
                                 </td>
                             </tr>
                         </tbody>

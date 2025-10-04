@@ -31,19 +31,19 @@
     <div class="dashboard-container">
         <aside class="sidebar" id="sidebar">
             <ul class="sidebar-nav">
-                <li><a href="User-Dashboard.html" class="active"><i class="fa-solid fa-house"></i> Dashboard</a></li>
-                <li><a href="User-Profile.html"><i class="fa-solid fa-user"></i> My Profile</a></li>
-                <li><a href="User-Listings.html"><i class="fa-solid fa-list-check"></i> My Listings</a></li>
-                <li><a href="User-Orders.html"><i class="fa-solid fa-receipt"></i> Order History</a></li>
-                <li><a href="User-Messages.html"><i class="fa-solid fa-envelope"></i> Messages</a></li>
-                <li><a href="User-Discussions.html"><i class="fa-solid fa-comments"></i> My Discussions</a></li>
-                <li><a href="User-Settings.html"><i class="fa-solid fa-gear"></i> Settings</a></li>
+                <li><a href="User-Dashboard.html" class="active" data-i18n-key="user.nav.dashboard"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+                <li><a href="User-Profile.html" data-i18n-key="user.nav.profile"><i class="fa-solid fa-user"></i> My Profile</a></li>
+                <li><a href="User-Listings.html" data-i18n-key="user.nav.listings"><i class="fa-solid fa-list-check"></i> My Listings</a></li>
+                <li><a href="User-Orders.html" data-i18n-key="user.nav.orders"><i class="fa-solid fa-receipt"></i> Order History</a></li>
+                <li><a href="User-Messages.html" data-i18n-key="user.nav.messages"><i class="fa-solid fa-envelope"></i> Messages</a></li>
+                <li><a href="User-Discussions.html" data-i18n-key="user.nav.discussions"><i class="fa-solid fa-comments"></i> My Discussions</a></li>
+                <li><a href="User-Settings.html" data-i18n-key="user.nav.settings"><i class="fa-solid fa-gear"></i> Settings</a></li>
             </ul>
              <div class="sidebar-footer">
                 <div class="profile-dropdown">
                     <div>
                         <div class="profile-name">John Farmer</div>
-                        <small>Logout</small>
+                        <small data-i18n-key="user.nav.logout">Logout</small>
                     </div>
                 </div>
             </div>
@@ -51,49 +51,45 @@
 
         <main class="main-content">
             <div class="main-header">
-                <h1>Welcome back, John!</h1>
-                <p>Here's what's new on AgriHub today.</p>
+                <h1 data-i18n-key="user.dashboard.title">Welcome back, John!</h1>
+                <p data-i18n-key="user.dashboard.subtitle">Here's what's new on AgriHub today.</p>
             </div>
 
             <div class="cards-grid">
                 <div class="card">
                     <div class="card-header">
-                        <span class="card-title">Active Listings</span>
+                        <span class="card-title" data-i18n-key="user.dashboard.activeListings">Active Listings</span>
                         <span class="card-icon icon-listings"><i class="fa-solid fa-list-check"></i></span>
                     </div>
                     <div class="card-value">5</div>
-                    <div class="card-footer">Manage your products</div>
+                    <div class="card-footer" data-i18n-key="user.dashboard.activeListingsFooter">Manage your products</div>
                 </div>
                 <div class="card">
                     <div class="card-header">
-                        <span class="card-title">Unread Messages</span>
+                        <span class="card-title" data-i18n-key="user.dashboard.unreadMessages">Unread Messages</span>
                         <span class="card-icon icon-users"><i class="fa-solid fa-envelope"></i></span>
                     </div>
                     <div class="card-value">2</div>
-                    <div class="card-footer">From 2 buyers</div>
+                    <div class="card-footer" data-i18n-key="user.dashboard.unreadMessagesFooter">From 2 buyers</div>
                 </div>
                 <div class="card">
                     <div class="card-header">
-                        <span class="card-title">Sales This Month</span>
-                        <span class="card-icon icon-news"><i class="fa-solid fa-newspaper"></i></span>
+                        <span class="card-title" data-i18n-key="user.dashboard.sales">Sales This Month</span>
+                        <span class="card-icon icon-revenue"><i class="fa-solid fa-dollar-sign"></i></span>
                     </div>
                     <div class="card-value">ETB 4,500</div>
-                    <div class="card-footer">+15% from last month</div>
+                    <div class="card-footer" data-i18n-key="user.dashboard.salesFooter">+15% from last month</div>
                 </div>
             </div>
 
             <div class="content-section">
                 <div class="main-header">
-                    <h2>Recent Activity</h2>
-                    <p>Here's what has happened recently on your account.</p>
+                    <h2 data-i18n-key="user.dashboard.activity.title">Recent Activity</h2>
+                    <p data-i18n-key="user.dashboard.activity.subtitle">Here's what has happened recently on your account.</p>
                 </div>
                 <div class="card activity-feed">
-                    <ul class="recent-list">
-                        <li><i class="fa-solid fa-tag activity-icon sale"></i><div>Your listing "Organic Teff" was sold.</div><span class="time">1h ago</span></li>
-                        <li><i class="fa-solid fa-envelope activity-icon message"></i><div>You have a new message from "Abebe C."</div><span class="time">3h ago</span></li>
-                        <li><i class="fa-solid fa-star activity-icon review"></i><div>You received a 5-star review for "Fresh Eggs".</div><span class="time">1d ago</span></li>
-                        <li><i class="fa-solid fa-plus activity-icon listing"></i><div>You listed a new product: "Used Tractor Tire".</div><span class="time">2d ago</span></li>
-                    </ul>
+                    <!-- Activity items will be populated dynamically -->
+                    <ul class="recent-list" id="activity-list"></ul>
                 </div>
             </div>
 
