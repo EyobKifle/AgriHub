@@ -1,0 +1,78 @@
+AgriHub - API Usage Documentation
+=================================
+
+This document outlines the API endpoints used throughout the AgriHub application, their purpose, and how they are integrated.
+
+
+1. Marketplace API
+------------------
+
+Endpoint: `/php/marketplace.php`
+Method: `GET`
+Description: This file serves a dual purpose. It renders the marketplace page and also acts as the primary API for fetching product and category data for the page's dynamic frontend.
+
+1.1. Action: `get_products`
+- Usage: Called by the frontend JavaScript to load and filter products on the marketplace grid.
+- Integration: Used in the `loadProducts()` method in the `Marketplace` JavaScript class within `marketplace.php`.
+- URL Parameters:
+  - `action=get_products` (required)
+  - `category` (string, e.g., "grains"): Filters by category slug. Defaults to 'all'.
+  - `min_price` (decimal): Minimum product price.
+  - `max_price` (decimal): Maximum product price.
+  - `search` (string): A search term to match against product titles and descriptions.
+  - `sort` (string): Sort order. Options: 'latest', 'price-asc', 'price-desc'.
+- Output (JSON):
+  ```json
+  {
+    "success": true,
+    "products": [
+      { "id": 1, "title": "...", "price": "850.00", "category_name": "Grains", ... }
+    ],
+    "total_products": 1
+  }
+  ```
+
+1.2. Action: `get_categories`
+- Usage: Called by the frontend JavaScript to dynamically build the category filter list and display product counts.
+- Integration: Used in the `loadCategories()` method in the `Marketplace` JavaScript class.
+- URL Parameters:
+  - `action=get_categories` (required)
+- Output (JSON):
+  ```json
+  {
+    "success": true,
+    "category_counts": {
+      "grains": "10",
+      "coffee": "5",
+      "vegetables": "12"
+    }
+  }
+  ```
+
+
+2. User Actions API (Future Implementation)
+-------------------------------------------
+
+These endpoints will be created to handle asynchronous user actions without full page reloads.
+
+2.1. Add/Remove Favorite
+- Endpoint: `/api/favorite.php`
+- Method: `POST`
+- Usage: Called when a user clicks the "Save" or "Wishlist" icon on a product.
+- Input (POST data or URL params):
+  - `product_id` (int): The ID of the product to favorite/unfavorite.
+- Behavior: The backend script will check if a record exists in `user_favorites` for the given `user_id` (from session) and `product_id`. If it exists, it's deleted. If not, it's inserted.
+- Output (JSON): `{ "success": true, "is_favorited": true/false }`
+
+2.2. Submit Comment
+- Endpoint: `/api/comment.php`
+- Method: `POST`
+- Usage: Called when a user submits a comment on a discussion detail page.
+- Input (POST data):
+  - `discussion_id` (int): The ID of the discussion being commented on.
+  - `content` (string): The text of the comment.
+  - `parent_comment_id` (int, optional): For threaded replies.
+- Behavior: Inserts a new record into the `discussion_comments` table. The database trigger `trg_after_comment_insert` will handle updating the `comment_count` on the parent discussion.
+- Output (JSON): `{ "success": true, "comment_html": "..." }` (Returns the rendered HTML for the new comment to be injected into the page).
+
+*Note: Similar API endpoints will be created for Liking, Reporting, and submitting Reviews.*

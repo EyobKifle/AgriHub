@@ -1,0 +1,4 @@
+- [x] Update the els object in chat-ui.js to set form.dataset.mode = 'new'
+- [x] Update the renderMessage function in chat-ui.js to include edit/delete buttons for the current user's messages
+- [x] Add the toggleEditState function to chat-ui.js
+- [x] Update the renderAll function in chat-ui.js to be async, accept discussionId, and use fetchMessages

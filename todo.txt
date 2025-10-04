@@ -1,0 +1,54 @@
+AgriHub - Development TODO List
+===============================
+
+This file contains a list of tasks to improve the codebase, focusing on maintainability, performance, and best practices.
+
+
+### P1: Critical Refactoring (Reduce Duplication)
+
+1.  [x] **Centralize Dashboard JavaScript:**
+    -   Create a new file: `Js/dashboard-common.js`.
+    -   Move the duplicated hamburger menu logic from all `Js/User-*.js` files into `dashboard-common.js`.
+    -   Remove the duplicated code from `User-Dashboard.js`, `User-Discussions.js`, `User-Listings.js`, `User-Management.js`, `User-Messages.js`, `User-Orders.js`, `User-Profile.js`, and `User-Settings.js`.
+    -   Ensure `dashboard-common.js` is loaded on all relevant user dashboard pages via a new `dashboard.js` entry point.
+
+
+### P2: Modernization & Best Practices
+
+1.  [x] **Refactor `marketplace.js`:**
+    -   Removed the global `window.marketplace` variable.
+    -   Used event delegation on the `#products-grid` container to handle clicks on "Details" and "Add to Cart" buttons instead of inline `onclick` attributes.
+    -   Moved inline styles from `showLoading()` and `showError()` methods into the main CSS file and use JavaScript to toggle classes on the grid container.
+
+2.  [x] **Refactor `chat.js`:**
+    -   Broke the file into smaller, more focused modules (`chat-ui.js`, `chat-data.js`, `chat-config.js`).
+    -   Updated image attachment previews to use the more performant `URL.createObjectURL()`.
+
+3.  [ ] **Encapsulate `view-product.js` Logic:**
+    -   Wrap the image slider logic in an exported function (e.g., `initializeProductSlider`).
+    -   Call this function from the main site entry point (`site.js`) or directly in a script tag on the product view page, similar to how `initializeImageSlider` is used. This will remove global variables.
+
+
+### P3: Code Quality & Minor Improvements
+
+1.  [x] **Create a Shared Utilities File:**
+    -   Created `Js/utils.js`.
+    -   Moved the `escapeHtml` function from `marketplace.js` into `utils.js` so it can be imported and used by other parts of the application.
+
+2.  [ ] **Review `Newsletter Template/script.js`:**
+    -   This file is very large and uses a lot of `document.getElementById`.
+    -   Consider refactoring it into a class-based structure to better manage state and event listeners.
+    -   Break down the large `selectBlock` function into smaller helper functions for each block type to improve readability.
+
+3.  [x] **Standardize DOM Element Selection:**
+    -   Cached DOM element selections at the top of `User-Listings.js` to improve performance and readability.
+
+
+### P4: New Feature Backend Implementation
+
+1.  [ ] **Create Chat API Endpoint (`api/messages.php`):**
+    -   Implement `GET` to fetch messages for a `discussion_id`.
+    -   Implement `POST` to add a new message (calls `sp_CreateDiscussionMessage` if exists).
+    -   Implement `PUT` to update a message (calls `sp_UpdateDiscussionMessage`).
+    -   Implement `DELETE` to remove a message (calls `sp_DeleteDiscussionMessage`).
+    -   Ensure all endpoints validate that the `author_id` matches the logged-in user for edit/delete operations.

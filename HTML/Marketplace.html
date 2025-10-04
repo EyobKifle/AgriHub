@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Marketplace</title>
-  <!-- Marketplace Styles -->
-  <link rel="stylesheet" href="../Css/marketplace.css" />
+  <title>Marketplace - AgriHub</title>
+  <link rel="stylesheet" href="Css/marketplace.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
   <!-- Header Placeholder -->
@@ -14,55 +14,51 @@
   <main>
     <div class="container">
       <header class="page-header">
-        <h1 data-i18n-key="market.page.title">Marketplace</h1>
-        <p data-i18n-key="market.page.subtitle">Buy and sell agricultural products or rent farming equipment from trusted vendors.</p>
+        <h1>Marketplace</h1>
+        <p>Buy and sell agricultural products or rent farming equipment from trusted vendors.</p>
       </header>
 
       <div class="marketplace-layout">
         <!-- Sidebar: Filters -->
         <aside class="marketplace-sidebar">
           <div class="sidebar-section">
-            <a href="#" class="btn btn-primary full-width" data-i18n-key="market.sidebar.listProduct">+ List a Product</a>
+            <a href="php/User-Listings.php" class="btn btn-primary full-width">+ List a Product</a>
           </div>
 
           <div class="sidebar-section">
-            <h3 data-i18n-key="market.sidebar.categories">Categories</h3>
+            <h3>Categories</h3>
             <ul class="category-list" id="category-list">
-              <li data-category="all" class="active"><span data-i18n-key="market.cat.all">All Products</span> <span class="count" data-cat="all">(0)</span></li>
-              <li data-category="grains"><span data-i18n-key="market.cat.grains">Grains</span> <span class="count" data-cat="grains">(0)</span></li>
-              <li data-category="coffee"><span data-i18n-key="market.cat.coffee">Coffee</span> <span class="count" data-cat="coffee">(0)</span></li>
-              <li data-category="vegetables"><span data-i18n-key="market.cat.vegetables">Vegetables</span> <span class="count" data-cat="vegetables">(0)</span></li>
-              <li data-category="equipment"><span data-i18n-key="market.cat.equipment">Equipment</span> <span class="count" data-cat="equipment">(0)</span></li>
-              <li data-category="fertilizers"><span data-i18n-key="market.cat.fertilizers">Fertilizers</span> <span class="count" data-cat="fertilizers">(0)</span></li>
-              <li data-category="seeds"><span data-i18n-key="market.cat.seeds">Seeds</span> <span class="count" data-cat="seeds">(0)</span></li>
+              <!-- Categories will be loaded here by JavaScript -->
             </ul>
           </div>
 
           <div class="sidebar-section">
-            <h3 data-i18n-key="market.sidebar.priceRange">Price Range (ETB)</h3>
+            <h3>Price Range (ETB)</h3>
             <div class="price-range">
               <input id="price-min" type="number" placeholder="Min" min="0" />
               <input id="price-max" type="number" placeholder="Max" min="0" />
             </div>
-            <button id="price-apply" class="btn btn-secondary full-width" data-i18n-key="market.sidebar.applyFilter">Apply Filter</button>
+            <button id="price-apply" class="btn btn-secondary full-width">Apply Filter</button>
           </div>
         </aside>
 
         <!-- Main Content -->
         <section class="main-content">
           <div class="search-bar">
-            <input id="search-input" type="text" placeholder="Search products..." data-i18n-placeholder-key="market.search.placeholder" />
+            <input id="search-input" type="text" placeholder="Search products..." />
             <select id="sort-select" aria-label="Sort products">
-              <option value="latest" data-i18n-key="market.sort.latest">Sort by: Latest</option>
-              <option value="price-asc" data-i18n-key="market.sort.priceAsc">Sort by: Price Low to High</option>
-              <option value="price-desc" data-i18n-key="market.sort.priceDesc">Sort by: Price High to Low</option>
+              <option value="latest">Sort by: Latest</option>
+              <option value="price-asc">Sort by: Price Low to High</option>
+              <option value="price-desc">Sort by: Price High to Low</option>
             </select>
           </div>
 
-          <div id="products-grid" class="products-grid" aria-live="polite"></div>
+          <div id="products-grid" class="products-grid" aria-live="polite">
+            <!-- Products will be loaded here by JavaScript -->
+          </div>
           <div id="empty-state" class="empty-state" hidden>
-            <i class="fa-regular fa-face-frown"></i>
-            <p data-i18n-key="market.emptyState">No products match your filters. Try adjusting your search or category.</p>
+            <i class="fas fa-frown"></i>
+            <p>No products match your filters. Try adjusting your search or category.</p>
           </div>
         </section>
       </div>
@@ -72,7 +68,7 @@
   <!-- Footer Placeholder -->
   <div id="footer-placeholder"></div>
 
-  <!-- Global scripts (loads header/footer) -->
+  <!-- Marketplace JavaScript -->
   <script type="module" src="../Js/site.js"></script>
 </body>
 </html>

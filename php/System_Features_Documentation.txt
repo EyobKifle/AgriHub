@@ -1,0 +1,96 @@
+AgriHub - System Features Documentation
+=======================================
+
+This document details the features and functionality of the AgriHub platform, explaining the flow from user interface (UI) to database interactions.
+
+
+1. User Authentication & Profile Management
+-------------------------------------------
+
+1.1. Registration & Login
+- Flow: Users can sign up with their name, email, phone, and location. The system hashes the password and stores the new user in the `users` table. Login validates credentials against this table.
+- Tables: `users`
+
+1.2. Profile Management (`User-Profile.php`)
+- Flow: Once logged in, a user can navigate to "My Profile". This page allows them to view and edit their information.
+- UI to DB Interaction:
+  - The page loads data by joining `users` and `user_profiles` tables for the logged-in `user_id`.
+  - The form supports updating basic info (`name`, `phone`, `location`) and extended profile data (`bio`, `farm_size_hectares`, `specialization`, `experience_years`, `business_name`, `business_address`).
+  - A file input allows uploading a new profile picture (`avatar_url`).
+  - On submission, the backend script:
+    1. Updates the `users` table with basic information.
+    2. Handles the file upload, moving the image to `uploads/avatars/` and saving the path in `users.avatar_url`.
+    3. Uses an `INSERT ... ON DUPLICATE KEY UPDATE` (UPSERT) query to save or update the extended information in the `user_profiles` table, linking it via `user_id`.
+- Tables: `users`, `user_profiles`
+
+
+2. Marketplace
+--------------
+
+2.1. Product Viewing & Filtering (`marketplace.php`)
+- Flow: The main marketplace page displays a grid of products. Users can filter by category, price range, and a search term. They can also sort the results.
+- UI to DB Interaction:
+  - The frontend JavaScript (`marketplace.php` <script> block) makes `fetch` requests to its own PHP part, which acts as an API.
+  - `action=get_products`: The backend script constructs a dynamic SQL query based on the filter parameters (`category`, `min_price`, `max_price`, `search`, `sort`). It joins `products`, `categories`, `users`, and `product_images` to get all necessary data. The results are returned as JSON.
+  - `action=get_categories`: This fetches all category slugs and their corresponding active product counts from the `categories` table. This is used to dynamically build the category filter list in the sidebar.
+- Tables: `products`, `categories`, `users`, `product_images`
+
+2.2. Product Creation & Management (`User-Listings.php`)
+- Flow: Logged-in users can create new product listings from their dashboard.
+- UI to DB Interaction:
+  - The "Create Listing" form includes fields for title, description, category, price, unit, and quantity.
+  - A multi-file input allows for uploading several product images.
+  - On form submission, the backend script:
+    1. Begins a database transaction to ensure data integrity.
+    2. Inserts the main product data into the `products` table and retrieves the new `product_id`.
+    3. Iterates through the uploaded files, moves them to `uploads/products/`, and inserts a record for each into the `product_images` table. The first image is marked as `is_primary = 1`.
+    4. Commits the transaction if all steps succeed, or rolls back on failure.
+- Tables: `products`, `product_images`, `categories` (for dropdown).
+
+2.3. Order & Checkout (To Be Implemented)
+- Flow:
+  1. "Add to Cart" buttons on product cards will add a product ID and quantity to a client-side cart (e.g., in `localStorage` or a session).
+  2. A dedicated cart page will display items, allowing users to adjust quantities or remove items.
+  3. The checkout process will collect a `delivery_address`.
+  4. On confirmation, the frontend will send the cart contents and address to a new API endpoint.
+  5. This endpoint will call the `sp_CreateOrder` stored procedure, passing the buyer's ID, address, and a JSON array of order items.
+- Stored Procedure: `sp_CreateOrder` handles the entire order creation logic within a transaction, including decrementing stock in the `products` table and creating records in `orders` and `order_items`.
+- Tables: `orders`, `order_items`, `products`
+
+
+3. Community & Discussions
+--------------------------
+
+3.1. Discussion Forum (`User-Discussions.php`)
+- Flow: Users can view discussions they have started and create new ones.
+- UI to DB Interaction:
+  - The page dynamically populates the "Category" dropdown for new discussions by querying the `discussion_categories` table.
+  - When a user creates a new discussion, the form data is inserted into the `discussions` table, linked to the `author_id` and `category_id`.
+  - The main table on the page lists all discussions where `author_id` matches the current user's ID.
+- Tables: `discussions`, `discussion_categories`
+
+3.2. Liking & Commenting (To Be Implemented on `discussion-detail.php`)
+- Flow: On a single discussion page, users will see the main post and all comments. They can "like" the post or comments and add their own replies.
+- UI to DB Interaction:
+  - "Like" Button: A click will trigger a JavaScript `fetch` call to an API endpoint (e.g., `api/like.php?type=discussion&id=...`). The backend will increment the `like_count` on the corresponding `discussions` or `discussion_comments` record.
+  - Comment Form: Submitting a comment will post to an API endpoint that inserts a new record into the `discussion_comments` table, linking it to the `discussion_id` and `author_id`. The `trg_after_comment_insert` trigger will automatically update the `comment_count` in the `discussions` table.
+- Tables: `discussions`, `discussion_comments`
+
+
+4. Reviews, Reports, & Favorites (To Be Implemented)
+----------------------------------------------------
+
+4.1. Reviews
+- Flow: After an order is marked as "delivered", a "Leave a Review" button will appear on the user's order detail page.
+- UI to DB Interaction: The user submits a rating (1-5) and a comment. This data is sent to an API endpoint that inserts a new record into the `reviews` table, linked to the `product_id`, `reviewer_id`, and `order_item_id` to verify the purchase.
+- Tables: `reviews`, `order_items`
+
+4.2. Reports
+- Flow: A "Report" button will be available on products, discussions, and comments.
+- UI to DB Interaction: Clicking the button opens a modal where the user can state a reason. The submission sends the `reported_item_type`, `reported_item_id`, and `reason` to an API endpoint, which inserts a new record into the `reports` table for admin review.
+- Tables: `reports`
+
+4.3. Favorites (Wishlist)
+- Flow: A "Save" or "Add to Wishlist" icon will be on each product card.
+- UI to DB Interaction: Clicking the icon triggers a JavaScript `fetch` call to an API endpoint (e.g., `api/favorite.php?product_id=...`). The backend will `INSERT` a record into the `user_favorites` table, linking the `user_id` and `product_id`. Clicking again would `DELETE` the record.
+- Tables: `user_favorites`

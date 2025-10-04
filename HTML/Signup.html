@@ -18,12 +18,23 @@
           <h1 data-i18n-key="signup.title">Create an account</h1>
           <p class="muted" data-i18n-key="signup.subtitle">Join AgriHub to connect and trade</p>
         </header>
-        <form class="auth-form" action="#" method="post">
+        <form class="auth-form" action="../php/auth.php" method="post">
+          <input type="hidden" name="action" value="signup">
           <div class="form-grid">
             <div class="form-field">
               <label for="name" data-i18n-key="signup.nameLabel">Full name</label>
               <input type="text" id="name" name="name" data-i18n-placeholder-key="signup.namePlaceholder" placeholder="Your Name" required />
             </div>
+            <div class="form-field">
+              <label for="phone">Phone Number</label>
+              <input type="tel" id="phone" name="phone" placeholder="+251 9..." required />
+            </div>
+          </div>
+          <div class="form-field">
+            <label for="location">Location / Region</label>
+            <input type="text" id="location" name="location" placeholder="e.g., Amhara, Gojjam" required />
+          </div>
+          <div class="form-grid">
             <div class="form-field">
               <label for="email" data-i18n-key="signup.emailLabel">Email</label>
               <input type="email" id="email" name="email" data-i18n-placeholder-key="signup.emailPlaceholder" placeholder="you@example.com" required />

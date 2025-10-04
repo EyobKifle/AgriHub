@@ -1,35 +1,11 @@
 /**
- * This file controls all the logic for the community chat feature.
- * It handles sending messages, displaying them, uploading files, and
- * keeping the chat updated across different browser tabs.
+ * This file is the main controller for the community chat feature.
+ * It orchestrates the UI, data, and event handling for the chat.
  */
 
-// A unique key to save our chat messages in the browser's local storage.
-const LS_KEY = 'agrihub_chat_messages_v1';
-
-// An object representing the person using the chat.
-const currentUser = {
-  id: 'me',
-  name: 'You',
-  avatar: 'https://placehold.co/80x80/1e4620/FFF?text=Y'
-};
-
-// A list of fake users for demonstration purposes.
-const demoUsers = [
-  { id: 'u1', name: 'Alemayehu', avatar: 'https://placehold.co/80x80/2a7742/FFF?text=A' },
-  { id: 'u2', name: 'Meron', avatar: 'https://placehold.co/80x80/d97706/FFF?text=M' },
-  { id: 'u3', name: 'Kebede', avatar: 'https://placehold.co/80x80/0a6e2d/FFF?text=K' }
-];
-
-// A handy object to store references to the HTML elements we'll be working with.
-// This is better than searching for them every time we need them.
-const els = {
-  messages: document.getElementById('chat-messages'),
-  form: document.getElementById('chat-form'),
-  input: document.getElementById('message-input'),
-  file: document.getElementById('file-upload'),
-  previews: document.getElementById('file-previews'),
-};
+import { LS_KEY, currentUser, demoUsers } from './chat/chat-config.js';
+import { loadMessages, saveMessages } from './chat/chat-data.js';
+import { els, renderAll, createAttachmentPreview } from './chat/chat-ui.js';
 
 /**
  * A helper function to get the current time as a standard string.
@@ -38,164 +14,9 @@ const els = {
 function nowISO() { return new Date().toISOString(); }
 
 /**
- * A helper function to format an ISO date string into a simple time like "12:30 PM".
- */
-function fmtTime(iso) {
-  const d = new Date(iso);
-  return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-}
-
-/**
- * Loads the saved chat messages from the browser's local storage.
- * It uses a try-catch block in case the saved data is corrupted.
- */
-function loadMessages() {
-  try {
-    return JSON.parse(localStorage.getItem(LS_KEY)) || [];
-  } catch {
-    return [];
-  }
-}
-
-/**
- * Saves the entire list of messages to the browser's local storage.
- */
-function saveMessages(list) {
-  localStorage.setItem(LS_KEY, JSON.stringify(list));
-}
-
-/**
- * A simple function to automatically scroll the chat window to the bottom
- * so the latest messages are always visible.
- */
-function scrollToBottom() {
-  els.messages.scrollTop = els.messages.scrollHeight;
-}
-
-/**
- * Creates a small preview element for a file that is about to be uploaded.
- */
-function createAttachmentPreview(file) {
-  const wrap = document.createElement('span');
-  wrap.className = 'preview';
-  const name = document.createElement('span');
-  name.className = 'name';
-  name.textContent = file.name;
-
-  const remove = document.createElement('button');
-  remove.className = 'remove';
-  remove.type = 'button';
-  remove.textContent = '✕';
-  // When the remove button is clicked, it rebuilds the file list without the removed file.
-  remove.addEventListener('click', () => {
-    // Remove this file from selection by reconstructing FileList is complex; reset input and rebuild others
-    const files = Array.from(els.file.files).filter(f => f !== file);
-    const dt = new DataTransfer();
-    files.forEach(f => dt.items.add(f));
-    els.file.files = dt.files;
-    wrap.remove();
-  });
-
-  // If the file is an image, create a small thumbnail.
-  if (file.type.startsWith('image/')) {
-    const img = document.createElement('img');
-    img.alt = file.name;
-    const reader = new FileReader();
-    reader.onload = e => { img.src = e.target.result; };
-    reader.readAsDataURL(file);
-    wrap.appendChild(img);
-  } else { // Otherwise, show a generic icon (e.g., for a PDF).
-    // icon placeholder for pdf
-    const img = document.createElement('img');
-    img.src = 'https://placehold.co/44x44/1e4620/FFF?text=PDF';
-    img.alt = 'PDF file';
-    wrap.appendChild(img);
-  }
-
-  wrap.appendChild(name);
-  wrap.appendChild(remove);
-  return wrap;
-}
-
-/**
- * Creates the complete HTML for a single chat message bubble.
- * It handles messages sent by the current user differently from received messages.
- */
-function renderMessage(m) {
-  const isMe = m.user.id === currentUser.id;
-  const row = document.createElement('div');
-  row.className = 'message' + (isMe ? ' sent' : '');
-
-  const avatar = document.createElement('div');
-  avatar.className = 'avatar';
-  const avImg = document.createElement('img');
-  avImg.src = m.user.avatar; avImg.alt = `${m.user.name} avatar`;
-  avatar.appendChild(avImg);
-
-  const bubble = document.createElement('div');
-  bubble.className = 'bubble';
-  const meta = document.createElement('div');
-  meta.className = 'meta';
-  const name = document.createElement('span');
-  name.className = 'name';
-  name.textContent = m.user.name;
-  const time = document.createElement('span');
-  time.className = 'time';
-  time.textContent = fmtTime(m.createdAt);
-  meta.appendChild(name); meta.appendChild(time);
-
-  const text = document.createElement('div');
-  text.className = 'text';
-  text.textContent = m.text || '';
-
-  // Assemble the bubble.
-  bubble.appendChild(meta);
-  if (m.text) bubble.appendChild(text);
-
-  if (m.attachments && m.attachments.length) {
-    const grid = document.createElement('div');
-    grid.className = 'attachments';
-    m.attachments.forEach(att => {
-      if (att.type === 'image') {
-        const a = document.createElement('a');
-        a.href = att.url; a.target = '_blank';
-        a.className = 'attachment';
-        const img = document.createElement('img');
-        img.src = att.url; img.alt = att.name;
-        a.appendChild(img);
-        grid.appendChild(a);
-      } else if (att.type === 'pdf') {
-        const a = document.createElement('a');
-        a.href = att.url; a.target = '_blank';
-        a.className = 'attachment file';
-        a.innerHTML = `<img src="https://placehold.co/44x44/1e4620/FFF?text=PDF" alt="PDF icon" /> <span>${att.name}</span>`;
-        grid.appendChild(a);
-      }
-    });
-    bubble.appendChild(grid);
-  }
-
-  row.appendChild(avatar);
-  row.appendChild(bubble);
-  return row;
-}
-
-/**
- * The main rendering function. It clears the chat window,
- * loads all messages, and displays them one by one.
- */
-function renderAll() {
-  const list = loadMessages();
-  els.messages.innerHTML = '';
-  const frag = document.createDocumentFragment();
-  list.forEach(m => frag.appendChild(renderMessage(m)));
-  els.messages.appendChild(frag);
-  scrollToBottom();
-}
-
-/**
  * Converts a list of files from an input into a format that can be saved.
  * For images, it creates a "Data URL" which is a long string representing the image.
+ * For other files, it creates a temporary blob URL.
  */
 async function filesToAttachments(files) {
   const atts = [];
@@ -204,7 +25,7 @@ async function filesToAttachments(files) {
       const dataUrl = await new Promise(res => { const r = new FileReader(); r.onload = e => res(e.target.result); r.readAsDataURL(f); });
       atts.push({ type: 'image', url: dataUrl, name: f.name });
     } else if (f.type === 'application/pdf') {
-      // Store only name and a blob URL; DataURL can be huge, but we simulate persistence
+      // For persistence in localStorage, we must use a Data URL, but for a real backend, a blob would be uploaded.
       const blobUrl = URL.createObjectURL(f);
       atts.push({ type: 'pdf', url: blobUrl, name: f.name });
     }
@@ -231,7 +52,7 @@ function seedDemoIfEmpty() {
  * A function to simulate another user replying to a message.
  * It waits a short time and then adds a new message to the list.
  */
-function scheduleBotReply(latest) {
+function scheduleBotReply() {
   // Simulate real-time by storing a bot reply; will propagate via storage event to other tabs
   setTimeout(() => {
     const msg = { id: crypto.randomUUID(), user: demoUsers[2], text: `@${currentUser.name} thanks for sharing!`, attachments: [], createdAt: nowISO() };
@@ -247,8 +68,15 @@ function scheduleBotReply(latest) {
 // When the user selects a file to upload, show the previews.
 els.file.addEventListener('change', () => {
   els.previews.innerHTML = '';
+  const onRemove = (fileToRemove) => {
+    const files = Array.from(els.file.files).filter(f => f !== fileToRemove);
+    const dt = new DataTransfer();
+    files.forEach(f => dt.items.add(f));
+    els.file.files = dt.files;
+  };
+
   Array.from(els.file.files).forEach(f => {
-    els.previews.appendChild(createAttachmentPreview(f));
+    els.previews.appendChild(createAttachmentPreview(f, onRemove));
   });
 });
 
@@ -281,7 +109,7 @@ els.form.addEventListener('submit', async (e) => {
   renderAll();
 
   // Schedule a fake reply from a bot.
-  scheduleBotReply(msg);
+  scheduleBotReply();
 });
 
 // This is a key part of the "real-time" update feature.
