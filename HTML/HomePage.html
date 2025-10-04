@@ -15,6 +15,7 @@
       href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
       rel="stylesheet"
     />
+    <script type="module" src="../Js/site.js" defer></script>
   </head>
   <body>
     <!-- Header Placeholder -->
@@ -24,14 +25,14 @@
       <section class="home-hero" id="hero-section">
         <div class="home-hero-overlay">
           <div class="home-hero-content">
-            <h1>Welcome to <span class="highlight">AgriHub</span></h1>
-            <p>
+            <h1 data-i18n-key="home.hero.title">Welcome to <span class="highlight">AgriHub</span></h1>
+            <p data-i18n-key="home.hero.subtitle">
               Your all-in-one platform for modern farming. Connect with buyers,
               access resources, and grow with Ethiopia’s farming community.
             </p>
             <div class="hero-buttons">
-              <a href="#marketplace" class="btn primary">Explore Marketplace</a>
-              <a href="#cta" class="btn secondary">Join Now</a>
+              <a href="#marketplace" class="btn primary" data-i18n-key="home.hero.button.primary">Explore Marketplace</a>
+              <a href="#cta" class="btn secondary" data-i18n-key="home.hero.button.secondary">Join Now</a>
             </div>
           </div>
         </div>
@@ -40,30 +41,30 @@
       <section id="features">
         <div class="container">
           <div class="section-header">
-            <h2>Core Features</h2>
-            <p>Everything you need to thrive in modern agriculture.</p>
+            <h2 data-i18n-key="home.features.title">Core Features</h2>
+            <p data-i18n-key="home.features.subtitle">Everything you need to thrive in modern agriculture.</p>
           </div>
           <div class="grid">
             <div class="card feature-card">
               <i class="fa-solid fa-store"></i>
-              <h3>Direct Marketplace</h3>
-              <p>
+              <h3 data-i18n-key="home.features.marketplace.title">Direct Marketplace</h3>
+              <p data-i18n-key="home.features.marketplace.text">
                 Sell your produce directly to buyers and suppliers without
                 middlemen. Get fair prices for your hard work.
               </p>
             </div>
             <div class="card feature-card">
               <i class="fa-solid fa-newspaper"></i>
-              <h3>Latest News & Tips</h3>
-              <p>
+              <h3 data-i18n-key="home.features.news.title">Latest News & Tips</h3>
+              <p data-i18n-key="home.features.news.text">
                 Stay updated with the latest agricultural news, weather
                 forecasts, and expert farming techniques.
               </p>
             </div>
             <div class="card feature-card">
               <i class="fa-solid fa-users"></i>
-              <h3>Farmer Community</h3>
-              <p>
+              <h3 data-i18n-key="home.features.community.title">Farmer Community</h3>
+              <p data-i18n-key="home.features.community.text">
                 Connect with fellow farmers, ask questions, share knowledge, and
                 build a strong support network.
               </p>
@@ -75,30 +76,30 @@
       <section id="how-it-works">
         <div class="container">
           <div class="section-header">
-            <h2>Getting Started is Easy</h2>
-            <p>Join our network in three simple steps.</p>
+            <h2 data-i18n-key="home.how.title">Getting Started is Easy</h2>
+            <p data-i18n-key="home.how.subtitle">Join our network in three simple steps.</p>
           </div>
           <div class="grid">
             <div class="card step-card">
               <i class="fa-solid fa-user-plus"></i>
-              <h3>1. Create Your Account</h3>
-              <p>
+              <h3 data-i18n-key="home.how.step1.title">1. Create Your Account</h3>
+              <p data-i18n-key="home.how.step1.text">
                 Sign up for free in minutes. Tell us about your farm and what
                 you produce or need.
               </p>
             </div>
             <div class="card step-card">
               <i class="fa-solid fa-magnifying-glass-dollar"></i>
-              <h3>2. List or Find Products</h3>
-              <p>
+              <h3 data-i18n-key="home.how.step2.title">2. List or Find Products</h3>
+              <p data-i18n-key="home.how.step2.text">
                 Easily list your produce for sale in the marketplace or browse
                 for seeds, tools, and supplies.
               </p>
             </div>
             <div class="card step-card">
               <i class="fa-solid fa-handshake-simple"></i>
-              <h3>3. Connect & Transact</h3>
-              <p>
+              <h3 data-i18n-key="home.how.step3.title">3. Connect & Transact</h3>
+              <p data-i18n-key="home.how.step3.text">
                 Communicate directly with buyers or sellers to arrange logistics
                 and complete your transaction securely.
               </p>
@@ -110,8 +111,8 @@
       <section id="marketplace">
         <div class="container">
           <div class="section-header">
-            <h2>Fresh on the Market</h2>
-            <p>
+            <h2 data-i18n-key="home.market.title">Fresh on the Market</h2>
+            <p data-i18n-key="home.market.subtitle">
               Discover high-quality produce and supplies from farms across
               Ethiopia.
             </p>
@@ -119,40 +120,40 @@
           <div class="grid">
             <article class="card product-card">
               <img
-                src="https://placehold.co/400x300/e85d04/FFF?text=Teff+Grain"
+                src="/images/Homepage images/Grain Teff.jpg"
                 alt="Teff Grain"
               />
-              <h3>High-Quality Teff Grain</h3>
-              <p class="price">ETB 3,500 / Quintal</p>
-              <p>
+              <h3 data-i18n-key="home.market.product1.title">High-Quality Teff Grain</h3>
+              <p class="price" data-i18n-key="home.market.product1.price">ETB 3,500 / Quintal</p>
+              <p data-i18n-key="home.market.product1.desc">
                 Premium grade Teff from the Gojjam region, perfect for injera.
               </p>
-              <a href="#" class="btn">View Product</a>
+              <a href="#" class="btn" data-i18n-key="common.viewProduct">View Product</a>
             </article>
             <article class="card product-card">
               <img
-                src="https://placehold.co/400x300/2a9d8f/FFF?text=Coffee+Beans"
+                src="/images/Homepage images/yergachefe buna.jpg"
                 alt="Coffee Beans"
               />
-              <h3>Yirgacheffe Coffee Beans</h3>
-              <p class="price">ETB 8,000 / Quintal</p>
-              <p>
+              <h3 data-i18n-key="home.market.product2.title">Yirgacheffe Coffee Beans</h3>
+              <p class="price" data-i18n-key="home.market.product2.price">ETB 8,000 / Quintal</p>
+              <p data-i18n-key="home.market.product2.desc">
                 Sun-dried, organic Arabica coffee beans with a distinct floral
                 aroma.
               </p>
-              <a href="#" class="btn">View Product</a>
+              <a href="#" class="btn" data-i18n-key="common.viewProduct">View Product</a>
             </article>
             <article class="card product-card">
               <img
-                src="https://placehold.co/400x300/264653/FFF?text=Organic+Fertilizer"
+                src="/images/Homepage images/organiccompost.jpg"
                 alt="Organic Fertilizer"
               />
-              <h3>Organic Compost Fertilizer</h3>
-              <p class="price">ETB 1,200 / 50kg Bag</p>
-              <p>
+              <h3 data-i18n-key="home.market.product3.title">Organic Compost Fertilizer</h3>
+              <p class="price" data-i18n-key="home.market.product3.price">ETB 1,200 / 50kg Bag</p>
+              <p data-i18n-key="home.market.product3.desc">
                 Nutrient-rich compost to improve soil health and crop yield.
               </p>
-              <a href="#" class="btn">View Product</a>
+              <a href="#" class="btn" data-i18n-key="common.viewProduct">View Product</a>
             </article>
           </div>
         </div>
@@ -161,8 +162,8 @@
       <section id="news">
         <div class="container">
           <div class="section-header">
-            <h2>News & Updates</h2>
-            <p>
+            <h2 data-i18n-key="home.news.title">News & Updates</h2>
+            <p data-i18n-key="home.news.subtitle">
               The latest insights and information for the Ethiopian agricultural
               sector.
             </p>
@@ -170,46 +171,47 @@
           <div class="grid">
             <article class="card news-card">
               <img
-                src="https://placehold.co/400x300/457b9d/FFF?text=New+Irrigation"
+                src="/images/Homepage images/Center Pivot irrigation system near Bonnievale.jpg"
                 alt="Irrigation System"
               />
-              <p class="meta">By AgriHub Staff | September 23, 2025</p>
-              <h3>
+              <p class="meta" data-i18n-key="home.news.article1.meta">By AgriHub Staff | September 23, 2025</p>
+              <h3 data-i18n-key="home.news.article1.title">
                 New Irrigation Techniques Boost Crop Yields in the Rift Valley
               </h3>
-              <p>
+              <p data-i18n-key="home.news.article1.desc">
                 Farmers are adopting innovative water management systems to
                 combat changing weather patterns...
               </p>
-              <a href="#">Read More &raquo;</a>
+              <a href="#" data-i18n-key="common.readMore">Read More &raquo;</a>
             </article>
             <article class="card news-card">
               <img
-                src="https://placehold.co/400x300/d62828/FFF?text=Coffee+Exports"
+                src="/images/Homepage images/Ethiopia’s Coffee .jpg"
                 alt="Coffee Exports"
               />
-              <p class="meta">
+              <p class="meta" data-i18n-key="home.news.article2.meta">
                 By Ministry of Agriculture | September 21, 2025
               </p>
-              <h3>Ethiopian Coffee Exports See a 15% Increase This Quarter</h3>
-              <p>
+              <h3 data-i18n-key="home.news.article2.title">Ethiopian Coffee Exports See a 15% Increase This Quarter</h3>
+              <p data-i18n-key="home.news.article2.desc">
                 A new report highlights the growing international demand for
                 specialty Ethiopian coffee beans...
               </p>
-              <a href="#">Read More &raquo;</a>
+              <a href="#" data-i18n-key="common.readMore">Read More &raquo;</a>
             </article>
             <article class="card news-card">
               <img
-                src="https://placehold.co/400x300/fca311/FFF?text=AgriTech"
-                alt="Farmer with Phone"
+                src="/images/Homepage images/chickfarm.jpg"
+                alt="Chik farm"
               />
-              <p class="meta">By Tech Today | September 19, 2025</p>
-              <h3>How Digital Tools Like AgriHub Are Transforming Farming</h3>
-              <p>
-                Digital platforms are connecting farmers to markets and
-                information like never before, increasing efficiency...
+              <p class="meta" data-i18n-key="home.news.article3.meta">By Poultry Today | September 19, 2025</p>
+              <h3 data-i18n-key="home.news.article3.title">How Chick farming is paving the future for poultry</h3>
+              <p data-i18n-key="home.news.article3.desc">
+                Modern chick farming is transforming the poultry industry with
+                sustainable practices, improved breeding techniques, and
+                technology-driven monitoring systems.
               </p>
-              <a href="#">Read More &raquo;</a>
+              <a href="#" data-i18n-key="common.readMore">Read More &raquo;</a>
             </article>
           </div>
         </div>
@@ -217,13 +219,13 @@
 
       <section id="cta">
         <div class="container">
-          <h2>Join Thousands of Farmers Thriving with AgriHub</h2>
-          <p>
+          <h2 data-i18n-key="home.cta.title">Join Thousands of Farmers Thriving with AgriHub</h2>
+          <p data-i18n-key="home.cta.text">
             Create your free account today and start selling your produce,
             accessing vital information, and connecting with a nationwide
             community.
           </p>
-          <a href="#" class="btn primary">Sign Up for Free</a>
+          <a href="#" class="btn primary" data-i18n-key="home.cta.button">Sign Up for Free</a>
         </div>
       </section>
     </main>
@@ -232,11 +234,5 @@
     <div id="footer-placeholder"></div>
 
     <script type="module" src="../Js/site.js"></script>
-    <!-- Homepage-specific scripts -->
-    <script type="module">
-      import { initializeImageSlider } from '../Js/imageSlider.js';
-      // Run scripts that are specific to the homepage
-      initializeImageSlider();
-    </script>
   </body>
 </html>

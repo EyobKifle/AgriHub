@@ -15,33 +15,33 @@
     <div class="container auth-container">
       <section class="auth-card">
         <header class="auth-header">
-          <h1>Create an account</h1>
-          <p class="muted">Join AgriHub to connect and trade</p>
+          <h1 data-i18n-key="signup.title">Create an account</h1>
+          <p class="muted" data-i18n-key="signup.subtitle">Join AgriHub to connect and trade</p>
         </header>
         <form class="auth-form" action="#" method="post">
           <div class="form-grid">
             <div class="form-field">
-              <label for="name">Full name</label>
-              <input type="text" id="name" name="name" placeholder="Your Name" required />
+              <label for="name" data-i18n-key="signup.nameLabel">Full name</label>
+              <input type="text" id="name" name="name" data-i18n-placeholder-key="signup.namePlaceholder" placeholder="Your Name" required />
             </div>
             <div class="form-field">
-              <label for="email">Email</label>
-              <input type="email" id="email" name="email" placeholder="you@example.com" required />
+              <label for="email" data-i18n-key="signup.emailLabel">Email</label>
+              <input type="email" id="email" name="email" data-i18n-placeholder-key="signup.emailPlaceholder" placeholder="you@example.com" required />
             </div>
           </div>
           <div class="form-grid">
             <div class="form-field">
-              <label for="password">Password</label>
-              <input type="password" id="password" name="password" placeholder="••••••••" required />
+              <label for="password" data-i18n-key="signup.passwordLabel">Password</label>
+              <input type="password" id="password" name="password" data-i18n-placeholder-key="signup.passwordPlaceholder" placeholder="••••••••" required />
             </div>
             <div class="form-field">
-              <label for="confirm">Confirm password</label>
-              <input type="password" id="confirm" name="confirm" placeholder="••••••••" required />
+              <label for="confirm" data-i18n-key="signup.confirmPasswordLabel">Confirm password</label>
+              <input type="password" id="confirm" name="confirm" data-i18n-placeholder-key="signup.confirmPasswordPlaceholder" placeholder="••••••••" required />
             </div>
           </div>
-          <button type="submit" class="btn btn-primary full-width">Create Account</button>
+          <button type="submit" class="btn btn-primary full-width" data-i18n-key="signup.createAccountButton">Create Account</button>
           <div class="auth-links">
-            <span>Already have an account? <a href="Login.html">Login</a></span>
+            <span data-i18n-key="signup.hasAccount">Already have an account?</span> <a href="Login.html" data-i18n-key="signup.loginLink">Login</a>
           </div>
         </form>
       </section>

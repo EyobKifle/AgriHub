@@ -52,26 +52,26 @@
 
         <main class="main-content">
             <div class="main-header">
-                <h1>My Listings</h1>
-                <p>View, edit, or delete the products you have listed for sale.</p>
+                <h1 data-i18n-key="user.listings.title">My Listings</h1>
+                <p data-i18n-key="user.listings.subtitle">View, edit, or delete the products you have listed for sale.</p>
             </div>
 
             <div class="page-controls">
                 <div class="search-filter-group">
                     <!-- Filters for listings could be added here later -->
                 </div>
-                <button class="btn btn-primary" id="add-listing-btn"><i class="fa-solid fa-plus"></i> Add New Listing</button>
+                <button class="btn btn-primary" id="add-listing-btn" data-i18n-key="user.listings.add"><i class="fa-solid fa-plus"></i> Add New Listing</button>
             </div>
 
             <div class="table-container">
                 <table class="data-table">
                     <thead>
                         <tr>
-                            <th>Product</th>
-                            <th>Category</th>
-                            <th>Price</th>
-                            <th>Status</th>
-                            <th>Actions</th>
+                            <th data-i18n-key="user.listings.table.product">Product</th>
+                            <th data-i18n-key="user.listings.table.category">Category</th>
+                            <th data-i18n-key="user.listings.table.price">Price</th>
+                            <th data-i18n-key="user.listings.table.status">Status</th>
+                            <th data-i18n-key="user.listings.table.actions">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -84,10 +84,10 @@
                             </td>
                             <td>Grains</td>
                             <td>ETB 4,500 / Quintal</td>
-                            <td><span class="status status-active">Active</span></td>
+                            <td><span class="status status-active" data-i18n-key="user.listings.status.active">Active</span></td>
                             <td class="action-buttons">
-                                <button title="Edit Listing"><i class="fa-solid fa-pen"></i></button>
-                                <button title="Delete Listing"><i class="fa-solid fa-trash"></i></button>
+                                <button data-i18n-title-key="user.listings.actions.edit" title="Edit Listing"><i class="fa-solid fa-pen"></i></button>
+                                <button data-i18n-title-key="user.listings.actions.delete" title="Delete Listing"><i class="fa-solid fa-trash"></i></button>
                             </td>
                         </tr>
                         <tr>
@@ -99,9 +99,9 @@
                             </td>
                             <td>Produce</td>
                             <td>ETB 15 / pc</td>
-                            <td><span class="status status-sold">Sold</span></td>
+                            <td><span class="status status-sold" data-i18n-key="user.listings.status.sold">Sold</span></td>
                             <td class="action-buttons">
-                                <button title="View Details"><i class="fa-solid fa-eye"></i></button>
+                                <button data-i18n-title-key="user.listings.actions.view" title="View Details"><i class="fa-solid fa-eye"></i></button>
                             </td>
                         </tr>
                         <tr>
@@ -113,10 +113,10 @@
                             </td>
                             <td>Equipment</td>
                             <td>ETB 3,000</td>
-                            <td><span class="status status-pending">Pending Approval</span></td>
+                            <td><span class="status status-pending" data-i18n-key="user.listings.status.pending">Pending Approval</span></td>
                             <td class="action-buttons">
-                                <button title="Edit Listing"><i class="fa-solid fa-pen"></i></button>
-                                <button title="Delete Listing"><i class="fa-solid fa-trash"></i></button>
+                                <button data-i18n-title-key="user.listings.actions.edit" title="Edit Listing"><i class="fa-solid fa-pen"></i></button>
+                                <button data-i18n-title-key="user.listings.actions.delete" title="Delete Listing"><i class="fa-solid fa-trash"></i></button>
                             </td>
                         </tr>
                     </tbody>
@@ -130,40 +130,40 @@
     <div class="modal-overlay" id="add-listing-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Add New Listing</h2>
+                <h2 data-i18n-key="user.listings.modal.title">Add New Listing</h2>
                 <button class="close-modal" id="close-modal-btn">&times;</button>
             </div>
             <div class="modal-body">
                 <form id="new-listing-form">
                     <div class="form-group">
-                        <label for="product-name">Product Name</label>
-                        <input type="text" id="product-name" placeholder="e.g., Organic Teff" required>
+                        <label for="product-name" data-i18n-key="user.listings.modal.name">Product Name</label>
+                        <input type="text" id="product-name" data-i18n-placeholder-key="user.listings.modal.namePlaceholder" placeholder="e.g., Organic Teff" required>
                     </div>
                     <div class="form-group">
-                        <label for="product-category">Category</label>
+                        <label for="product-category" data-i18n-key="user.listings.modal.category">Category</label>
                         <select id="product-category" required>
-                            <option value="" disabled selected>Select a category</option>
-                            <option value="grains">Grains</option>
-                            <option value="produce">Produce</option>
-                            <option value="equipment">Equipment</option>
-                            <option value="coffee">Coffee</option>
-                            <option value="fertilizers">Fertilizers</option>
+                            <option value="" disabled selected data-i18n-key="user.listings.modal.selectCategory">Select a category</option>
+                            <option value="grains" data-i18n-key="market.cat.grains">Grains</option>
+                            <option value="produce" data-i18n-key="market.cat.vegetables">Produce</option>
+                            <option value="equipment" data-i18n-key="market.cat.equipment">Equipment</option>
+                            <option value="coffee" data-i18n-key="market.cat.coffee">Coffee</option>
+                            <option value="fertilizers" data-i18n-key="market.cat.fertilizers">Fertilizers</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="product-price">Price (ETB)</label>
-                        <input type="number" id="product-price" placeholder="e.g., 3000" required>
+                        <label for="product-price" data-i18n-key="user.listings.modal.price">Price (ETB)</label>
+                        <input type="number" id="product-price" data-i18n-placeholder-key="user.listings.modal.pricePlaceholder" placeholder="e.g., 3000" required>
                     </div>
                     <div class="form-group">
-                        <label for="product-description">Description</label>
-                        <textarea id="product-description" rows="4" placeholder="Provide details about your product..."></textarea>
+                        <label for="product-description" data-i18n-key="user.listings.modal.description">Description</label>
+                        <textarea id="product-description" rows="4" data-i18n-placeholder-key="user.listings.modal.descriptionPlaceholder" placeholder="Provide details about your product..."></textarea>
                     </div>
                     <div class="form-group">
-                        <label>Product Image</label>
+                        <label data-i18n-key="user.listings.modal.image">Product Image</label>
                         <label for="product-image-upload" class="image-upload-box">
                             <div id="image-preview">
                                 <i class="fa-solid fa-cloud-arrow-up"></i>
-                                <span>Click to upload or drag & drop</span>
+                                <span data-i18n-key="user.listings.modal.upload">Click to upload or drag & drop</span>
                             </div>
                         </label>
                         <input type="file" id="product-image-upload" accept="image/*" hidden>
@@ -171,8 +171,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="cancel-modal-btn">Cancel</button>
-                <button type="submit" form="new-listing-form" class="btn btn-primary">Save Listing</button>
+                <button type="button" class="btn btn-secondary" id="cancel-modal-btn" data-i18n-key="user.listings.modal.cancel">Cancel</button>
+                <button type="submit" form="new-listing-form" class="btn btn-primary" data-i18n-key="user.listings.modal.save">Save Listing</button>
             </div>
         </div>
     </div>

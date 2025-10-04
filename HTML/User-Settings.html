@@ -31,20 +31,20 @@
     <div class="dashboard-container">
         <aside class="sidebar" id="sidebar">
             <ul class="sidebar-nav">
-                <li><a href="User-Dashboard.html"><i class="fa-solid fa-house"></i> Dashboard</a></li>
-                <li><a href="User-Profile.html"><i class="fa-solid fa-user"></i> My Profile</a></li>
-                <li><a href="User-Listings.html"><i class="fa-solid fa-list-check"></i> My Listings</a></li>
-                <li><a href="User-Orders.html"><i class="fa-solid fa-receipt"></i> Order History</a></li>
-                <li><a href="User-Messages.html"><i class="fa-solid fa-envelope"></i> Messages</a></li>
-                <li><a href="User-Discussions.html"><i class="fa-solid fa-comments"></i> My Discussions</a></li>
-                <li><a href="User-Settings.html" class="active"><i class="fa-solid fa-gear"></i> Settings</a></li>
+                <li><a href="User-Dashboard.html" data-i18n-key="user.nav.dashboard"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+                <li><a href="User-Profile.html" data-i18n-key="user.nav.profile"><i class="fa-solid fa-user"></i> My Profile</a></li>
+                <li><a href="User-Listings.html" data-i18n-key="user.nav.listings"><i class="fa-solid fa-list-check"></i> My Listings</a></li>
+                <li><a href="User-Orders.html" data-i18n-key="user.nav.orders"><i class="fa-solid fa-receipt"></i> Order History</a></li>
+                <li><a href="User-Messages.html" data-i18n-key="user.nav.messages"><i class="fa-solid fa-envelope"></i> Messages</a></li>
+                <li><a href="User-Discussions.html" data-i18n-key="user.nav.discussions"><i class="fa-solid fa-comments"></i> My Discussions</a></li>
+                <li><a href="User-Settings.html" class="active" data-i18n-key="user.nav.settings"><i class="fa-solid fa-gear"></i> Settings</a></li>
             </ul>
              <div class="sidebar-footer">
                 <div class="profile-dropdown">
                     
                     <div>
                         <div class="profile-name">John Farmer</div>
-                        <small>Logout</small>
+                        <small data-i18n-key="user.nav.logout">Logout</small>
                     </div>
                 </div>
             </div>
@@ -52,53 +52,53 @@
 
         <main class="main-content">
             <div class="main-header">
-                <h1>Settings</h1>
-                <p>Manage your account preferences and site settings.</p>
+                <h1 data-i18n-key="user.settings.title">Settings</h1>
+                <p data-i18n-key="user.settings.subtitle">Manage your account preferences and site settings.</p>
             </div>
 
             <div class="settings-grid">
                 <!-- Notification Settings -->
                 <div class="card">
-                    <h3 class="card-title">Notifications</h3>
+                    <h3 class="card-title" data-i18n-key="user.settings.notifications.title">Notifications</h3>
                     <form class="settings-form">
                         <div class="form-group form-group-toggle">
-                            <label for="email-notifications">Email Notifications</label>
+                            <label for="email-notifications" data-i18n-key="user.settings.notifications.email">Email Notifications</label>
                             <label class="switch">
                                 <input type="checkbox" id="email-notifications" checked>
                                 <span class="slider"></span>
                             </label>
                         </div>
-                        <p class="form-text">Receive updates about your listings and messages via email.</p>
+                        <p class="form-text" data-i18n-key="user.settings.notifications.desc">Receive updates about your listings and messages via email.</p>
                     </form>
                 </div>
 
                 <!-- Appearance Settings -->
                 <div class="card">
-                    <h3 class="card-title">Appearance</h3>
+                    <h3 class="card-title" data-i18n-key="user.settings.appearance.title">Appearance</h3>
                     <form class="settings-form">
                         <div class="form-group form-group-toggle">
-                            <label for="dark-mode-toggle">Dark Mode</label>
+                            <label for="dark-mode-toggle" data-i18n-key="user.settings.appearance.darkMode">Dark Mode</label>
                             <label class="switch">
                                 <input type="checkbox" id="dark-mode-toggle">
                                 <span class="slider"></span>
                             </label>
                         </div>
-                        <p class="form-text">Switch between light and dark themes.</p>
+                        <p class="form-text" data-i18n-key="user.settings.appearance.desc">Switch between light and dark themes.</p>
                     </form>
                 </div>
 
                 <!-- Language Settings -->
                 <div class="card">
-                    <h3 class="card-title">Language</h3>
+                    <h3 class="card-title" data-i18n-key="user.settings.language.title">Language</h3>
                     <form class="settings-form">
                         <div class="form-group">
-                            <label for="language-select">Preferred Language</label>
+                            <label for="language-select" data-i18n-key="user.settings.language.preferred">Preferred Language</label>
                             <select id="language-select">
-                                <option value="en">English</option>
-                                <option value="am">Amharic (አማርኛ)</option>
+                                <option value="en" data-i18n-key="lang.en">English</option>
+                                <option value="am" data-i18n-key="lang.amFull">Amharic (አማርኛ)</option>
                             </select>
                         </div>
-                        <p class="form-text">Choose the language for your dashboard interface.</p>
+                        <p class="form-text" data-i18n-key="user.settings.language.desc">Choose the language for your dashboard interface.</p>
                     </form>
                 </div>
             </div>

@@ -31,20 +31,20 @@
     <div class="dashboard-container">
         <aside class="sidebar" id="sidebar">
             <ul class="sidebar-nav">
-                <li><a href="User-Dashboard.html"><i class="fa-solid fa-house"></i> Dashboard</a></li>
-                <li><a href="User-Profile.html"><i class="fa-solid fa-user"></i> My Profile</a></li>
-                <li><a href="User-Listings.html"><i class="fa-solid fa-list-check"></i> My Listings</a></li>
-                <li><a href="User-Orders.html"><i class="fa-solid fa-receipt"></i> Order History</a></li>
-                <li><a href="User-Messages.html"><i class="fa-solid fa-envelope"></i> Messages</a></li>
-                <li><a href="User-Discussions.html" class="active"><i class="fa-solid fa-comments"></i> My Discussions</a></li>
-                <li><a href="User-Settings.html"><i class="fa-solid fa-gear"></i> Settings</a></li>
+                <li><a href="User-Dashboard.html" data-i18n-key="user.nav.dashboard"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+                <li><a href="User-Profile.html" data-i18n-key="user.nav.profile"><i class="fa-solid fa-user"></i> My Profile</a></li>
+                <li><a href="User-Listings.html" data-i18n-key="user.nav.listings"><i class="fa-solid fa-list-check"></i> My Listings</a></li>
+                <li><a href="User-Orders.html" data-i18n-key="user.nav.orders"><i class="fa-solid fa-receipt"></i> Order History</a></li>
+                <li><a href="User-Messages.html" data-i18n-key="user.nav.messages"><i class="fa-solid fa-envelope"></i> Messages</a></li>
+                <li><a href="User-Discussions.html" class="active" data-i18n-key="user.nav.discussions"><i class="fa-solid fa-comments"></i> My Discussions</a></li>
+                <li><a href="User-Settings.html" data-i18n-key="user.nav.settings"><i class="fa-solid fa-gear"></i> Settings</a></li>
             </ul>
              <div class="sidebar-footer">
                 <div class="profile-dropdown">
                     
                     <div>
                         <div class="profile-name">John Farmer</div>
-                        <small>Logout</small>
+                        <small data-i18n-key="user.nav.logout">Logout</small>
                     </div>
                 </div>
             </div>
@@ -52,23 +52,23 @@
 
         <main class="main-content">
             <div class="main-header">
-                <h1>My Discussions</h1>
-                <p>Keep track of conversations you've started or participated in.</p>
+                <h1 data-i18n-key="user.discussions.title">My Discussions</h1>
+                <p data-i18n-key="user.discussions.subtitle">Keep track of conversations you've started or participated in.</p>
             </div>
 
             <div class="page-controls">
-                <button class="btn btn-primary"><i class="fa-solid fa-plus"></i> Start New Discussion</button>
+                <button class="btn btn-primary" data-i18n-key="user.discussions.new"><i class="fa-solid fa-plus"></i> Start New Discussion</button>
             </div>
 
             <div class="table-container">
                 <table class="data-table">
                     <thead>
                         <tr>
-                            <th>Topic</th>
-                            <th>Category</th>
-                            <th>Last Reply</th>
-                            <th>Replies</th>
-                            <th>Actions</th>
+                            <th data-i18n-key="user.discussions.table.topic">Topic</th>
+                            <th data-i18n-key="user.discussions.table.category">Category</th>
+                            <th data-i18n-key="user.discussions.table.lastReply">Last Reply</th>
+                            <th data-i18n-key="user.discussions.table.replies">Replies</th>
+                            <th data-i18n-key="user.discussions.table.actions">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -78,7 +78,7 @@
                             <td>2h ago</td>
                             <td>24</td>
                             <td class="action-buttons">
-                                <button title="View Discussion"><i class="fa-solid fa-eye"></i></button>
+                                <button title="View Discussion" data-i18n-title-key="user.discussions.actions.view"><i class="fa-solid fa-eye"></i></button>
                             </td>
                         </tr>
                         <tr>
@@ -87,7 +87,7 @@
                             <td>1d ago</td>
                             <td>18</td>
                             <td class="action-buttons">
-                                <button title="View Discussion"><i class="fa-solid fa-eye"></i></button>
+                                <button title="View Discussion" data-i18n-title-key="user.discussions.actions.view"><i class="fa-solid fa-eye"></i></button>
                             </td>
                         </tr>
                     </tbody>

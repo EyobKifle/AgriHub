@@ -109,48 +109,56 @@
             gap: 1rem;
         }
 
-        /* Dropdown */
+        /* --- Dropdown (Language Selector) --- */
         .dropdown {
             position: relative;
         }
-
+        
         .dropdown .dropbtn {
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 6px;
+            color: var(--text-light); /* keep your theme */
+            transition: color 0.3s;
+        }
+        
+        .dropdown .dropbtn:hover {
+            color: var(--text-dark);
         }
 
         .dropdown .dropbtn .fa-caret-down {
             transition: transform 0.3s ease;
         }
 
-        .dropdown.active .dropbtn .fa-caret-down {
-            transform: rotate(180deg);
+        /* Show dropdown on hover (desktop) */
+        .dropdown:hover .dropdown-content {
+            display: block;
         }
 
+        /* Dropdown content box */
         .dropdown-content {
-            display: none;
+            display: none; /* hidden by default */
             position: absolute;
-            background-color: var(--white);
-            min-width: 160px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.1);
-            z-index: 1;
-            border-radius: 8px;
-            overflow: hidden;
-            border: 1px solid var(--border-color);
             right: 0;
-            margin-top: 10px;
+            top: 100%;
+            min-width: 160px;
+            background-color: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0px 8px 16px rgba(0,0,0,0.1);
+            overflow: hidden;
+            z-index: 1000;
+            margin-top: 8px;
         }
 
-        .dropdown.active .dropdown-content {
-            display: block;
-        }
-
+        /* Dropdown links */
         .dropdown-content a {
-            color: var(--text-light);
-            padding: 12px 16px;
             display: block;
+            padding: 12px 16px;
+            color: var(--text-light);
+            font-size: 0.95rem;
+            transition: background 0.3s, color 0.3s;
         }
 
         .dropdown-content a:hover {
@@ -158,50 +166,38 @@
             color: var(--text-dark);
         }
 
+        /* Active caret rotation when dropdown is open */
+        .dropdown.active .dropbtn .fa-caret-down {
+            transform: rotate(180deg);
+        }
+
+        .dropdown.active .dropdown-content {
+            display: block;
+        }
+
         /* Dark Mode Switch */
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 50px;
-            height: 26px;
-        }
-
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
+        .dark-mode-toggle {
+            background: none;
+            border: none;
+            color: var(--text-light);
             cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: 0.4s;
-            border-radius: 26px;
+            font-size: 1.2rem;
+            padding: 5px;
+        }
+        .dark-mode-toggle:hover {
+            color: var(--text-dark);
         }
 
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 20px;
-            width: 20px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: 0.4s;
-            border-radius: 50%;
+        /* Show sun in light mode, moon in dark mode */
+        .dark-mode-toggle .fa-moon {
+            display: none;
         }
-
-        input:checked + .slider {
-            background-color: var(--primary-green);
+        body.dark-mode .dark-mode-toggle .fa-sun {
+            display: none;
         }
-
-        input:checked + .slider:before {
-            transform: translateX(24px);
+        body.dark-mode .dark-mode-toggle .fa-moon {
+            display: block;
+            color: var(--dark-text-secondary);
         }
 
         /* Mobile Menu */
@@ -209,6 +205,20 @@
             display: none;
             font-size: 1.5rem;
             cursor: pointer;
+        }
+
+        /* Mobile fix: allow click to toggle dropdown */
+        @media (max-width: 992px) {
+            .dropdown .dropbtn {
+                width: 100%;
+            }
+            .dropdown-content {
+                position: relative;
+                right: auto;
+                border: none;
+                box-shadow: none;
+                margin-top: 0;
+            }
         }
 
         /* Buttons */
