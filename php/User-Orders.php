@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['user_id'])) {
-    header('Location: Login.html');
+    header('Location: ../HTML/Login.html');
     exit();
 }
 require_once __DIR__ . '/../php/config.php'; // agrihub DB
@@ -12,15 +12,20 @@ $email = $_SESSION['email'] ?? '';
 $initial = strtoupper(mb_substr($name, 0, 1));
 
 $orders = [];
-$sql = 'SELECT o.id, o.buyer_id, o.seller_id, o.quantity, o.unit_price, o.total_price, o.status, o.created_at,
-               p.title AS product_title,
-               ub.name AS buyer_name,
-               us.name AS seller_name
+// Aggregate orders visible to the current user (as buyer or as seller via order_items)
+$sql = 'SELECT 
+            o.id,
+            o.order_code,
+            o.total_amount,
+            o.status,
+            o.created_at,
+            COUNT(oi.id) AS item_count
         FROM orders o
-        JOIN products p ON p.id = o.product_id
-        JOIN users ub ON ub.id = o.buyer_id
-        JOIN users us ON us.id = o.seller_id
-        WHERE o.buyer_id = ? OR o.seller_id = ?
+        LEFT JOIN order_items oi ON oi.order_id = o.id
+        WHERE o.buyer_id = ? OR EXISTS (
+            SELECT 1 FROM order_items oi2 WHERE oi2.order_id = o.id AND oi2.seller_id = ?
+        )
+        GROUP BY o.id
         ORDER BY o.created_at DESC';
 if ($stmt = $conn->prepare($sql)) {
     $stmt->bind_param('ii', $userId, $userId);

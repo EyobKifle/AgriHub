@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['user_id'])) {
-    header('Location: Login.html');
+    header('Location: ../HTML/Login.html');
     exit();
 }
 require_once __DIR__ . '/../php/config.php';

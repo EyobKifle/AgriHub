@@ -1,8 +1,14 @@
 <?php
 session_start();
 if (!isset($_SESSION['user_id'])) {
-    http_response_code(401);
-    echo json_encode(['error' => 'User not authenticated.']);
+    // If this endpoint is called directly from the browser, redirect to login page.
+    if (($_SERVER['HTTP_ACCEPT'] ?? '') === 'text/html') {
+        header('Location: ../HTML/Login.html');
+    } else {
+        http_response_code(401);
+        header('Content-Type: application/json');
+        echo json_encode(['error' => 'User not authenticated.']);
+    }
     exit();
 }
 
@@ -96,6 +102,33 @@ function saveListing($conn, $userId) {
     $unit = trim($_POST['unit'] ?? '');
     $quantity = (float)($_POST['quantity_available'] ?? 0);
     $description = trim($_POST['description'] ?? '');
+
+    // Server-side validation
+    if (mb_strlen($title) < 3 || mb_strlen($title) > 200) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Title must be between 3 and 200 characters.']);
+        return;
+    }
+    if ($categoryId <= 0) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Please select a valid category.']);
+        return;
+    }
+    if ($price <= 0 || $price > 100000000) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Please enter a valid price.']);
+        return;
+    }
+    if ($quantity <= 0) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Quantity must be greater than 0.']);
+        return;
+    }
+    if ($unit === '' || mb_strlen($unit) > 50) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Please enter a valid unit.']);
+        return;
+    }
 
     if (empty($title) || $categoryId <= 0 || $price <= 0 || empty($unit) || $quantity <= 0) {
         http_response_code(400);

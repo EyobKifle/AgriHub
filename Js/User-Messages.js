@@ -18,9 +18,9 @@ const els = {
  */
 async function fetchData() {
     try {
-        const response = await fetch('../php/api/messages.php');
+        const response = await fetch('../php/User-Messages.php');
         if (!response.ok) {
-            if (response.status === 401) window.location.href = '../HTML/guest/Login.html';
+            if (response.status === 401) window.location.href = '../HTML/Login.html';
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
@@ -28,6 +28,7 @@ async function fetchData() {
     } catch (error) {
         console.error('Error fetching messages data:', error);
         els.conversationsTableBody.innerHTML = `<tr><td colspan="4" style="text-align:center; color: #900;">Failed to load conversations.</td></tr>`;
+        showStatus('Failed to load conversations. Please try again.', '#900');
     }
 }
 
@@ -76,7 +77,7 @@ async function handleComposeSubmit(e) {
     showStatus('Sending...', '#555');
 
     try {
-        const response = await fetch('../php/api/messages.php', { method: 'POST', body: formData });
+        const response = await fetch('../php/User-Messages.php', { method: 'POST', body: formData });
         const result = await response.json();
         if (!response.ok) throw new Error(result.error || 'An unknown error occurred.');
 

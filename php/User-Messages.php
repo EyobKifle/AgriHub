@@ -1,8 +1,13 @@
 <?php
 session_start();
 if (!isset($_SESSION['user_id'])) {
-    http_response_code(401);
-    echo json_encode(['error' => 'User not authenticated.']);
+    if (($_SERVER['HTTP_ACCEPT'] ?? '') === 'text/html') {
+        header('Location: ../HTML/Login.html');
+    } else {
+        http_response_code(401);
+        header('Content-Type: application/json');
+        echo json_encode(['error' => 'User not authenticated.']);
+    }
     exit();
 }
 
@@ -80,6 +85,21 @@ function handlePost($conn, $userId) {
     if (empty($recipientEmail) || empty($subject) || empty($body)) {
         http_response_code(400);
         echo json_encode(['error' => 'Please fill in all fields.']);
+        return;
+    }
+    if (!filter_var($recipientEmail, FILTER_VALIDATE_EMAIL)) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Please enter a valid recipient email.']);
+        return;
+    }
+    if (mb_strlen($subject) > 255) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Subject is too long.']);
+        return;
+    }
+    if (mb_strlen($body) > 5000) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Message body is too long.']);
         return;
     }
 

@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['user_id'])) {
-    header('Location: Login.html');
+    header('Location: ../HTML/Login.html');
     exit();
 }
 require_once __DIR__ . '/../php/config.php';
@@ -38,7 +38,7 @@ if ($stmt = $conn->prepare('SELECT COALESCE(SUM(oi.quantity * oi.unit_price), 0)
     $stmt->close();
 }
 
-// Recent activity: combine listings, orders, discussions
+// Recent activity: combine listings, orders, discussions (limit to 10 items total)
 $activities = [];
 // Listings created by user
 if ($stmt = $conn->prepare('SELECT title AS label, created_at AS ts, "listing" AS type FROM products WHERE seller_id = ? ORDER BY created_at DESC LIMIT 10')) {
