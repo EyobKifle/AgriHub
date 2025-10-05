@@ -3,44 +3,52 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-   <title>Login - AgriHub</title>
- <link rel="stylesheet" href="../Css/login.css" />
-  <link rel="stylesheet" href="../Css/header.css" />
-  <link rel="stylesheet" href="../Css/footer.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <title>Login - AgriHub</title>
+    <link rel="stylesheet" href="../Css/header.css" />
+    <link rel="stylesheet" href="../Css/footer.css" />
+    <link rel="stylesheet" href="../Css/auth.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   </head>
   <body>
-   <div id="header-placeholder"></div>
-   
-  <section class="form-container" style="padding-top: 50px; padding-bottom: 50px;">
-    <form action="../php/auth.php" method="post" class="login-form">
-      <input type="hidden" name="action" value="login">
-      <h1 class="title-text"><i class="fa-solid fa-leaf"></i> AgriHub</h1>
-      <p class="subtitle-text" data-i18n-key="login.subtitle">Welcome to AgriHub. Login to your account</p>
+    <div id="header-placeholder"></div>
 
-      <!-- This is where error messages will appear -->
-      <div id="form-message-placeholder"></div>
+    <main>
+      <div class="auth-container">
+        <section class="auth-card">
+          <header class="auth-header">
+            <h1><i class="fa-solid fa-leaf"></i> AgriHub</h1>
+            <p class="muted" data-i18n-key="login.subtitle">Welcome back! Please login to your account.</p>
+          </header>
 
-      <div class="input-box">
-        <label for="email" data-i18n-key="login.emailLabel">Email Address</label>
-        <input type="email" name="email" data-i18n-placeholder-key="login.emailPlaceholder" placeholder="Email Address" required />
+          <form class="auth-form" action="../php/auth.php" method="post">
+            <input type="hidden" name="action" value="login">
+            <div id="form-message-placeholder"></div>
+
+            <div class="form-field">
+              <label for="email" data-i18n-key="login.emailLabel">Email Address</label>
+              <input type="email" id="email" name="email" data-i18n-placeholder-key="login.emailPlaceholder" placeholder="you@example.com" required />
+            </div>
+
+            <div class="form-field">
+              <label for="password" data-i18n-key="login.passwordLabel">Password</label>
+              <div class="password-wrapper">
+                <input type="password" id="password" name="password" data-i18n-placeholder-key="login.passwordPlaceholder" placeholder="••••••••" required />
+                <button type="button" class="password-toggle" aria-label="Show password">
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+              </div>
+            </div>
+            <a href="#" class="auth-links forgot-password-link" data-i18n-key="login.forgotPassword">Forgot Password?</a>
+            <button type="submit" class="btn btn-primary full-width" data-i18n-key="login.signInButton">Sign In</button>
+            <div class="auth-links">
+              <span data-i18n-key="login.noAccount">Don’t have an account?</span> <a href="Signup.html" data-i18n-key="login.createAccount">Create Account</a>
+            </div>
+          </form>
+        </section>
       </div>
+    </main>
 
-      <div class="input-box">
-        <label for="password" data-i18n-key="login.passwordLabel">Password</label>
-        <input type="password" name="password" data-i18n-placeholder-key="login.passwordPlaceholder" placeholder="Password" required />
-      </div>
-
-      <a href="#" class="forgot-password" data-i18n-key="login.forgotPassword">Forgot Password?</a>
-      <button type="submit" data-i18n-key="login.signInButton">Sign In</button>
-
-      <p class="redirection">
-        <span data-i18n-key="login.noAccount">Don’t have an account?</span> <a href="Signup.html" data-i18n-key="login.createAccount">Create Account</a>
-      </p>
-    </form>
-  </section>
-
-  <script type="module" src="../Js/site.js"></script>
-  <div id="footer-placeholder"></div>
-</body>
+    <div id="footer-placeholder"></div>
+    <script type="module" src="../Js/site.js"></script>
+  </body>
 </html>

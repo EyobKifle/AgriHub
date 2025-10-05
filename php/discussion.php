@@ -119,7 +119,11 @@ if ($isApiRequest) {
             $stmt = $conn->prepare("UPDATE discussion_messages SET content = ? WHERE id = ? AND user_id = ?");
             $stmt->bind_param('sii', $text, $messageId, $current_user_id);
             $stmt->execute();
-            send_json_success(['message' => 'Message updated successfully.']);
+            if ($stmt->affected_rows > 0) {
+                send_json_success(['message' => 'Message updated successfully.']);
+            } else {
+                send_json_error('Message not found or you do not have permission to edit it.', 404);
+            }
             $stmt->close();
             break;
 
@@ -132,7 +136,11 @@ if ($isApiRequest) {
             $stmt = $conn->prepare("DELETE FROM discussion_messages WHERE id = ? AND user_id = ?");
             $stmt->bind_param('ii', $messageId, $current_user_id);
             $stmt->execute();
-            send_json_success(['message' => 'Message deleted successfully.']);
+            if ($stmt->affected_rows > 0) {
+                send_json_success(['message' => 'Message deleted successfully.']);
+            } else {
+                send_json_error('Message not found or you do not have permission to delete it.', 404);
+            }
             $stmt->close();
             break;
 

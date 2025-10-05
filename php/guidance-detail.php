@@ -24,19 +24,18 @@ if (!$articleId) {
         if (json_last_error() !== JSON_ERROR_NONE) {
             $error = 'Error decoding guidance data.';
         } else {
-            $articles = $data['articles'] ?? [];
-            
-            // Loop through articles to find the one with the matching ID
-            foreach ($articles as $a) {
-                if ($a['id'] === $articleId) {
-                    $guide = $a;
-                    break;
-                }
+            $all_articles = $data['articles'] ?? [];
+            // Create a map for faster lookups
+            $articles_by_id = [];
+            foreach ($all_articles as $a) {
+                $articles_by_id[$a['id']] = $a;
             }
+            
+            $guide = $articles_by_id[$articleId] ?? null;
 
             // If we found the article, look for related topics
             if ($guide) {
-                foreach ($articles as $a) {
+                foreach ($all_articles as $a) {
                     // A related topic has the same 'item' but a different 'id'
                     if ($a['item'] === $guide['item'] && $a['id'] !== $guide['id']) {
                         $related_topics[] = $a;

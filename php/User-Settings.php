@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->close();
     }
 
-    header('Location: user-settings.php?saved=1');
+    header('Location: User-Settings.php?saved=1');
     exit();
 }
 
@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
         <div class="header-right">
             <a href="user-profile.php" class="profile-link" aria-label="User Profile">
-                <div class="profile-avatar"><?php echo e($initial); ?></div>
+                <div class="profile-avatar"><?php echo htmlspecialchars($initial, ENT_QUOTES, 'UTF-8'); ?></div>
             </a>
         </div>
     </header>
@@ -90,27 +90,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="dashboard-container">
         <aside class="sidebar" id="sidebar">
             <ul class="sidebar-nav">
-                <li><a href="user-dashboard.php"><i class="fa-solid fa-house"></i> Dashboard</a></li>
-                <li><a href="user-profile.php"><i class="fa-solid fa-user"></i> My Profile</a></li>
-                <li><a href="user-listings.php"><i class="fa-solid fa-list-check"></i> My Listings</a></li>
-                <li><a href="user-orders.php"><i class="fa-solid fa-receipt"></i> Order History</a></li>
-                <li><a href="user-messages.php"><i class="fa-solid fa-envelope"></i> Messages</a></li>
-                <li><a href="user-discussions.php"><i class="fa-solid fa-comments"></i> My Discussions</a></li>
-                <li><a href="user-settings.php" class="active"><i class="fa-solid fa-gear"></i> Settings</a></li>
+                <li><a href="User-Dashboard.php" data-i18n-key="user.nav.dashboard"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+                <li><a href="User-Profile.php" data-i18n-key="user.nav.profile"><i class="fa-solid fa-user"></i> My Profile</a></li>
+                <li><a href="User-Listings.php" data-i18n-key="user.nav.listings"><i class="fa-solid fa-list-check"></i> My Listings</a></li>
+                <li><a href="User-Orders.php" data-i18n-key="user.nav.orders"><i class="fa-solid fa-receipt"></i> Order History</a></li>
+                <li><a href="User-Messages.php" data-i18n-key="user.nav.messages"><i class="fa-solid fa-envelope"></i> Messages</a></li>
+                <li><a href="User-Discussions.php" data-i18n-key="user.nav.discussions"><i class="fa-solid fa-comments"></i> My Discussions</a></li>
+                <li><a href="User-Settings.php" class="active" data-i18n-key="user.nav.settings"><i class="fa-solid fa-gear"></i> Settings</a></li>
                 <hr>
                 <!-- Site Navigation Links -->
                 <li><a href="User-Marketplace.php" data-i18n-key="header.nav.marketplace"><i class="fa-solid fa-store"></i> Marketplace</a></li>
-                <li><a href="News.php" data-i18n-key="header.nav.news"><i class="fa-regular fa-newspaper"></i> News</a></li>
-                <li><a href="Community.php" data-i18n-key="header.nav.community"><i class="fa-solid fa-users"></i> Community</a></li>
+                <li><a href="User-News.php" data-i18n-key="header.nav.news"><i class="fa-regular fa-newspaper"></i> News</a></li>
+                <li><a href="User-Community.php" data-i18n-key="header.nav.community"><i class="fa-solid fa-users"></i> Community</a></li>
+                <li><a href="User-Farming-Guidance.php" data-i18n-key="header.nav.guidance"><i class="fa-solid fa-book-open"></i> Farming Guidance</a></li>
             </ul>
             <div class="sidebar-footer">
                 <div class="profile-dropdown">
                     <div>
-                        <div class="profile-name"><?php echo e($name); ?></div>
+                        <div class="profile-name"><?php echo htmlspecialchars($name, ENT_QUOTES, 'UTF-8'); ?></div>
                         <div class="profile-email" style="opacity:.8; font-size:12px;">
-                            <?php echo e($email); ?>
+                            <?php echo htmlspecialchars($email, ENT_QUOTES, 'UTF-8'); ?>
                         </div>
-                        <small><a href="../php/auth.php?action=logout" style="color:inherit; text-decoration:none;">Logout</a></small>
+                        <small><a href="../php/auth.php?action=logout" style="color:inherit; text-decoration:none;" data-i18n-key="user.nav.logout">Logout</a></small>
                     </div>
                 </div>
             </div>
@@ -118,76 +119,69 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <main class="main-content">
             <div class="main-header">
-                <h1>Settings</h1>
-                <p>Manage your account preferences and notification settings.</p>
+                <h1 data-i18n-key="user.settings.title">Settings</h1>
+                <p data-i18n-key="user.settings.subtitle">Manage your account preferences and site settings.</p>
+                <?php if (isset($_GET['saved'])): ?>
+                    <div class="alert alert-success" style="background-color: #d4edda; color: #155724; padding: 1rem; border-radius: 8px; margin-top: 1.5rem;">
+                        Your settings have been saved successfully.
+                    </div>
+                <?php endif; ?>
             </div>
 
-            <?php if (isset($_GET['saved'])): ?>
-                <div class="alert alert-success" style="background-color: #d4edda; color: #155724; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
-                    Your settings have been saved successfully.
-                </div>
-            <?php endif; ?>
-
-            <div class="settings-grid">
+            <form class="settings-grid" method="post" action="User-Settings.php">
+                <!-- Notification Settings -->
                 <div class="card">
-                    <h3 class="card-title">General Preferences</h3>
-                    <form method="post" action="user-settings.php" class="settings-form">
+                    <h3 class="card-title" data-i18n-key="user.settings.notifications.title">Notifications</h3>
+                    <div class="settings-form">
+                        <div class="form-group form-group-toggle">
+                            <label for="email-notifications" data-i18n-key="user.settings.notifications.email">Email Notifications</label>
+                            <label class="switch">
+                                <input type="checkbox" id="email-notifications" name="email_notifications" <?php echo $prefEmailNotif ? 'checked' : ''; ?>>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <p class="form-text" data-i18n-key="user.settings.notifications.desc">Receive updates about your listings and messages via email.</p>
+                    </div>
+                </div>
+
+                <!-- Appearance Settings -->
+                <div class="card">
+                    <h3 class="card-title" data-i18n-key="user.settings.appearance.title">Appearance</h3>
+                    <div class="settings-form">
+                        <div class="form-group form-group-toggle">
+                            <label for="dark-mode-toggle" data-i18n-key="user.settings.appearance.darkMode">Dark Mode</label>
+                            <label class="switch">
+                                <input type="checkbox" id="dark-mode-toggle" name="dark_mode" <?php echo $prefDarkMode ? 'checked' : ''; ?>>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <p class="form-text" data-i18n-key="user.settings.appearance.desc">Switch between light and dark themes.</p>
+                    </div>
+                </div>
+
+                <!-- Language Settings -->
+                <div class="card">
+                    <h3 class="card-title" data-i18n-key="user.settings.language.title">Language</h3>
+                    <div class="settings-form">
                         <div class="form-group">
-                            <label for="language">Language</label>
-                            <select id="language" name="language">
-                                <option value="en" <?php if ($currentLang === 'en') echo 'selected'; ?>>English</option>
-                                <option value="am" <?php if ($currentLang === 'am') echo 'selected'; ?>>Amharic</option>
-                                <option value="om" <?php if ($currentLang === 'om') echo 'selected'; ?>>Oromo</option>
-                                <option value="ti" <?php if ($currentLang === 'ti') echo 'selected'; ?>>Tigrinya</option>
+                            <label for="language-select" data-i18n-key="user.settings.language.preferred">Preferred Language</label>
+                            <select id="language-select" name="language">
+                                <option value="en" <?php echo $currentLang==='en'?'selected':''; ?> data-i18n-key="lang.en">English</option>
+                                <option value="am" <?php echo $currentLang==='am'?'selected':''; ?> data-i18n-key="lang.amFull">Amharic (አማርኛ)</option>
+                                <option value="om" <?php echo $currentLang==='om'?'selected':''; ?> data-i18n-key="lang.om">Oromo</option>
+                                <option value="ti" <?php echo $currentLang==='ti'?'selected':''; ?> data-i18n-key="lang.ti">Tigrinya</option>
                             </select>
                         </div>
-                        <div class="form-group form-group-toggle">
-                            <label for="dark_mode">Dark Mode</label>
-                            <label class="switch">
-                                <input type="checkbox" id="dark_mode" name="dark_mode" <?php if ($prefDarkMode) echo 'checked'; ?>>
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-                        <div class="form-actions">
-                            <button type="submit" class="btn btn-primary">Save Preferences</button>
-                        </div>
-                    </form>
+                        <p class="form-text" data-i18n-key="user.settings.language.desc">Choose the language for your dashboard interface.</p>
+                    </div>
                 </div>
 
-                <div class="card">
-                    <h3 class="card-title">Notification Settings</h3>
-                    <form method="post" action="user-settings.php" class="settings-form">
-                        <div class="form-group form-group-toggle">
-                            <label for="email_notifications">Email Notifications</label>
-                            <label class="switch">
-                                <input type="checkbox" id="email_notifications" name="email_notifications" <?php if ($prefEmailNotif) echo 'checked'; ?>>
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-                        <p class="form-text">Receive emails about new messages, order updates, and important announcements.</p>
-                        <div class="form-actions">
-                            <button type="submit" class="btn btn-primary">Save Notifications</button>
-                        </div>
-                    </form>
+                <div class="card" style="grid-column: 1 / -1;">
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Save Settings</button>
+                    </div>
                 </div>
-
-                <div class="card">
-                    <h3 class="card-title">Account Security</h3>
-                    <form method="post" action="change-password.php" class="settings-form">
-                        <div class="form-group">
-                            <label for="current_password">Current Password</label>
-                            <input type="password" id="current_password" name="current_password" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="new_password">New Password</label>
-                            <input type="password" id="new_password" name="new_password" required>
-                        </div>
-                        <div class="form-actions">
-                            <button type="submit" class="btn btn-primary">Change Password</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+            </form>
         </main>
     </div>
 

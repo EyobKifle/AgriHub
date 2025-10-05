@@ -1,3 +1,7 @@
+/* ==========================================================================
+   Authentication Styles (Login & Signup)
+   ========================================================================== */
+
 /* VARIABLES (shared with header/footer) */
 :root {
   --primary-green: #1E4620;
@@ -10,16 +14,16 @@
   --accent-orange: #D97706;
 }
 
-/* Container */
+/* Main container for auth pages */
 .auth-container {
   display: flex;
   justify-content: center;
-  align-items: center;
-  padding: 120px 20px;
-  align-items: flex-start; /* Align to top */
+  align-items: flex-start; /* Align card to the top */
+  padding: 80px 20px;
+  min-height: calc(100vh - 200px); /* Adjust based on header/footer height */
 }
 
-/* Card */
+/* The main card holding the form */
 .auth-card {
   background: var(--white);
   padding: 2rem;
@@ -32,21 +36,26 @@
 
 .auth-header {
   text-align: center;
-  margin-bottom: 1.5rem; /* Matches subtitle margin */
+  margin-bottom: 1.5rem;
 }
 
 .auth-header h1 {
   font-size: 1.8rem;
   font-weight: 700;
   color: var(--light-green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .auth-header p.muted {
   font-size: 0.95rem;
   color: var(--text-light);
+  margin-top: 0.25rem;
 }
 
-/* Form */
+/* Form layout */
 .auth-form {
   display: flex;
   flex-direction: column;
@@ -66,15 +75,15 @@
 
 .form-field label {
   margin-bottom: 0.4rem;
-  font-size: 0.9rem; /* Matches */
-  font-weight: 600; /* Updated */
+  font-size: 0.9rem;
+  font-weight: 600;
   color: var(--text-dark);
 }
 
 .form-field input {
   padding: 0.75rem;
   border: 1px solid var(--border-color);
-  border-radius: 8px; /* Updated */
+  border-radius: 8px;
   font-size: 1rem;
   transition: border 0.2s, box-shadow 0.2s;
 }
@@ -82,10 +91,10 @@
 .form-field input:focus {
   outline: none;
   border-color: var(--light-green);
-  box-shadow: 0 0 6px rgba(42, 119, 42, 0.25); /* Updated */
+  box-shadow: 0 0 6px rgba(42, 119, 42, 0.25);
 }
 
-/* Password input wrapper */
+/* Password input specific styles */
 .password-wrapper {
   position: relative;
   display: flex;
@@ -114,31 +123,12 @@
   color: var(--light-green);
 }
 
-/* Button */
-.btn {
-  padding: 0.9rem; /* Updated */
-  border-radius: 8px; /* Updated */
-  font-weight: 600;
-  cursor: pointer;
-  border: none;
-  transition: background 0.3s;
-}
-
-.btn-primary {
-  background-color: var(--light-green);
-  color: var(--white);
-}
-
-.btn-primary:hover {
-  background: rgb(63, 146, 63);
-  transform: translateY(-1px);
-}
-
-.full-width {
+/* Buttons */
+.btn.full-width {
   width: 100%;
 }
 
-/* Links */
+/* Links below the form */
 .auth-links {
   text-align: center;
   margin-top: 1.2rem;
@@ -156,7 +146,14 @@
   text-decoration: underline;
 }
 
-/* Responsive */
+/* Specific link for 'Forgot Password' */
+.forgot-password-link {
+  text-align: right;
+  font-size: 0.9rem;
+  margin-top: -0.5rem; /* Pull it closer to the input field */
+}
+
+/* Responsive adjustments */
 @media (max-width: 600px) {
   .form-grid {
     grid-template-columns: 1fr;

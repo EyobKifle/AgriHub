@@ -26,6 +26,7 @@ CREATE TABLE `user_profiles` (
     `experience_years` TINYINT UNSIGNED DEFAULT NULL,
     `language_preference` VARCHAR(10) NOT NULL DEFAULT 'en',
     `pref_theme` ENUM('light','dark') NOT NULL DEFAULT 'light',
+    `pref_email_notifications` BOOLEAN NOT NULL DEFAULT TRUE,
     `business_name` VARCHAR(255) DEFAULT NULL,
     `business_address` TEXT,
     `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

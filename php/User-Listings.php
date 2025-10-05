@@ -1,189 +1,126 @@
 <?php
 session_start();
 if (!isset($_SESSION['user_id'])) {
-    // If this endpoint is called directly from the browser, redirect to login page.
-    if (($_SERVER['HTTP_ACCEPT'] ?? '') === 'text/html') {
-        header('Location: ../HTML/Login.html');
-    } else {
-        http_response_code(401);
-        header('Content-Type: application/json');
-        echo json_encode(['error' => 'User not authenticated.']);
-    }
+    header('Location: ../HTML/Login.html');
     exit();
 }
-
-require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/utils.php';
 
-$userId = (int)$_SESSION['user_id'];
+$name = $_SESSION['name'] ?? 'User';
+$email = $_SESSION['email'] ?? '';
+$initial = strtoupper(mb_substr($name, 0, 1));
+$currentPage = 'User-Listings';
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Listings - AgriHub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../Css/User-Dashboard.css">
+</head>
+<body>
+    <header class="main-header-bar">
+        <div class="header-left">
+            <button class="hamburger-menu" id="hamburger-menu" aria-label="Toggle Menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+        <div class="header-center">
+            <div class="logo">
+                <i class="fa-solid fa-leaf"></i>
+                <span>AgriHub</span>
+            </div>
+        </div>
+        <div class="header-right">
+            <a href="User-Account.php" class="profile-link" aria-label="User Account">
+                <div class="profile-avatar" id="user-initial-avatar"><?php echo e($initial); ?></div>
+            </a>
+        </div>
+    </header>
 
-header('Content-Type: application/json');
+    <div class="dashboard-container">
+        <?php include __DIR__ . '/_sidebar.php'; ?>
 
-try {
-    switch ($_SERVER['REQUEST_METHOD']) {
-        case 'GET':
-            handleGet($conn, $userId);
-            break;
-        case 'POST':
-            handlePost($conn, $userId);
-            break;
-        default:
-            http_response_code(405);
-            echo json_encode(['error' => 'Method Not Allowed']);
-            break;
-    }
-} catch (Exception $e) {
-    http_response_code(500);
-    error_log($e->getMessage());
-    echo json_encode(['error' => 'An unexpected server error occurred.']);
-} finally {
-    $conn->close();
-}
+        <main class="main-content">
+            <div class="main-header">
+                <h1 data-i18n-key="user.listings.title">My Listings</h1>
+                <p data-i18n-key="user.listings.subtitle">Manage the products you are selling on the marketplace.</p>
+            </div>
 
-/**
- * Handles GET requests to fetch initial page data.
- */
-function handleGet($conn, $userId) {
-    $name = $_SESSION['name'] ?? 'User';
-    $email = $_SESSION['email'] ?? '';
-    $initial = strtoupper(mb_substr($name, 0, 1));
+            <div class="page-controls">
+                <button type="button" id="create-listing-btn" class="btn btn-primary" data-i18n-key="user.listings.add"><i class="fa-solid fa-plus"></i> Add New Listing</button>
+                <span id="form-status-message" style="margin-left:12px;"></span>
+            </div>
 
-    // Fetch categories
-    $categories = $conn->query('SELECT id, name FROM categories ORDER BY name')->fetch_all(MYSQLI_ASSOC);
+            <div class="card" id="create-listing-card" style="display: none;">
+                <h3 class="card-title" id="form-title">New Listing</h3>
+                <form id="listing-form" enctype="multipart/form-data">
+                    <input type="hidden" name="action" value="save_listing">
+                    <input type="hidden" name="product_id" id="product_id" value="0">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="form-title-input">Title</label>
+                            <input type="text" id="form-title-input" name="title" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="form-category-id">Category</label>
+                            <select id="form-category-id" name="category_id" required>
+                                <!-- Options will be populated by JS -->
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="form-description">Description</label>
+                        <textarea id="form-description" name="description" rows="3" placeholder="Describe your product..."></textarea>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="form-price">Price</label>
+                            <input type="number" step="0.01" id="form-price" name="price" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="form-unit">Unit</label>
+                            <input type="text" id="form-unit" name="unit" placeholder="e.g., kg, quintal, bag" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="form-quantity">Quantity Available</label>
+                            <input type="number" step="0.01" id="form-quantity" name="quantity_available" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="images">Product Images (first image will be primary)</label>
+                        <input type="file" id="images" name="images[]" multiple accept="image/*">
+                        <p class="form-text">You can select multiple images. For updates, new images will be added to the existing ones.</p>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" id="cancel-edit-btn" style="display: none;">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="form-submit-btn">Create</button>
+                    </div>
+                </form>
+            </div>
 
-    // Fetch user's listings
-    $stmt = $conn->prepare(
-       "SELECT p.id, p.title, p.description, p.category_id, p.price, p.unit, p.quantity_available, p.status, c.name as category_name
-        FROM products p
-        JOIN categories c ON p.category_id = c.id
-        WHERE p.seller_id = ?
-        ORDER BY p.created_at DESC"
-    );
-    $stmt->bind_param('i', $userId);
-    $stmt->execute();
-    $listings = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-    $stmt->close();
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th data-i18n-key="user.listings.table.product">Product</th>
+                            <th data-i18n-key="user.listings.table.category">Category</th>
+                            <th data-i18n-key="user.listings.table.price">Price</th>
+                            <th data-i18n-key="user.listings.table.status">Status</th>
+                            <th data-i18n-key="user.listings.table.actions">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="listings-table-body">
+                        <!-- Listing rows will be populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
 
-    echo json_encode([
-        'user' => ['name' => $name, 'email' => $email, 'initial' => $initial],
-        'categories' => $categories,
-        'listings' => $listings,
-    ]);
-}
-
-/**
- * Handles POST requests to create, update, or delete listings.
- */
-function handlePost($conn, $userId) {
-    $action = $_POST['action'] ?? '';
-
-    switch ($action) {
-        case 'save_listing':
-            saveListing($conn, $userId);
-            break;
-        case 'delete_listing':
-            deleteListing($conn, $userId);
-            break;
-        default:
-            http_response_code(400);
-            echo json_encode(['error' => 'Invalid action specified.']);
-            break;
-    }
-}
-
-/**
- * Creates or updates a product listing.
- */
-function saveListing($conn, $userId) {
-    $productId = (int)($_POST['product_id'] ?? 0);
-    $title = trim($_POST['title'] ?? '');
-    $categoryId = (int)($_POST['category_id'] ?? 0);
-    $price = (float)($_POST['price'] ?? 0);
-    $unit = trim($_POST['unit'] ?? '');
-    $quantity = (float)($_POST['quantity_available'] ?? 0);
-    $description = trim($_POST['description'] ?? '');
-
-    // Server-side validation
-    if (mb_strlen($title) < 3 || mb_strlen($title) > 200) {
-        http_response_code(400);
-        echo json_encode(['error' => 'Title must be between 3 and 200 characters.']);
-        return;
-    }
-    if ($categoryId <= 0) {
-        http_response_code(400);
-        echo json_encode(['error' => 'Please select a valid category.']);
-        return;
-    }
-    if ($price <= 0 || $price > 100000000) {
-        http_response_code(400);
-        echo json_encode(['error' => 'Please enter a valid price.']);
-        return;
-    }
-    if ($quantity <= 0) {
-        http_response_code(400);
-        echo json_encode(['error' => 'Quantity must be greater than 0.']);
-        return;
-    }
-    if ($unit === '' || mb_strlen($unit) > 50) {
-        http_response_code(400);
-        echo json_encode(['error' => 'Please enter a valid unit.']);
-        return;
-    }
-
-    if (empty($title) || $categoryId <= 0 || $price <= 0 || empty($unit) || $quantity <= 0) {
-        http_response_code(400);
-        echo json_encode(['error' => 'Please fill in all required fields.']);
-        return;
-    }
-
-    if ($productId > 0) { // Update existing listing
-        $stmt = $conn->prepare(
-            "UPDATE products SET title=?, description=?, category_id=?, price=?, unit=?, quantity_available=? WHERE id=? AND seller_id=?"
-        );
-        $stmt->bind_param('ssidsdii', $title, $description, $categoryId, $price, $unit, $quantity, $productId, $userId);
-    } else { // Create new listing
-        $stmt = $conn->prepare(
-            "INSERT INTO products (seller_id, title, description, category_id, price, unit, quantity_available, status) VALUES (?, ?, ?, ?, ?, ?, ?, 'active')"
-        );
-        $stmt->bind_param('issidsd', $userId, $title, $description, $categoryId, $price, $unit, $quantity);
-    }
-
-    if ($stmt->execute()) {
-        echo json_encode(['success' => true, 'message' => 'Listing saved successfully.']);
-    } else {
-        http_response_code(500);
-        echo json_encode(['error' => 'Database error: Could not save the listing.']);
-    }
-    $stmt->close();
-}
-
-/**
- * Deletes a product listing.
- */
-function deleteListing($conn, $userId) {
-    $productId = (int)($_POST['product_id'] ?? 0);
-
-    if ($productId <= 0) {
-        http_response_code(400);
-        echo json_encode(['error' => 'Invalid product ID.']);
-        return;
-    }
-
-    // Also delete associated images from filesystem and database (optional, for full cleanup)
-
-    $stmt = $conn->prepare("DELETE FROM products WHERE id = ? AND seller_id = ?");
-    $stmt->bind_param('ii', $productId, $userId);
-
-    if ($stmt->execute()) {
-        if ($stmt->affected_rows > 0) {
-            echo json_encode(['success' => true, 'message' => 'Listing deleted successfully.']);
-        } else {
-            http_response_code(404); // Or 403 Forbidden
-            echo json_encode(['error' => 'Listing not found or you do not have permission to delete it.']);
-        }
-    } else {
-        http_response_code(500);
-        echo json_encode(['error' => 'Database error: Could not delete the listing.']);
-    }
-    $stmt->close();
-}
+    <script type="module" src="../Js/dashboard.js"></script>
+    <script type="module" src="../Js/User-Listings.js"></script>
+</body>
+</html>

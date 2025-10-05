@@ -187,6 +187,7 @@
   "user.nav.messages": "Messages",
   "user.nav.discussions": "My Discussions",
   "user.nav.settings": "Settings",
+  "user.nav.account": "My Account",
   "user.nav.logout": "Logout",
   "user.dashboard.title": "Welcome back, John!",
   "user.dashboard.subtitle": "Here's what's new on AgriHub today.",
@@ -230,6 +231,8 @@
   "lang.amFull": "Amharic (አማርኛ)",
   "user.settings.language.desc": "Choose the language for your dashboard interface.",
 
+  "user.account.title": "My Account",
+  "user.account.subtitle": "Manage your personal information, farm details, and account settings.",
   "header.toggleDarkMode": "Toggle dark mode",
 
   "footer.about.title": "AgriHub",

@@ -1,11 +1,10 @@
 import { loadHeader, initializeHeaderScripts } from './header.js';
 import { loadFooter } from './footer.js';
-import{ initializeImageSlider } from './imageSlider.js';
+import { initializeImageSlider } from './imageSlider.js';
 import { initializeI18n, applyTranslationsToPage, updateLangSwitcher } from './i18n.js';
 import { highlightActiveLink } from './navigation.js';
 import { initializeMarketplace } from './marketplace.js';
-import { initializeNewsPage } from './news.js';
-import { initializeGuidancePage } from './guidance.js';
+import { initializeGuidancePage, initializeGuidanceCategoryPage, initializeArticlePage } from './guidance.js';
 
 /**
  * Checks the URL for query parameters like 'error' or 'success' and displays
@@ -100,8 +99,46 @@ const initializeSite = async () => {
     case 'Farming-Guidance.html':
       initializeGuidancePage();
       break;
+    case 'guidance-category.html':
+      initializeGuidanceCategoryPage();
+      break;
+    case 'article.html':
+      initializeArticlePage();
+      break;
   }
 };
+
+// Password toggle functionality
+function initPasswordToggle() {
+  const toggleButtons = document.querySelectorAll('.password-toggle');
+  
+  toggleButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      const input = this.parentElement.querySelector('input');
+      const icon = this.querySelector('i');
+      
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+        this.setAttribute('aria-label', 'Hide password');
+      } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+        this.setAttribute('aria-label', 'Show password');
+      }
+    });
+  });
+}
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+  initPasswordToggle();
+});
+
+// If using modules, export the function
+export { initPasswordToggle };
 
 // This is the standard way to make sure our script runs only after the
 // initial HTML document has been fully loaded and is ready to be manipulated.

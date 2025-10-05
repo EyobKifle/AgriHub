@@ -1,20 +1,27 @@
 /**
  * Manages the "My Discussions" page.
- * Fetches user's discussions and categories from the server,
- * renders them on the page, and handles the creation of new discussions.
+ * This module is dynamically loaded by `dashboard.js`.
+ * It initializes event listeners and fetches data for the user's discussions page.
  */
 
 const els = {
+    // User info
     userInitialAvatar: document.getElementById('user-initial-avatar'),
     userProfileName: document.getElementById('user-profile-name'),
     userProfileEmail: document.getElementById('user-profile-email'),
-    createDiscussionBtn: document.getElementById('create-discussion-btn'),
-    createDiscussionCard: document.getElementById('create-discussion-card'),
-    createDiscussionForm: document.getElementById('create-discussion-form'),
+    // Page controls
+    createBtn: document.getElementById('create-discussion-btn'),
+    statusMessage: document.getElementById('form-status-message'),
+    // Form elements
+    createCard: document.getElementById('create-discussion-card'),
+    form: document.getElementById('create-discussion-form'),
     categorySelect: document.getElementById('category_id'),
-    discussionsTableBody: document.getElementById('discussions-table-body'),
-    formStatusMessage: document.getElementById('form-status-message'),
+    // Table
+    tableBody: document.getElementById('discussions-table-body'),
 };
+
+let allDiscussions = [];
+let allCategories = [];
 
 /**
  * Fetches all necessary data from the backend API.
@@ -23,102 +30,119 @@ async function fetchData() {
     try {
         const response = await fetch('../php/api/discussions.php');
         if (!response.ok) {
-            if (response.status === 401) {
-                window.location.href = '../HTML/Login.html';
-            }
+            if (response.status === 401) window.location.href = '../HTML/Login.html';
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        renderPage(data);
+        allDiscussions = data.discussions || [];
+        allCategories = data.categories || [];
+        renderPage(data.user);
     } catch (error) {
-        console.error('Error fetching discussion data:', error);
-        els.discussionsTableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; color: #900;">Failed to load data. Please try again later.</td></tr>`;
+        console.error('Error fetching page data:', error);
+        els.tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; color: #900;">Failed to load data.</td></tr>`;
     }
 }
 
 /**
  * Populates the page with data from the server.
- * @param {object} data The data object from the API.
  */
-function renderPage(data) {
-    // Render user info
-    if (data.user) {
-        els.userInitialAvatar.textContent = data.user.initial;
-        els.userProfileName.textContent = data.user.name;
-        els.userProfileEmail.textContent = data.user.email;
+function renderPage(user) {
+    if (user) {
+        if (els.userInitialAvatar) els.userInitialAvatar.textContent = user.initial;
+        if (els.userProfileName) els.userProfileName.textContent = user.name;
+        if (els.userProfileEmail) els.userProfileEmail.textContent = user.email;
     }
 
-    // Render category dropdown
     let categoryOptions = '<option value="">Select category</option>';
-    if (data.categories && data.categories.length > 0) {
-        data.categories.forEach(cat => {
-            categoryOptions += `<option value="${cat.id}">${escapeHtml(cat.name)}</option>`;
-        });
-    }
+    allCategories.forEach(cat => {
+        categoryOptions += `<option value="${cat.id}">${escapeHtml(cat.name)}</option>`;
+    });
     els.categorySelect.innerHTML = categoryOptions;
 
-    // Render discussions table
     let discussionRows = '';
-    if (data.discussions && data.discussions.length > 0) {
-        data.discussions.forEach(d => {
+    if (allDiscussions.length > 0) {
+        allDiscussions.forEach(item => {
             discussionRows += `
-                <tr>
-                    <td>${escapeHtml(d.title)}</td>
-                    <td>${escapeHtml(d.category_name)}</td>
-                    <td>${escapeHtml(d.updated_at)}</td>
-                    <td>${d.comment_count}</td>
+                <tr data-id="${item.id}">
+                    <td><a href="Discussion.php?id=${item.id}">${escapeHtml(item.title)}</a></td>
+                    <td>${escapeHtml(item.category_name)}</td>
+                    <td>${timeAgo(item.updated_at)}</td>
+                    <td>${item.comment_count}</td>
                     <td class="action-buttons">
-                        <a href="../php/discussion.php?id=${d.id}" title="View Discussion"><i class="fa-solid fa-eye"></i></a>
+                        <button class="delete-btn" title="Delete Discussion"><i class="fa-solid fa-trash"></i></button>
                     </td>
-                </tr>
-            `;
+                </tr>`;
         });
     } else {
-        discussionRows = `<tr><td colspan="5" style="text-align:center; opacity:.8;">You haven't started any discussions yet.</td></tr>`;
+        discussionRows = `<tr><td colspan="5" style="text-align:center; opacity:.8;">You have not started any discussions yet.</td></tr>`;
     }
-    els.discussionsTableBody.innerHTML = discussionRows;
+    els.tableBody.innerHTML = discussionRows;
 }
 
-/**
- * Handles the submission of the "create discussion" form.
- * @param {Event} e The form submission event.
- */
-async function handleCreateDiscussion(e) {
+function resetAndHideForm() {
+    els.form.reset();
+    els.createCard.style.display = 'none';
+}
+
+async function handleFormSubmit(e) {
     e.preventDefault();
-    const formData = new FormData(els.createDiscussionForm);
-    els.formStatusMessage.textContent = 'Submitting...';
-    els.formStatusMessage.style.color = '#555';
+    const formData = new FormData(els.form);
+    showStatus('Saving...', '#555');
 
     try {
-        const response = await fetch('../php/api/discussions.php', {
-            method: 'POST',
-            body: formData,
-        });
+        const response = await fetch('../php/api/discussions.php', { method: 'POST', body: formData });
         const result = await response.json();
-        if (!response.ok) {
-            throw new Error(result.error || 'An unknown error occurred.');
-        }
-        els.formStatusMessage.textContent = 'Discussion created successfully!';
-        els.formStatusMessage.style.color = '#090';
-        els.createDiscussionForm.reset();
-        fetchData(); // Refresh the list
+        if (!response.ok) throw new Error(result.error || 'An unknown error occurred.');
+        
+        showStatus(result.message, '#090');
+        resetAndHideForm();
+        fetchData(); // Refresh the data
     } catch (error) {
-        els.formStatusMessage.textContent = `Error: ${error.message}`;
-        els.formStatusMessage.style.color = '#900';
+        showStatus(`Error: ${error.message}`, '#900');
     }
+}
+
+function showStatus(message, color) {
+    els.statusMessage.textContent = message;
+    els.statusMessage.style.color = color;
+    setTimeout(() => { els.statusMessage.textContent = ''; }, 4000);
 }
 
 function escapeHtml(str) {
+    if (typeof str !== 'string') return '';
     return str.replace(/[&<>"']/g, (match) => ({'&': '&amp;','<': '&lt;','>': '&gt;','"': '&quot;',"'": '&#039;'}[match]));
 }
 
-// --- Event Listeners ---
-els.createDiscussionBtn.addEventListener('click', () => {
-    const card = els.createDiscussionCard;
-    card.style.display = card.style.display === 'none' ? 'block' : 'none';
-});
+function timeAgo(dateString) {
+    const date = new Date(dateString);
+    const seconds = Math.floor((new Date() - date) / 1000);
+    let interval = seconds / 31536000;
+    if (interval > 1) return Math.floor(interval) + " years ago";
+    interval = seconds / 2592000;
+    if (interval > 1) return Math.floor(interval) + " months ago";
+    interval = seconds / 86400;
+    if (interval > 1) return Math.floor(interval) + " days ago";
+    interval = seconds / 3600;
+    if (interval > 1) return Math.floor(interval) + " hours ago";
+    interval = seconds / 60;
+    if (interval > 1) return Math.floor(interval) + " minutes ago";
+    return Math.floor(seconds) + " seconds ago";
+}
 
-els.createDiscussionForm.addEventListener('submit', handleCreateDiscussion);
+function initializeEventListeners() {
+    els.createBtn.addEventListener('click', () => {
+        resetAndHideForm();
+        els.createCard.style.display = 'block';
+        els.createCard.scrollIntoView({ behavior: 'smooth' });
+    });
+    
+    els.form.addEventListener('submit', handleFormSubmit);
+}
 
-// --- Initial Load ---
-document.addEventListener('DOMContentLoaded', fetchData);
+function init() {
+    if (!els.tableBody) return; // Make sure we are on the correct page
+    initializeEventListeners();
+    fetchData();
+}
+
+init();

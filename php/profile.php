@@ -75,7 +75,7 @@ function handlePost($conn, $userId) {
     // Handle avatar upload
     $avatar_path = $_POST['existing_avatar_url'] ?? ''; // Keep existing if no new upload
     if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
-        $upload_dir = __DIR__ . '/../../uploads/avatars/';
+        $upload_dir = __DIR__ . '/../uploads/avatars/';
         if (!is_dir($upload_dir)) {
             mkdir($upload_dir, 0777, true);
         }

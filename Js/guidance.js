@@ -1,253 +1,238 @@
 /**
- * This file controls the Farming Guidance page.
- * It fetches a JSON file containing all the guidance topics and renders them
- * in a structured, hierarchical way (Domain > Subdomain > Item > Title).
+ * Creates the HTML for a single category card.
+ * @param {object} category - The category data object.
+ * @returns {string} - The HTML string for the category card.
  */
+function createCategoryCard(category) {
+  // Use a placeholder image if the category image is missing
+  const imageUrl = category.image_url || 'https://via.placeholder.com/300x200.png?text=AgriHub';
+  // The link can point to a future page for that category, e.g., /guidance/crops/teff
+  const categoryLink = `guidance-category.html?slug=${category.slug}`;
 
-// The location of the data file.
-const DATA_URL = "../data/guidance-map.json";
-const root = document.getElementById("guide-root"); // The main container element where all the content will be placed.
-const searchInput = document.getElementById("guide-search");
-const sidebar = document.getElementById("guidance-sidebar");
-
-/**
- * Handles what happens when a user clicks or activates a guide card.
- * It reads the unique ID from the card and navigates to the detail page for that ID.
- */
-function onCardActivate(el) {
-  const id = el.getAttribute("data-id");
-  if (!id) return;
-  window.location.href = `../php/guidance-detail.php?id=${encodeURIComponent(id)}`;
-}
-
-/**
- * A helper function to group an array of objects by a specific key.
- * For example, it can take all articles and group them by their 'domain'.
- */
-function groupBy(arr, key) {
-  // Start with an empty object to hold our groups.
-  const groups = {};
-  // Loop through each item in the array.
-  arr.forEach(item => {
-    const groupName = item[key]; // e.g., 'Crop Farming'
-    // If we haven't seen this group name before, create an empty array for it.
-    if (!groups[groupName]) {
-      groups[groupName] = [];
-    }
-    // Add the current item to its group.
-    groups[groupName].push(item);
-  });
-  return groups;
-}
-
-function createCard(a) {
-  const art = document.createElement("article");
-  art.className = "guide-card";
-  art.tabIndex = 0;
-  art.setAttribute("data-id", a.id);
-  art.setAttribute("aria-label", `Open guide: ${a.item} — ${a.title}`);
-  art.innerHTML = `
-    <div class="card-media">
-      <img src="${a.image}" alt="${a.item} - ${a.title}" loading="lazy" />
-    </div>
-    <div class="card-body">
-      <h3 class="card-title">${a.item}: ${a.title}</h3>
-      <p class="card-desc">${a.desc}</p>
-    </div>
+  return `
+    <a href="${categoryLink}" class="category-card">
+      <img src="${imageUrl}" alt="${category.name}" class="category-card-image">
+      <div class="category-card-content">
+        <span>${category.name}</span>
+      </div>
+    </a>
   `;
-  // Add event listeners for both mouse clicks and keyboard activation (Enter/Space).
-  art.addEventListener("click", () => onCardActivate(art));
-  art.addEventListener("keypress", (e) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      onCardActivate(art);
-    }
-  });
-  return art;
 }
 
 /**
- * Takes the raw data and builds the entire nested HTML structure of
- * sections, groups, and card grids.
+ * Fetches guidance categories from the server and renders them on the page.
  */
-function renderHierarchy(data) {
-  if (!root) return;
-  const byDomain = groupBy(data.articles, "domain");
-  const domainNames = Object.keys(byDomain);
-  const mainContent = document.querySelector('.main-content');
-  const mainHeader = document.createElement('div');
-  mainHeader.className = 'main-content-header';
-  mainContent.insertBefore(mainHeader, root);
-  const frag = document.createDocumentFragment();
-
-  Object.entries(byDomain).forEach(([domain, list]) => {
-    // Domain section
-    const section = document.createElement("section");
-    section.className = "guide-domain";
-    section.setAttribute("data-domain-name", domain);
-    section.id = `domain-${domain.replace(/\s|&/g, "-")}`; // Create a URL-friendly ID
-
-    const content = document.createElement("div");
-    content.className = "guide-domain-content"; // Keep class for structure
-
-    const bySub = groupBy(list, "subdomain");
-    Object.entries(bySub).forEach(([sub, subList]) => {
-      const subWrap = document.createElement("div");
-      subWrap.className = "topic-group";
-      const subHeader = document.createElement("div");
-      subHeader.className = "section-header";
-      subHeader.innerHTML = `<h3>${sub}</h3>`;
-      subWrap.appendChild(subHeader);
-
-      const byItem = groupBy(subList, "item");
-      Object.entries(byItem).forEach(([itemName, items]) => {
-        const itemWrap = document.createElement("div");
-        itemWrap.className = "item-group";
-        const itemHeader = document.createElement("div");
-        itemHeader.className = "section-header";
-        itemHeader.innerHTML = `<div class="section-sub">${itemName}</div>`;
-        itemWrap.appendChild(itemHeader);
-
-        const grid = document.createElement("div");
-        grid.className = "card-grid";
-        items.forEach((a) => grid.appendChild(createCard(a)));
-
-        itemWrap.appendChild(grid);
-        // Only add if there are cards
-        if (items.length > 0) {
-          subWrap.appendChild(itemWrap);
-        }
-      });
-      // Only add if there's content
-      if (subList.length > 0) {
-        content.appendChild(subWrap);
-      }
-    });
-
-    section.appendChild(content);
-    frag.appendChild(section);
-  });
-
-  root.innerHTML = "";
-  root.appendChild(frag);
-
-  // Show the first domain by default
-  const firstDomain = document.querySelector('.guide-domain');
-  if (firstDomain) {
-    firstDomain.classList.add('active');
-    mainHeader.innerHTML = `<h2>${firstDomain.getAttribute('data-domain-name')}</h2>`;
-  }
-
-  // Render the sidebar navigation
-  renderSidebarNav(domainNames);
-}
-
-/**
- * Renders the navigation links in the sidebar.
- */
-function renderSidebarNav(domains) {
-  if (!sidebar) return;
-
-  const navHeader = document.createElement("h3");
-  navHeader.textContent = "Categories";
-
-  const list = document.createElement("ul");
-  list.className = "domain-nav-list";
-
-  domains.forEach(domain => {
-    const item = document.createElement("li");
-    const link = document.createElement("a");
-    link.href = `#domain-${domain.replace(/\s|&/g, "-")}`;
-    link.textContent = domain;
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      const targetId = link.getAttribute('href');
-      const targetSection = document.querySelector(targetId);
-      if (!targetSection) return;
-
-      // Manage active state
-      document.querySelectorAll('.domain-nav-list a').forEach(l => l.classList.remove('active'));
-      link.classList.add('active');
-
-      // Show the selected domain and hide others
-      document.querySelectorAll('.guide-domain').forEach(s => s.classList.remove('active'));
-      targetSection.classList.add('active');
-      
-      document.querySelector('.main-content-header h2').textContent = domain;
-    });
-    item.appendChild(link);
-    list.appendChild(item);
-  });
-
-  sidebar.innerHTML = '';
-  sidebar.appendChild(navHeader);
-  sidebar.appendChild(list);
-
-  // Set the first link as active by default
-  const firstLink = sidebar.querySelector('.domain-nav-list a');
-  if (firstLink) {
-    firstLink.classList.add('active');
-  }
-}
-
-/**
- * Filters the guidance articles based on a search term.
- * It hides non-matching cards and entire domain sections if they have no matching content.
- */
-function filterGuides(term) {
-  const searchTerm = term.toLowerCase().trim();
-  let totalVisible = 0;
-
-  document.querySelectorAll('.guide-card').forEach(card => {
-    const title = card.querySelector('.card-title')?.textContent.toLowerCase() || '';
-    const desc = card.querySelector('.card-desc')?.textContent.toLowerCase() || '';
-    const isMatch = title.includes(searchTerm) || desc.includes(searchTerm);
-    card.hidden = !isMatch;
-  });
-
-  document.querySelectorAll('.guide-domain').forEach(domainSection => {
-    const visibleCards = domainSection.querySelectorAll('.guide-card:not([hidden])');
-    const isActive = domainSection.classList.contains('active');
-
-    if (searchTerm) {
-      // If searching, hide domains without matches
-      domainSection.hidden = visibleCards.length === 0;
-    } else {
-      // If search is cleared, only show the active one
-      domainSection.hidden = false;
-      domainSection.classList.toggle('active', isActive);
-    }
-    totalVisible += visibleCards.length;
-  });
-
-  const emptyState = document.getElementById('empty-state');
-  if (emptyState) {
-    emptyState.hidden = totalVisible > 0 || !searchTerm;
-  }
-}
-
-/**
- * The main initialization function for the page.
- */
-export async function initializeGuidancePage() {
-  // Check if we are on the guidance page by looking for the root element and search input.
-  if (!root) return;
+async function renderGuidanceCategories() {
+  const placeholder = document.getElementById('guidance-categories-placeholder');
+  if (!placeholder) return;
 
   try {
-    // Download the guidance data from the JSON file.
-    const res = await fetch(DATA_URL);
-    const data = await res.json();
-    // Once the data is loaded, call the function to render it.
-    renderHierarchy(data);
-
-    // Add search event listener
-    if (searchInput) {
-      searchInput.addEventListener('input', (e) => filterGuides(e.target.value));
+    const response = await fetch('../php/get-guidance-categories.php');
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
-  } catch (e) {
-    // If the download fails, show an error message to the user.
-    root.innerHTML =
-      "<p>Failed to load guidance data. Please try again later.</p>";
-    console.error("Guidance data load error:", e);
+    const categoryGroups = await response.json();
+
+    if (categoryGroups.length === 0) {
+      placeholder.innerHTML = '<p>No guidance categories found.</p>';
+      return;
+    }
+
+    let html = '';
+    for (const group of categoryGroups) {
+      html += `
+        <section class="category-section">
+          <h2 class="category-section-title">${group.details.name}</h2>
+          <div class="categories-grid">
+            ${group.children.map(createCategoryCard).join('')}
+          </div>
+        </section>
+      `;
+    }
+    placeholder.innerHTML = html;
+  } catch (error) {
+    console.error("Failed to fetch or render guidance categories:", error);
+    placeholder.innerHTML = '<p class="error-message">Could not load categories. Please try again later.</p>';
   }
+}
+
+export function initializeGuidancePage() {
+  renderGuidanceCategories();
+}
+
+/**
+ * Creates the HTML for a single article card.
+ * @param {object} article - The article data object.
+ * @returns {string} - The HTML string for the article card.
+ */
+function createArticleCard(article) {
+  const imageUrl = article.image_url || 'https://via.placeholder.com/400x300.png?text=Article';
+  const articleLink = `article.html?id=${article.id}`; 
+  const excerpt = article.excerpt || 'No summary available.';
+  const author = article.author_name || 'AgriHub Staff';
+  const postDate = new Date(article.created_at).toLocaleDateString('en-US', {
+    year: 'numeric', month: 'long', day: 'numeric'
+  });
+
+  return `
+    <a href="${articleLink}" class="article-card">
+      <img src="${imageUrl}" alt="${article.title}" class="article-card-image">
+      <div class="article-card-content">
+        <h3 class="article-card-title">${article.title}</h3>
+        <p class="article-card-excerpt">${excerpt}</p>
+        <div class="article-card-meta">
+          <span>By ${author}</span>
+          <span>•</span>
+          <span>${postDate}</span>
+        </div>
+      </div>
+    </a>
+  `;
+}
+
+/**
+ * Fetches and renders the content for a specific guidance category page.
+ */
+async function renderCategoryPage() {
+  const headerPlaceholder = document.getElementById('category-header-placeholder');
+  const articlesPlaceholder = document.getElementById('articles-list-placeholder');
+  if (!headerPlaceholder || !articlesPlaceholder) return;
+
+  const params = new URLSearchParams(window.location.search);
+  const slug = params.get('slug');
+
+  if (!slug) {
+    headerPlaceholder.innerHTML = '<h1>Category not found</h1><p>No category was specified.</p>';
+    return;
+  }
+
+  try {
+    const response = await fetch(`../php/get-articles-by-category.php?slug=${slug}`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+
+    if (!data.success || !data.category) {
+      headerPlaceholder.innerHTML = `<h1>Category "${slug}" not found</h1>`;
+      return;
+    }
+
+    // Render header
+    document.title = `${data.category.name} - AgriHub Guidance`;
+    headerPlaceholder.innerHTML = `
+      <h1 data-i18n-key="${data.category.name_key}">${data.category.name}</h1>
+      <p data-i18n-key="${data.category.description_key}">Articles and guides about ${data.category.name.toLowerCase()}.</p>
+    `;
+
+    // Render articles
+    if (data.articles.length > 0) {
+      articlesPlaceholder.innerHTML = data.articles.map(createArticleCard).join('');
+    } else {
+      articlesPlaceholder.innerHTML = `<p>No articles found in this category yet. Please check back later.</p>`;
+    }
+
+  } catch (error) {
+    console.error("Failed to fetch or render category content:", error);
+    articlesPlaceholder.innerHTML = '<p class="error-message">Could not load articles. Please try again later.</p>';
+  }
+}
+
+export function initializeGuidanceCategoryPage() {
+  renderCategoryPage();
+}
+
+/**
+ * Creates the HTML for a single related article card.
+ * @param {object} article - The related article data object.
+ * @returns {string} - The HTML string for the card.
+ */
+function createRelatedArticleCard(article) {
+  const imageUrl = article.image_url || 'https://via.placeholder.com/300x200.png?text=AgriHub';
+  const articleLink = `article.html?id=${article.id}`;
+
+  return `
+    <a href="${articleLink}" class="related-article-card">
+      <img src="${imageUrl}" alt="${article.title}" class="related-article-image">
+      <div class="related-article-content">
+        <h3 class="related-article-title">${article.title}</h3>
+      </div>
+    </a>
+  `;
+}
+
+/**
+ * Fetches and renders a single full article.
+ */
+async function renderArticlePage() {
+  const placeholder = document.getElementById('article-content-placeholder');
+  if (!placeholder) return;
+
+  const params = new URLSearchParams(window.location.search);
+  const articleId = params.get('id');
+
+  if (!articleId) {
+    placeholder.innerHTML = '<h1>Article not found</h1><p>No article ID was specified.</p>';
+    return;
+  }
+
+  try {
+    const response = await fetch(`../php/get-article.php?id=${articleId}`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+
+    if (!data.success || !data.article) {
+      placeholder.innerHTML = '<h1>Article Not Found</h1><p>The requested article could not be found or is no longer available.</p>';
+      return;
+    }
+
+    const article = data.article;
+    document.title = `${article.title} - AgriHub`;
+
+    const postDate = new Date(article.created_at).toLocaleDateString('en-US', {
+      year: 'numeric', month: 'long', day: 'numeric'
+    });
+
+    // Note: Using innerHTML for article.content assumes the content is trusted
+    // and has been sanitized on the server before being saved to the database.
+    placeholder.innerHTML = `
+      <header class="article-header">
+        <a href="guidance-category.html?slug=${article.category_slug}" class="article-category-link">${article.category_name}</a>
+        <h1 class="article-title">${article.title}</h1>
+        <div class="article-meta">
+          <span>By <strong>${article.author_name}</strong></span>
+          <span>•</span>
+          <span>${postDate}</span>
+        </div>
+      </header>
+
+      ${article.image_url ? `
+        <figure class="article-image-container">
+          <img src="${article.image_url}" alt="${article.title}" class="article-image">
+        </figure>
+      ` : ''}
+
+      <div class="article-body">
+        ${article.content}
+      </div>
+    `;
+
+    // Render related articles if they exist
+    if (data.related_articles && data.related_articles.length > 0) {
+      const relatedSection = document.getElementById('related-articles-section');
+      const relatedGrid = document.getElementById('related-articles-grid');
+      relatedGrid.innerHTML = data.related_articles.map(createRelatedArticleCard).join('');
+      relatedSection.style.display = 'block';
+    }
+
+  } catch (error) {
+    console.error("Failed to fetch or render article:", error);
+    placeholder.innerHTML = '<p class="error-message">Could not load the article. Please try again later.</p>';
+  }
+}
+
+export function initializeArticlePage() {
+  renderArticlePage();
 }

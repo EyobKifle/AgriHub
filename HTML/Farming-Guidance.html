@@ -4,33 +4,26 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Farming Guidance - AgriHub</title>
-  <!-- Global Styles (Header, Footer) -->
   <link rel="stylesheet" href="../Css/header.css" />
   <link rel="stylesheet" href="../Css/footer.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-  <!-- Guidance Styles -->
   <link rel="stylesheet" href="../Css/guidance.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 </head>
 <body>
-  <!-- Header Placeholder -->
   <div id="header-placeholder"></div>
 
-  <main>
-    <div class="container">
-      <header class="page-header">
-        <h1 data-i18n-key="guidance.page.title">Farming Guidance</h1>
-        <p data-i18n-key="guidance.page.subtitle">Master content map for Ethiopian farming: crops, livestock, techniques, health & safety, business, innovation, and policy. Click any topic to open details.</p>
-      </header>
+  <main class="guidance-container">
+    <header class="guidance-header">
+      <h1 data-i18n-key="guidance.title">Farming Guidance</h1>
+      <p data-i18n-key="guidance.subtitle">Explore categories to find articles, tips, and discussions.</p>
+    </header>
 
-      <!-- Dynamic Guidance Root -->
-      <div id="guide-root" aria-live="polite"></div>
-    </div>
+    <section id="guidance-categories-placeholder" class="categories-grid-container">
+      <!-- Category cards will be dynamically inserted here -->
+    </section>
   </main>
 
-  <!-- Footer Placeholder -->
   <div id="footer-placeholder"></div>
-
-  <!-- Global scripts (loads header/footer) -->
   <script type="module" src="../Js/site.js"></script>
 </body>
 </html>

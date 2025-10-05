@@ -45,12 +45,12 @@ $initial = strtoupper(mb_substr($name, 0, 1));
         <aside class="sidebar" id="sidebar">
             <ul class="sidebar-nav">
                 <li><a href="User-Dashboard.php"><i class="fa-solid fa-house"></i> Dashboard</a></li>
-                <li><a href="User-Profile.php" class="active"><i class="fa-solid fa-user"></i> My Profile</a></li>
-                <li><a href="User-Listings.php"><i class="fa-solid fa-list-check"></i> My Listings</a></li>
-                <li><a href="User-Orders.php"><i class="fa-solid fa-receipt"></i> Order History</a></li>
-                <li><a href="User-Messages.php"><i class="fa-solid fa-envelope"></i> Messages</a></li>
-                <li><a href="User-Discussions.php"><i class="fa-solid fa-comments"></i> My Discussions</a></li>
-                <li><a href="User-Settings.php"><i class="fa-solid fa-gear"></i> Settings</a></li>
+                <li><a href="User-Profile.php" class="active" data-i18n-key="user.nav.profile"><i class="fa-solid fa-user"></i> My Profile</a></li>
+                <li><a href="User-Listings.php" data-i18n-key="user.nav.listings"><i class="fa-solid fa-list-check"></i> My Listings</a></li>
+                <li><a href="User-Orders.php" data-i18n-key="user.nav.orders"><i class="fa-solid fa-receipt"></i> Order History</a></li>
+                <li><a href="User-Messages.php" data-i18n-key="user.nav.messages"><i class="fa-solid fa-envelope"></i> Messages</a></li>
+                <li><a href="User-Discussions.php" data-i18n-key="user.nav.discussions"><i class="fa-solid fa-comments"></i> My Discussions</a></li>
+                <li><a href="User-Settings.php" data-i18n-key="user.nav.settings"><i class="fa-solid fa-gear"></i> Settings</a></li>
                 <hr>
                 <!-- Site Navigation Links -->
                 <li><a href="User-Marketplace.php" data-i18n-key="header.nav.marketplace"><i class="fa-solid fa-store"></i> Marketplace</a></li>

@@ -1,150 +1,131 @@
 <?php
 session_start();
 if (!isset($_SESSION['user_id'])) {
-    if (($_SERVER['HTTP_ACCEPT'] ?? '') === 'text/html') {
-        header('Location: ../HTML/Login.html');
-    } else {
-        http_response_code(401);
-        header('Content-Type: application/json');
-        echo json_encode(['error' => 'User not authenticated.']);
-    }
+    header('Location: ../HTML/Login.html');
     exit();
 }
-
-require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/utils.php';
 
-$userId = (int)$_SESSION['user_id'];
+$name = $_SESSION['name'] ?? 'User';
+$email = $_SESSION['email'] ?? '';
+$initial = strtoupper(mb_substr($name, 0, 1));
+?>
+<!DOCTYPE html>
+<html lang="en">
 
-header('Content-Type: application/json');
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages - AgriHub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../Css/User-Dashboard.css">
+</head>
 
-try {
-    switch ($_SERVER['REQUEST_METHOD']) {
-        case 'GET':
-            handleGet($conn, $userId);
-            break;
-        case 'POST':
-            handlePost($conn, $userId);
-            break;
-        default:
-            http_response_code(405);
-            echo json_encode(['error' => 'Method Not Allowed']);
-            break;
-    }
-} catch (Exception $e) {
-    http_response_code(500);
-    error_log("User-Messages.php Error: " . $e->getMessage());
-    echo json_encode(['error' => 'An unexpected server error occurred.']);
-} finally {
-    $conn->close();
-}
+<body>
+    <!-- Full-width Header -->
+    <header class="main-header-bar">
+        <div class="header-left">
+            <button class="hamburger-menu" id="hamburger-menu" aria-label="Toggle Menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+        <div class="header-center">
+            <div class="logo">
+                <i class="fa-solid fa-leaf"></i>
+                <span>AgriHub</span>
+            </div>
+        </div>
+        <div class="header-right">
+            <a href="User-Account.php" class="profile-link" aria-label="User Profile">
+                <div class="profile-avatar"><?php echo e($initial); ?></div>
+            </a>
+        </div>
+    </header>
 
-/**
- * Handles GET requests to fetch initial page data.
- */
-function handleGet($conn, $userId) {
-    $name = $_SESSION['name'] ?? 'User';
-    $email = $_SESSION['email'] ?? '';
-    $initial = strtoupper(mb_substr($name, 0, 1));
+    <div class="dashboard-container">
+        <aside class="sidebar" id="sidebar">
+            <ul class="sidebar-nav">
+                <li><a href="User-Dashboard.php"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+                <li><a href="User-Account.php"><i class="fa-solid fa-user"></i> My Account</a></li>
+                <li><a href="User-Listings.php"><i class="fa-solid fa-list-check"></i> My Listings</a></li>
+                <li><a href="User-Orders.php"><i class="fa-solid fa-receipt"></i> Order History</a></li>
+                <li><a href="User-Messages.php" class="active"><i class="fa-solid fa-envelope"></i> Messages</a></li>
+                <li><a href="User-Discussions.php"><i class="fa-solid fa-comments"></i> My Discussions</a></li>
+                <li><a href="User-Settings.php"><i class="fa-solid fa-gear"></i> Settings</a></li>
+                <hr>
+                <!-- Site Navigation Links -->
+                <li><a href="User-Marketplace.php" data-i18n-key="header.nav.marketplace"><i class="fa-solid fa-store"></i> Marketplace</a></li>
+                <li><a href="User-News.php" data-i18n-key="header.nav.news"><i class="fa-regular fa-newspaper"></i> News</a></li>
+                <li><a href="User-Community.php" data-i18n-key="header.nav.community"><i class="fa-solid fa-users"></i> Community</a></li>
+                <li><a href="User-Farming-Guidance.php" data-i18n-key="header.nav.guidance"><i class="fa-solid fa-book-open"></i> Farming Guidance</a></li>
+            </ul>
+            <div class="sidebar-footer">
+                <div class="profile-dropdown">
+                    <div>
+                        <div class="profile-name"><?php echo e($name); ?></div>
+                        <div class="profile-email" style="opacity:.8; font-size:12px;"><?php echo e($email); ?></div>
+                        <small><a href="auth.php?action=logout" style="color:inherit; text-decoration:none;" data-i18n-key="user.nav.logout">Logout</a></small>
+                    </div>
+                </div>
+            </div>
+        </aside>
 
-    // This query is complex. It finds conversations involving the user,
-    // gets the other participant's name, the last message, and a count of unread messages.
-    $stmt = $conn->prepare("
-        SELECT
-            c.id, c.subject, c.updated_at,
-            (SELECT body FROM messages WHERE conversation_id = c.id ORDER BY created_at DESC LIMIT 1) AS last_message,
-            (SELECT COUNT(*) FROM messages WHERE conversation_id = c.id AND recipient_id = ? AND is_read = 0) AS unread_count,
-            other_user.name AS other_participant_name
-        FROM conversations c
-        JOIN conversation_participants cp ON c.id = cp.conversation_id
-        JOIN users other_user ON cp.user_id = other_user.id
-        WHERE c.id IN (SELECT conversation_id FROM conversation_participants WHERE user_id = ?)
-          AND cp.user_id != ?
-        GROUP BY c.id
-        ORDER BY c.updated_at DESC
-    ");
-    $stmt->bind_param('iii', $userId, $userId, $userId);
-    $stmt->execute();
-    $conversations = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-    $stmt->close();
+        <main class="main-content">
+            <div class="main-header">
+                <h1>Messages</h1>
+                <p>Send and receive messages with other users.</p>
+                <span id="form-status-message" style="margin-top:8px;"></span>
+            </div>
 
-    echo json_encode([
-        'user' => ['name' => $name, 'email' => $email, 'initial' => $initial],
-        'conversations' => $conversations,
-    ]);
-}
+            <div class="card">
+                <h3 class="card-title">Compose</h3>
+                <form id="compose-form" class="settings-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="recipient_email">To (Email)</label>
+                            <input type="email" id="recipient_email" name="recipient_email" placeholder="recipient@example.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="subject">Subject</label>
+                            <input type="text" id="subject" name="subject" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="body">Message</label>
+                        <textarea id="body" name="body" rows="3" required></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Send</button>
+                    </div>
+                </form>
+            </div>
 
-/**
- * Handles POST requests to compose a new message.
- */
-function handlePost($conn, $userId) {
-    $recipientEmail = trim($_POST['recipient_email'] ?? '');
-    $subject = trim($_POST['subject'] ?? '');
-    $body = trim($_POST['body'] ?? '');
+            <div class="content-section">
+                <div class="main-header">
+                    <h2>Conversations</h2>
+                    <p>Your message history.</p>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Subject</th>
+                                <th>With</th>
+                                <th>Last Message</th>
+                                <th>Updated</th>
+                            </tr>
+                        </thead>
+                        <tbody id="conversations-table-body">
+                            <!-- Conversation rows will be populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
 
-    if (empty($recipientEmail) || empty($subject) || empty($body)) {
-        http_response_code(400);
-        echo json_encode(['error' => 'Please fill in all fields.']);
-        return;
-    }
-    if (!filter_var($recipientEmail, FILTER_VALIDATE_EMAIL)) {
-        http_response_code(400);
-        echo json_encode(['error' => 'Please enter a valid recipient email.']);
-        return;
-    }
-    if (mb_strlen($subject) > 255) {
-        http_response_code(400);
-        echo json_encode(['error' => 'Subject is too long.']);
-        return;
-    }
-    if (mb_strlen($body) > 5000) {
-        http_response_code(400);
-        echo json_encode(['error' => 'Message body is too long.']);
-        return;
-    }
+    <script type="module" src="../Js/User-Messages.js"></script>
+    <script type="module" src="../Js/dashboard.js"></script>
+</body>
 
-    // Find recipient
-    $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
-    $stmt->bind_param('s', $recipientEmail);
-    $stmt->execute();
-    $recipient = $stmt->get_result()->fetch_assoc();
-    $stmt->close();
-
-    if (!$recipient) {
-        http_response_code(404);
-        echo json_encode(['error' => 'Recipient not found.']);
-        return;
-    }
-    $recipientId = (int)$recipient['id'];
-
-    if ($recipientId === $userId) {
-        http_response_code(400);
-        echo json_encode(['error' => 'You cannot send a message to yourself.']);
-        return;
-    }
-
-    $conn->begin_transaction();
-    try {
-        // 1. Create conversation
-        $stmt = $conn->prepare("INSERT INTO conversations (subject) VALUES (?)");
-        $stmt->bind_param('s', $subject);
-        $stmt->execute();
-        $convoId = $conn->insert_id;
-
-        // 2. Add participants
-        $stmt = $conn->prepare("INSERT INTO conversation_participants (conversation_id, user_id) VALUES (?, ?), (?, ?)");
-        $stmt->bind_param('iiii', $convoId, $userId, $convoId, $recipientId);
-        $stmt->execute();
-
-        // 3. Add message
-        $stmt = $conn->prepare("INSERT INTO messages (conversation_id, sender_id, recipient_id, body) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param('iiis', $convoId, $userId, $recipientId, $body);
-        $stmt->execute();
-
-        $conn->commit();
-        echo json_encode(['success' => true, 'message' => 'Message sent successfully.']);
-    } catch (Exception $e) {
-        $conn->rollback();
-        throw $e; // Re-throw to be caught by the main try-catch block
-    }
-}
+</html>

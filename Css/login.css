@@ -270,6 +270,35 @@ button:hover {
   background: rgb(63, 146, 63);
 }
 
+/* Password input wrapper */
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-wrapper input {
+  width: 100%;
+  padding-right: 45px; /* Space for the toggle button */
+}
+
+.password-toggle {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  color: var(--text-light);
+  cursor: pointer;
+  padding: 4px;
+  width: auto;
+  font-size: 0.9rem;
+}
+
+.password-toggle:hover {
+  background: none;
+  color: var(--light-green);
+}
+
 .forgot-password {
   display: block;
   margin: 1rem 0;

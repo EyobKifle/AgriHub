@@ -9,6 +9,7 @@ if (!isset($_SESSION['user_id'])) {
 $name = $_SESSION['name'] ?? 'User';
 $email = $_SESSION['email'] ?? '';
 $initial = strtoupper(mb_substr($name, 0, 1));
+$currentPage = 'User-Marketplace';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -35,38 +36,14 @@ $initial = strtoupper(mb_substr($name, 0, 1));
             </div>
         </div>
         <div class="header-right">
-            <a href="User-Profile.php" class="profile-link" aria-label="User Profile">
+            <a href="User-Account.php" class="profile-link" aria-label="User Profile">
                 <div class="profile-avatar"><?php echo htmlspecialchars($initial, ENT_QUOTES, 'UTF-8'); ?></div>
             </a>
         </div>
     </header>
     
     <div class="dashboard-container">
-        <aside class="sidebar" id="sidebar">
-            <ul class="sidebar-nav">
-                <li><a href="User-Dashboard.php"><i class="fa-solid fa-house"></i> Dashboard</a></li>
-                <li><a href="User-Profile.php"><i class="fa-solid fa-user"></i> My Profile</a></li>
-                <li><a href="User-Listings.php"><i class="fa-solid fa-list-check"></i> My Listings</a></li>
-                <li><a href="User-Orders.php"><i class="fa-solid fa-receipt"></i> Order History</a></li>
-                <li><a href="User-Messages.php"><i class="fa-solid fa-envelope"></i> Messages</a></li>
-                <li><a href="User-Discussions.php"><i class="fa-solid fa-comments"></i> My Discussions</a></li>
-                <li><a href="User-Settings.php"><i class="fa-solid fa-gear"></i> Settings</a></li>
-                <hr>
-                <li><a href="User-Marketplace.php" class="active" data-i18n-key="header.nav.marketplace"><i class="fa-solid fa-store"></i> Marketplace</a></li>
-                <li><a href="User-News.php" data-i18n-key="header.nav.news"><i class="fa-regular fa-newspaper"></i> News</a></li>
-                <li><a href="User-Community.php" data-i18n-key="header.nav.community"><i class="fa-solid fa-users"></i> Community</a></li>
-                <li><a href="User-Farming-Guidance.php" data-i18n-key="header.nav.guidance"><i class="fa-solid fa-book-open"></i> Farming Guidance</a></li>
-            </ul>
-             <div class="sidebar-footer">
-                <div class="profile-dropdown">
-                    <div>
-                        <div class="profile-name"><?php echo htmlspecialchars($name, ENT_QUOTES, 'UTF-8'); ?></div>
-                        <div class="profile-email" style="opacity:.8; font-size:12px;"><?php echo htmlspecialchars($email, ENT_QUOTES, 'UTF-8'); ?></div>
-                        <small><a href="auth.php?action=logout" style="color:inherit; text-decoration:none;" data-i18n-key="user.nav.logout">Logout</a></small>
-                    </div>
-                </div>
-            </div>
-        </aside>
+        <?php include __DIR__ . '/_sidebar.php'; ?>
 
         <main class="main-content">
             <!-- Original Marketplace.html content starts here -->
