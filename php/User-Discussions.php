@@ -8,67 +8,59 @@ if (!isset($_SESSION['user_id'])) {
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/utils.php';
 
+header('Content-Type: application/json');
 $userId = (int)$_SESSION['user_id'];
-$name = $_SESSION['name'] ?? 'User';
-$email = $_SESSION['email'] ?? '';
-$initial = strtoupper(mb_substr($name, 0, 1));
 
-// This script can now handle both GET (for fetching data) and POST (for creating data)
-if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    // Handle data fetching for the page load
-    fetchDiscussionData($conn, $userId, $name, $email, $initial);
-} elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Handle form submission for creating a new discussion
-    handleFormSubmission($conn, $userId);
+try {
+    switch ($_SERVER['REQUEST_METHOD']) {
+        case 'GET':
+            fetchDiscussionData($conn, $userId);
+            break;
+        case 'POST':
+            handleFormSubmission($conn, $userId);
+            break;
+        default:
+            http_response_code(405);
+            echo json_encode(['error' => 'Method Not Allowed']);
+            break;
+    }
+} catch (Exception $e) {
+    http_response_code(500);
+    error_log("User-Discussions.php Error: " . $e->getMessage());
+    echo json_encode(['error' => 'An unexpected server error occurred.']);
+} finally {
+    $conn->close();
 }
 
 function handleFormSubmission($conn, $userId) {
-$formError = '';
-
-// Handle "create discussion" form submission
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'create_discussion') {
     $title = trim($_POST['title'] ?? '');
     $content = trim($_POST['content'] ?? '');
     $categoryId = (int)($_POST['category_id'] ?? 0);
 
-    $response = [];
     if (empty($title) || empty($content) || $categoryId <= 0) {
         http_response_code(400);
-        $response['error'] = 'Please fill in all fields.';
-    } else {
-        if ($stmt = $conn->prepare('INSERT INTO discussions (author_id, category_id, title, content, status) VALUES (?, ?, ?, ?, "published")')) {
-            $stmt->bind_param('iiss', $userId, $categoryId, $title, $content);
-            if ($stmt->execute()) {
-                $response['success'] = true;
-                $response['message'] = 'Discussion created successfully.';
-            } else {
-                http_response_code(500);
-                $response['error'] = 'Failed to create discussion. Please try again.';
-            }
-            $stmt->close();
-        } else {
-            http_response_code(500);
-            $response['error'] = 'Server error. Please try again later.';
-        }
+        echo json_encode(['error' => 'Please fill in all fields.']);
+        return;
     }
-    header('Content-Type: application/json');
-    echo json_encode($response);
-    exit();
-}
-}
 
-function fetchDiscussionData($conn, $userId, $name, $email, $initial) {
+    $stmt = $conn->prepare('INSERT INTO discussions (author_id, category_id, title, content, status) VALUES (?, ?, ?, ?, "published")');
+    $stmt->bind_param('iiss', $userId, $categoryId, $title, $content);
 
-// Fetch categories for the form dropdown
-$categories = [];
-if ($stmt = $conn->prepare('SELECT id, name FROM discussion_categories ORDER BY name')) {
-    $stmt->execute();
-    $res = $stmt->get_result();
-    while ($r = $res->fetch_assoc()) {
-        $categories[] = $r;
+    if ($stmt->execute()) {
+        echo json_encode(['success' => true, 'message' => 'Discussion created successfully.']);
+    } else {
+        http_response_code(500);
+        echo json_encode(['error' => 'Failed to create discussion. Please try again.']);
     }
     $stmt->close();
 }
+
+function fetchDiscussionData($conn, $userId) {
+    $name = $_SESSION['name'] ?? 'User';
+    $email = $_SESSION['email'] ?? '';
+    $initial = strtoupper(mb_substr($name, 0, 1));
+    // Fetch categories for the form dropdown
+    $categories = $conn->query('SELECT id, name FROM discussion_categories ORDER BY name')->fetch_all(MYSQLI_ASSOC);
 
 // Fetch discussions created by the user
 $rows = [];
@@ -83,9 +75,6 @@ if ($stmt = $conn->prepare($sql)) {
     $stmt->close();
 }
 
-$conn->close();
-
-header('Content-Type: application/json');
 echo json_encode([
     'user' => [
         'name' => $name,

@@ -1,5 +1,4 @@
 import { fetchMessages } from './chat-api.js';
-import { session } from './chat/chat-session.js';
 
 // A handy object to store references to the HTML elements we'll be working with.
 export const els = {
@@ -70,7 +69,8 @@ export function createAttachmentPreview(file, onRemove) {
  * It handles messages sent by the current user differently from received messages.
  */
 function renderMessage(m) {
-  const isMe = m.user.id === session.currentUser.id;
+  const currentUser = getCurrentUser();
+  const isMe = m.user.id === currentUser.id;
   const row = document.createElement('div');
     row.className = `message ${isMe ? 'sent' : 'received'}`;
   row.setAttribute('data-message-id', m.id);
@@ -141,6 +141,19 @@ function renderMessage(m) {
   row.appendChild(avatar);
   row.appendChild(bubble);
   return row;
+}
+
+function getCurrentUser() {
+    const userDataEl = document.getElementById('chat-container'); // Or any other main container
+    if (userDataEl && userDataEl.dataset.user) {
+        try {
+            return JSON.parse(userDataEl.dataset.user);
+        } catch (e) {
+            console.error('Failed to parse user data from data attribute:', e);
+        }
+    }
+    console.error('Could not find user data. Using a fallback user. This should not happen in production.');
+    return { id: 1, name: 'Dev User', avatar: 'https://placehold.co/48x48/a78bfa/FFF?text=D' };
 }
 
 /**

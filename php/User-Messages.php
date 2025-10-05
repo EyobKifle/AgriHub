@@ -14,13 +14,17 @@ $userId = (int)$_SESSION['user_id'];
 header('Content-Type: application/json');
 
 try {
-    if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-        handleGet($conn, $userId);
-    } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        handlePost($conn, $userId);
-    } else {
-        http_response_code(405);
-        echo json_encode(['error' => 'Method Not Allowed']);
+    switch ($_SERVER['REQUEST_METHOD']) {
+        case 'GET':
+            handleGet($conn, $userId);
+            break;
+        case 'POST':
+            handlePost($conn, $userId);
+            break;
+        default:
+            http_response_code(405);
+            echo json_encode(['error' => 'Method Not Allowed']);
+            break;
     }
 } catch (Exception $e) {
     http_response_code(500);

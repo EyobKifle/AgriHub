@@ -163,4 +163,4 @@ if ($conn) {
     $product->handleRequest();
 }
 
-include 'HTML/marketplace.html';
+include 'marketplace.html';

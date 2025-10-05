@@ -1,19 +1,19 @@
 AgriHub - API Usage Documentation
 =================================
 
-This document outlines the API endpoints used throughout the AgriHub application, their purpose, and how they are integrated.
+This document outlines the JSON API endpoints used throughout the AgriHub application, their purpose, and how they are integrated.
 
 
 1. Marketplace API
 ------------------
 
-Endpoint: `/php/marketplace.php`
+Endpoint: `/php/api/ProductApi.php`
 Method: `GET`
-Description: This file serves a dual purpose. It renders the marketplace page and also acts as the primary API for fetching product and category data for the page's dynamic frontend.
+Description: The primary API for fetching product and category data for the marketplace page's dynamic frontend.
 
 1.1. Action: `get_products`
 - Usage: Called by the frontend JavaScript to load and filter products on the marketplace grid.
-- Integration: Used in the `loadProducts()` method in the `Marketplace` JavaScript class within `marketplace.php`.
+- Integration: Used in `Js/marketplace.js`.
 - URL Parameters:
   - `action=get_products` (required)
   - `category` (string, e.g., "grains"): Filters by category slug. Defaults to 'all'.
@@ -25,10 +25,7 @@ Description: This file serves a dual purpose. It renders the marketplace page an
   ```json
   {
     "success": true,
-    "products": [
-      { "id": 1, "title": "...", "price": "850.00", "category_name": "Grains", ... }
-    ],
-    "total_products": 1
+    "products": [ { "id": 1, "title": "...", "price": "850.00", ... } ]
   }
   ```
 

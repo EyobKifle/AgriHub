@@ -17,9 +17,7 @@ const sidebar = document.getElementById("guidance-sidebar");
 function onCardActivate(el) {
   const id = el.getAttribute("data-id");
   if (!id) return;
-  window.location.href = `../HTML/guidance-detail.php?id=${encodeURIComponent(
-    id
-  )}`;
+  window.location.href = `../php/guidance-detail.php?id=${encodeURIComponent(id)}`;
 }
 
 /**

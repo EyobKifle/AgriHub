@@ -3,71 +3,76 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><?php echo e($guide['title'] ?? 'Guidance Detail'); ?> - AgriHub</title>
+  <title>Farming Guidance - AgriHub</title>
   <link rel="stylesheet" href="../Css/header.css">
   <link rel="stylesheet" href="../Css/footer.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="../Css/guidance-detail.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
   <div id="header-placeholder"></div>
 
-  <main>
+  <main class="main">
     <div class="container">
-      <?php if ($error): ?>
-        <div class="error-box"><?php echo e($error); ?></div>
-      <?php else: ?>
-        <article class="guide-detail">
-          <header class="guide-header">
-            <h1><?php echo e($guide['title']); ?></h1>
-            <?php if (!empty($guide['description'])): ?>
-            <p class="muted"><?php echo e($guide['description']); ?></p>
-            <?php endif; ?>
-          </header>
+      <div class="breadcrumb">
+        <a href="guidance.html" data-i18n-key="guidance.page.title">Farming Guidance</a>
+        <i class="fa-solid fa-chevron-right"></i>
+        <span id="breadcrumb-item"></span>
+      </div>
 
-          <?php if (!empty($images)): ?>
-            <section class="image-gallery">
-              <?php foreach ($images as $src): ?>
-                <figure class="image-item">
-                  <img src="<?php echo e($src); ?>" alt="Image for <?php echo e($guide['title']); ?>">
-                </figure>
-              <?php endforeach; ?>
-            </section>
-          <?php endif; ?>
+      <div id="error-box" class="error-box" style="display: none;"></div>
 
-          <section class="guide-content">
-            <?php // Render content as-is. If markdown is used, convert before storing. ?>
-            <?php echo $guide['content']; ?>
-          </section>
+      <div id="guidance-content" style="display: none;">
+        <header class="article-header">
+          <h1 id="article-title"></h1>
+          <p class="meta">
+            <strong data-i18n-key="community.cat.crop">Domain:</strong> <span id="article-domain"></span> | 
+            <strong data-i18n-key="community.cat.livestock">Subdomain:</strong> <span id="article-subdomain"></span>
+          </p>
+          <p id="article-desc" class="description"></p>
+        </header>
 
-          <?php if (!empty($howto)): ?>
-            <section class="howto-section">
-              <h2>How-To Steps</h2>
-              <ol class="howto-list">
-                <?php foreach ($howto as $step): ?>
-                  <li><?php echo e($step); ?></li>
-                <?php endforeach; ?>
+        <div class="content-grid">
+          <article class="main-content">
+            <section class="content-section">
+              <h2 data-i18n-key="home.how.title">How-To Guide</h2>
+              <ol>
+                <li>Step-by-step explanation of <strong id="guide-title-1"></strong> for <strong id="guide-item-1"></strong>.</li>
+                <li>Includes practical, region-specific guidance for Ethiopian conditions.</li>
+                <li>Highlights tools, safety measures, and sustainability tips.</li>
               </ol>
             </section>
-          <?php endif; ?>
 
-          <?php if (!empty($videos)): ?>
-            <section class="videos">
-              <h2>Videos</h2>
-              <div class="video-grid">
-                <?php foreach ($videos as $url): ?>
-                  <?php echo embedYouTube($url); ?>
-                <?php endforeach; ?>
+            <section class="content-section">
+              <h2 data-i18n-key="home.features.news.title">Video Tutorials</h2>
+              <div class="video-gallery">
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video player" frameborder="0" allowfullscreen></iframe>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/o-YBDTqX_ZU" title="YouTube video player" frameborder="0" allowfullscreen></iframe>
               </div>
             </section>
-          <?php endif; ?>
-        </article>
-      <?php endif; ?>
+
+            <section class="content-section">
+              <h2 data-i18n-key="admin.news.title">Gallery</h2>
+              <img id="article-image" src="" alt="" style="width:100%;max-width:600px; border-radius: 8px;">
+            </section>
+          </article>
+
+          <aside class="sidebar">
+            <div class="sidebar-section">
+              <h3 data-i18n-key="user.discussions.table.topic">Related Topics</h3>
+              <ul id="related-topics-list">
+                <!-- Related topics will be inserted here by JS -->
+              </ul>
+            </div>
+          </aside>
+        </div>
+      </div>
     </div>
   </main>
 
   <div id="footer-placeholder"></div>
 
   <script type="module" src="../Js/site.js"></script>
+  <script type="module" src="../Js/guidance-detail.js"></script>
 </body>
 </html>

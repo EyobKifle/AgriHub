@@ -26,8 +26,7 @@ function handleGet($conn, $userId) {
         SELECT
             u.name, u.email, u.phone, u.location, u.avatar_url,
             p.bio, p.farm_size_hectares, p.specialization, p.experience_years,
-            p.business_name, p.business_address, p.language_preference,
-            p.pref_email_notifications, p.pref_theme
+            p.business_name, p.business_address, p.language_preference, p.pref_theme
         FROM users u
         LEFT JOIN user_profiles p ON u.id = p.user_id
         WHERE u.id = ?
@@ -52,7 +51,6 @@ function handleGet($conn, $userId) {
     $profile['business_name'] = $profile['business_name'] ?? '';
     $profile['business_address'] = $profile['business_address'] ?? '';
     $profile['language_preference'] = $profile['language_preference'] ?? 'en';
-    $profile['pref_email_notifications'] = (bool)($profile['pref_email_notifications'] ?? true);
     $profile['pref_theme'] = $profile['pref_theme'] ?? 'light';
 
     echo json_encode($profile);
@@ -72,7 +70,6 @@ function handlePost($conn, $userId) {
     $business_name = trim($_POST['business_name'] ?? '');
     $business_address = trim($_POST['business_address'] ?? '');
     $lang_pref = trim($_POST['language_preference'] ?? 'en');
-    $email_notif = isset($_POST['pref_email_notifications']) ? 1 : 0;
     $theme_pref = trim($_POST['pref_theme'] ?? 'light');
 
     // Handle avatar upload
@@ -102,8 +99,8 @@ function handlePost($conn, $userId) {
         }
 
         // Upsert into user_profiles
-        $stmt = $conn->prepare('INSERT INTO user_profiles (user_id, bio, farm_size_hectares, specialization, experience_years, business_name, business_address, language_preference, pref_email_notifications, pref_theme) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE bio = VALUES(bio), farm_size_hectares = VALUES(farm_size_hectares), specialization = VALUES(specialization), experience_years = VALUES(experience_years), business_name = VALUES(business_name), business_address = VALUES(business_address), language_preference = VALUES(language_preference), pref_email_notifications = VALUES(pref_email_notifications), pref_theme = VALUES(pref_theme)');
-        $stmt->bind_param('isdsisssis', $userId, $bio, $farm_size, $specialization, $experience, $business_name, $business_address, $lang_pref, $email_notif, $theme_pref);
+        $stmt = $conn->prepare('INSERT INTO user_profiles (user_id, bio, farm_size_hectares, specialization, experience_years, business_name, business_address, language_preference, pref_theme) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE bio = VALUES(bio), farm_size_hectares = VALUES(farm_size_hectares), specialization = VALUES(specialization), experience_years = VALUES(experience_years), business_name = VALUES(business_name), business_address = VALUES(business_address), language_preference = VALUES(language_preference), pref_theme = VALUES(pref_theme)');
+        $stmt->bind_param('isdsissss', $userId, $bio, $farm_size, $specialization, $experience, $business_name, $business_address, $lang_pref, $theme_pref);
         $stmt->execute();
         $stmt->close();
 

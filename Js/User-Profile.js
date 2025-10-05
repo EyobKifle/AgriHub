@@ -24,7 +24,7 @@ async function fetchData() {
     try {
         const response = await fetch('../php/api/profile.php');
         if (!response.ok) {
-            if (response.status === 401) window.location.href = '../HTML/Login.html';
+            if (response.status === 401) window.location.href = '../HTML/guest/Login.html';
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();

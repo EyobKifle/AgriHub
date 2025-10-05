@@ -11,40 +11,35 @@ This document details the features and functionality of the AgriHub platform, ex
 - Flow: Users can sign up with their name, email, phone, and location. The system hashes the password and stores the new user in the `users` table. Login validates credentials against this table.
 - Tables: `users`
 
-1.2. Profile Management (`User-Profile.php`)
+1.2. Profile Management
 - Flow: Once logged in, a user can navigate to "My Profile". This page allows them to view and edit their information.
 - UI to DB Interaction:
-  - The page loads data by joining `users` and `user_profiles` tables for the logged-in `user_id`.
-  - The form supports updating basic info (`name`, `phone`, `location`) and extended profile data (`bio`, `farm_size_hectares`, `specialization`, `experience_years`, `business_name`, `business_address`).
+  - The frontend (`Js/User-Profile.js`) makes a `GET` request to `/php/api/profile.php` to fetch the current user's data.
+  - The form supports updating basic info (`name`, `phone`, `location`), extended profile data (`bio`, `farm_size_hectares`, `specialization`, etc.), and preferences (`language`, `theme`, `email_notifications`).
   - A file input allows uploading a new profile picture (`avatar_url`).
-  - On submission, the backend script:
-    1. Updates the `users` table with basic information.
-    2. Handles the file upload, moving the image to `uploads/avatars/` and saving the path in `users.avatar_url`.
-    3. Uses an `INSERT ... ON DUPLICATE KEY UPDATE` (UPSERT) query to save or update the extended information in the `user_profiles` table, linking it via `user_id`.
+  - On submission, the frontend sends a `POST` request with all form data (including the avatar file) to `/php/api/profile.php`.
+  - The backend API handles updating the `users` and `user_profiles` tables, including processing the file upload.
 - Tables: `users`, `user_profiles`
 
 
 2. Marketplace
 --------------
 
-2.1. Product Viewing & Filtering (`marketplace.php`)
+2.1. Product Viewing & Filtering
 - Flow: The main marketplace page displays a grid of products. Users can filter by category, price range, and a search term. They can also sort the results.
 - UI to DB Interaction:
-  - The frontend JavaScript (`marketplace.php` <script> block) makes `fetch` requests to its own PHP part, which acts as an API.
-  - `action=get_products`: The backend script constructs a dynamic SQL query based on the filter parameters (`category`, `min_price`, `max_price`, `search`, `sort`). It joins `products`, `categories`, `users`, and `product_images` to get all necessary data. The results are returned as JSON.
-  - `action=get_categories`: This fetches all category slugs and their corresponding active product counts from the `categories` table. This is used to dynamically build the category filter list in the sidebar.
+  - The frontend JavaScript (`Js/marketplace.js`) makes `fetch` requests to `/php/api/ProductApi.php`.
+  - `action=get_products`: The API constructs a dynamic SQL query based on the filter parameters (`category`, `min_price`, `max_price`, `search`, `sort`). It joins `products`, `categories`, `users`, and `product_images` to get all necessary data. The results are returned as JSON.
+  - `action=get_categories`: The API fetches all category slugs and their corresponding active product counts from the `categories` table. This is used to dynamically build the category filter list in the sidebar.
 - Tables: `products`, `categories`, `users`, `product_images`
 
-2.2. Product Creation & Management (`User-Listings.php`)
-- Flow: Logged-in users can create new product listings from their dashboard.
+2.2. Product Creation & Management (My Listings)
+- Flow: Logged-in users can create, view, update, and delete their own product listings from the "My Listings" section of their dashboard.
 - UI to DB Interaction:
-  - The "Create Listing" form includes fields for title, description, category, price, unit, and quantity.
-  - A multi-file input allows for uploading several product images.
-  - On form submission, the backend script:
-    1. Begins a database transaction to ensure data integrity.
-    2. Inserts the main product data into the `products` table and retrieves the new `product_id`.
-    3. Iterates through the uploaded files, moves them to `uploads/products/`, and inserts a record for each into the `product_images` table. The first image is marked as `is_primary = 1`.
-    4. Commits the transaction if all steps succeed, or rolls back on failure.
+  - The frontend (`Js/User-Listings.js`) interacts with a dedicated API at `/php/api/listings.php`.
+  - `GET`: Fetches all listings for the logged-in user.
+  - `POST`: Creates a new listing or updates an existing one. The form data, including product images, is sent. The backend handles inserting/updating the `products` table and managing `product_images`.
+  - `POST` with `action=delete_listing`: Deletes a specified product.
 - Tables: `products`, `product_images`, `categories` (for dropdown).
 
 2.3. Order & Checkout (To Be Implemented)
@@ -61,20 +56,28 @@ This document details the features and functionality of the AgriHub platform, ex
 3. Community & Discussions
 --------------------------
 
-3.1. Discussion Forum (`User-Discussions.php`)
+3.1. Discussion Management (My Discussions)
 - Flow: Users can view discussions they have started and create new ones.
 - UI to DB Interaction:
-  - The page dynamically populates the "Category" dropdown for new discussions by querying the `discussion_categories` table.
-  - When a user creates a new discussion, the form data is inserted into the `discussions` table, linked to the `author_id` and `category_id`.
-  - The main table on the page lists all discussions where `author_id` matches the current user's ID.
+  - The frontend (`Js/User-Discussions.js`) interacts with `/php/api/discussions.php`.
+  - `GET`: Fetches all discussions started by the user, along with all available categories for the "create" form dropdown.
+  - `POST`: Submits the new discussion (title, content, category) to be saved in the `discussions` table.
 - Tables: `discussions`, `discussion_categories`
 
-3.2. Liking & Commenting (To Be Implemented on `discussion-detail.php`)
-- Flow: On a single discussion page, users will see the main post and all comments. They can "like" the post or comments and add their own replies.
+3.2. Real-time Chat (on `discussion.php`)
+- Flow: On a single discussion page, users see a real-time chat interface for that topic. They can send, edit, and delete their own messages.
 - UI to DB Interaction:
-  - "Like" Button: A click will trigger a JavaScript `fetch` call to an API endpoint (e.g., `api/like.php?type=discussion&id=...`). The backend will increment the `like_count` on the corresponding `discussions` or `discussion_comments` record.
-  - Comment Form: Submitting a comment will post to an API endpoint that inserts a new record into the `discussion_comments` table, linking it to the `discussion_id` and `author_id`. The `trg_after_comment_insert` trigger will automatically update the `comment_count` in the `discussions` table.
-- Tables: `discussions`, `discussion_comments`
+  - The frontend (`Js/chat.js`, `Js/chat-ui.js`) communicates with a RESTful API at `/php/api/chat.php`.
+  - `GET`: Fetches all messages for the current `discussion_id`.
+  - `POST`: Adds a new message. The message object (user, text, attachments) is sent as a JSON body.
+  - `PUT`: Updates an existing message's text content.
+  - `DELETE`: Deletes a message.
+- Tables: `discussion_messages` (or similar), `discussions`
+
+3.3. Private Messaging (My Messages)
+- Flow: Users can view their private conversation list and send new messages from their dashboard.
+- UI to DB Interaction: The frontend (`Js/User-Messages.js`) uses `/php/api/messages.php` to fetch conversation lists and send new messages.
+- Tables: `conversations`, `messages`
 
 
 4. Reviews, Reports, & Favorites (To Be Implemented)

@@ -1,43 +1,138 @@
+/* General Page Layout */
 :root {
-  --primary-green: #1E4620;
-  --light-green: rgb(42, 119, 42);
-  --light-bg: #FBF9F4;
-  --text-dark: #1C1C1C;
-  --text-light: #555;
-  --border-color: #E5E7EB;
-  --white: #FFFFFF;
-  --accent-orange: #D97706;
+    --primary-color: #1E4620;
+    --secondary-color: #D97706;
+    --text-color: #333;
+    --light-text-color: #666;
+    --bg-color: #f9fafb;
+    --card-bg: #fff;
+    --border-color: #e5e7eb;
 }
 
-* { box-sizing: border-box; }
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Roboto', sans-serif;
+}
 
-body { background: var(--light-bg); color: var(--text-dark); }
-.container { max-width: 1000px; margin: 0 auto; padding: 1rem; }
+.main {
+    padding: 2rem 0;
+}
 
-.error-box { background: #fff1f0; color: #b71c1c; border: 1px solid #f5c6cb; padding: .75rem 1rem; border-radius: .5rem; }
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
 
-.guide-header h1 { margin: 0 0 .25rem; color: var(--primary-green); }
-.guide-header .muted { margin: 0 0 .75rem; color: var(--text-light); }
+.error-box {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 1rem;
+    border: 1px solid #f5c6cb;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
 
-.image-gallery { display: grid; grid-template-columns: 1fr; gap: .75rem; margin: 1rem 0; }
-.image-item { border-radius: .75rem; overflow: hidden; border: 1px solid var(--border-color); }
-.image-item img { width: 100%; height: auto; display: block; }
+/* Breadcrumb Navigation */
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    color: var(--light-text-color);
+}
+.breadcrumb a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+.breadcrumb a:hover {
+    text-decoration: underline;
+}
+.breadcrumb i {
+    font-size: 0.7rem;
+}
 
-.guide-content { background: var(--white); border: 1px solid var(--border-color); border-radius: .75rem; padding: 1rem; line-height: 1.6; }
-.guide-content h2, .guide-content h3 { color: var(--text-dark); }
-.guide-content p { color: var(--text-light); }
+/* Article Header */
+.article-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+.article-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+.article-header .meta {
+    font-size: 1rem;
+    color: var(--light-text-color);
+    margin-bottom: 1rem;
+}
+.article-header .description {
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
 
-.howto-section { margin-top: 1rem; }
-.howto-section h2 { margin: 0 0 .5rem; }
-.howto-list { background: var(--white); border: 1px solid var(--border-color); border-radius: .75rem; padding: 1rem 1.25rem; }
-.howto-list li { margin: .4rem 0; }
+/* Content Grid */
+.content-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+}
+@media (min-width: 992px) {
+    .content-grid {
+        grid-template-columns: 3fr 1fr;
+    }
+}
 
-.videos { margin-top: 1rem; }
-.video-grid { display: grid; grid-template-columns: 1fr; gap: .75rem; }
-.video-embed { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: .75rem; border: 1px solid var(--border-color); background: #000; }
-.video-embed iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+.content-section {
+    margin-bottom: 2.5rem;
+}
+.content-section h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+}
+.content-section ol {
+    padding-left: 1.5rem;
+    line-height: 1.8;
+}
 
-@media (min-width: 700px) {
-  .image-gallery { grid-template-columns: repeat(2, 1fr); }
-  .video-grid { grid-template-columns: repeat(2, 1fr); }
+.video-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+}
+.video-gallery iframe {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 8px;
+}
+
+/* Sidebar */
+.sidebar-section h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 0.5rem;
+}
+.sidebar-section ul {
+    list-style: none;
+    padding: 0;
+}
+.sidebar-section ul li a {
+    display: block;
+    padding: 0.75rem 0;
+    color: var(--text-color);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border-color);
+    transition: color 0.2s;
+}
+.sidebar-section ul li a:hover {
+    color: var(--primary-color);
 }

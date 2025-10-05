@@ -39,9 +39,9 @@ let allCategories = [];
  */
 async function fetchData() {
     try {
-        const response = await fetch('../php/User-Listings.php');
+        const response = await fetch('../php/api/listings.php');
         if (!response.ok) {
-            if (response.status === 401) window.location.href = '../HTML/Login.html';
+            if (response.status === 401) window.location.href = '../HTML/guest/Login.html';
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
@@ -125,7 +125,7 @@ async function handleFormSubmit(e) {
     showStatus('Saving...', '#555');
 
     try {
-        const response = await fetch('../php/User-Listings.php', { method: 'POST', body: formData });
+        const response = await fetch('../php/api/listings.php', { method: 'POST', body: formData });
         const result = await response.json();
         if (!response.ok) throw new Error(result.error || 'An unknown error occurred.');
         
@@ -147,7 +147,7 @@ async function handleDelete(listingId) {
     showStatus('Deleting...', '#555');
 
     try {
-        const response = await fetch('../php/User-Listings.php', { method: 'POST', body: formData });
+        const response = await fetch('../php/api/listings.php', { method: 'POST', body: formData });
         const result = await response.json();
         if (!response.ok) throw new Error(result.error || 'An unknown error occurred.');
 

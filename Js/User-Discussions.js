@@ -68,7 +68,7 @@ function renderPage(data) {
                     <td>${escapeHtml(d.updated_at)}</td>
                     <td>${d.comment_count}</td>
                     <td class="action-buttons">
-                        <a href="discussion.php?id=${d.id}" title="View Discussion"><i class="fa-solid fa-eye"></i></a>
+                        <a href="../php/discussion.php?id=${d.id}" title="View Discussion"><i class="fa-solid fa-eye"></i></a>
                     </td>
                 </tr>
             `;

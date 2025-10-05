@@ -4,7 +4,6 @@
  */
 
 import { addMessage, updateMessage, deleteMessage } from './chat/chat-api.js';
-import { session } from './chat/chat-session.js';
 import { els, renderAll, createAttachmentPreview, toggleEditState } from './chat/chat-ui.js';
 
 /**
@@ -41,7 +40,7 @@ function scheduleBotReply() {
   // Simulate real-time by storing a bot reply; will propagate via storage event to other tabs
   const botUser = { id: 999, name: 'AgriBot', avatar: 'https://placehold.co/48x48/94a3b8/FFF?text=B' };
   setTimeout(() => {
-    const msg = { id: crypto.randomUUID(), user: botUser, text: `@${session.currentUser.name} thanks for sharing!`, attachments: [], createdAt: nowISO(), discussionId: getDiscussionId() };
+    const msg = { id: crypto.randomUUID(), user: botUser, text: `@${getCurrentUser().name} thanks for sharing!`, attachments: [], createdAt: nowISO(), discussionId: getDiscussionId() };
     addMessage(msg).then(() => {
       renderAll(getDiscussionId());
     }).catch(err => {
@@ -53,7 +52,18 @@ function scheduleBotReply() {
 // --- INITIALIZATION ---
 
 function getDiscussionId() {
-  return session.discussionId;
+  // In a real app, this would come from the URL or a data attribute
+  return new URLSearchParams(window.location.search).get('id') || 'general';
+}
+
+function getCurrentUser() {
+    const userDataEl = document.getElementById('user-data');
+    if (userDataEl) {
+        return JSON.parse(userDataEl.textContent);
+    }
+    // Fallback for development if the element isn't there
+    console.warn('Could not find #user-data element. Using fallback user.');
+    return { id: 1, name: 'Dev User', avatar: 'https://placehold.co/48x48/a78bfa/FFF?text=D' };
 }
 
 // When the page first loads, run these functions.
@@ -99,7 +109,7 @@ async function handleNewMessageSubmit() {
 
   const attachments = await filesToAttachments(files);
   const msg = {
-    user: session.currentUser,
+    user: getCurrentUser(),
     text,
     attachments,
     discussionId: getDiscussionId(),
