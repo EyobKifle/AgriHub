@@ -378,7 +378,7 @@ INSERT INTO users (
     updated_at
 )
 VALUES (
-    'agrihubadmin@gmail.com',
+    'Agrihubadmin@gmail.com',
     '$2b$12$d2XAaedjRCMo1vTlVTlsx0teqMk2J9J7BhGQa/IVcI0JTRk6QihVu', -- bcrypt hash
     'AgriHub Admin',
     'admin',
