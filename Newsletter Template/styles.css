@@ -450,25 +450,6 @@ section {
     transform: translateY(-1px);
 }
 
-.divider { 
-    border-top: 1px solid var(--border-color); 
-    margin: 15px 0; 
-    height: 1px;
-}
-
-.two-col { 
-    display: flex; 
-    gap: 15px; 
-}
-
-.two-col > div { 
-    flex: 1; 
-    border: 1px dashed var(--border-color); 
-    padding: 15px;
-    border-radius: 4px;
-    min-height: 100px;
-}
-
 .social-links {
     display: flex;
     justify-content: center;
@@ -818,4 +799,19 @@ section {
     .grid {
         grid-template-columns: 1fr;
     }
+}
+
+/* Social links URL input styling */
+.social-url-input {
+    width: 100%;
+    margin: 5px 0 10px 0;
+    padding: 5px;
+    font-size: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 3px;
+}
+
+.social-url-input:focus {
+    outline: none;
+    border-color: var(--primary-green);
 }

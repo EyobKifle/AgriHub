@@ -101,10 +101,10 @@ function addBlock(type, content = null) {
         case "social":
             contentDiv.innerHTML = `
                 <div class="social-links">
-                    <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
-                    <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
-                    <a href="#" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" title="Facebook" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" title="Twitter" target="_blank" rel="noopener noreferrer"><i class="fab fa-twitter"></i></a>
+                    <a href="#" title="Instagram" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
+                    <a href="#" title="LinkedIn" target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin-in"></i></a>
                 </div>`;
             break;
     }
@@ -528,14 +528,32 @@ function selectBlock(block, type) {
             break;
             
         case "social":
+            // Get current social links data
+            const socialLinks = block.querySelectorAll('.social-links a');
+            const currentLinks = {};
+            
+            socialLinks.forEach(link => {
+                const platform = link.title.toLowerCase();
+                currentLinks[platform] = link.href;
+            });
+
             settingsContent.innerHTML = `
                 <label>Social Platforms</label>
                 <div>
-                    <input type="checkbox" id="facebook" checked> <label for="facebook" style="display:inline;">Facebook</label><br>
-                    <input type="checkbox" id="twitter" checked> <label for="twitter" style="display:inline;">Twitter</label><br>
-                    <input type="checkbox" id="instagram" checked> <label for="instagram" style="display:inline;">Instagram</label><br>
-                    <input type="checkbox" id="linkedin" checked> <label for="linkedin" style="display:inline;">LinkedIn</label><br>
+                    <input type="checkbox" id="facebook" checked> <label for="facebook" style="display:inline;">Facebook</label>
+                    <input type="url" id="facebookUrl" placeholder="Facebook URL" value="${currentLinks.facebook || '#'}" style="width: 100%; margin: 5px 0 10px 0; padding: 5px; font-size: 12px;"><br>
+                    
+                    <input type="checkbox" id="twitter" checked> <label for="twitter" style="display:inline;">Twitter</label>
+                    <input type="url" id="twitterUrl" placeholder="Twitter URL" value="${currentLinks.twitter || '#'}" style="width: 100%; margin: 5px 0 10px 0; padding: 5px; font-size: 12px;"><br>
+                    
+                    <input type="checkbox" id="instagram" checked> <label for="instagram" style="display:inline;">Instagram</label>
+                    <input type="url" id="instagramUrl" placeholder="Instagram URL" value="${currentLinks.instagram || '#'}" style="width: 100%; margin: 5px 0 10px 0; padding: 5px; font-size: 12px;"><br>
+                    
+                    <input type="checkbox" id="linkedin" checked> <label for="linkedin" style="display:inline;">LinkedIn</label>
+                    <input type="url" id="linkedinUrl" placeholder="LinkedIn URL" value="${currentLinks.linkedin || '#'}" style="width: 100%; margin: 5px 0 10px 0; padding: 5px; font-size: 12px;"><br>
+                    
                     <input type="checkbox" id="youtube"> <label for="youtube" style="display:inline;">YouTube</label>
+                    <input type="url" id="youtubeUrl" placeholder="YouTube URL" value="${currentLinks.youtube || '#'}" style="width: 100%; margin: 5px 0 10px 0; padding: 5px; font-size: 12px;">
                 </div>
                 <label>Icon Color</label>
                 <input type="color" id="socialColor" value="#0066ff">
@@ -563,10 +581,16 @@ function selectBlock(block, type) {
                                                     e.target.value === 'center' ? 'center' : 'flex-end';
             });
             
-            // Platform selection
+            // Platform selection and URL updates
             const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            const urlInputs = document.querySelectorAll('input[type="url"]');
+            
             checkboxes.forEach(checkbox => {
                 checkbox.addEventListener('change', updateSocialLinks);
+            });
+            
+            urlInputs.forEach(input => {
+                input.addEventListener('input', updateSocialLinks);
             });
             
             function updateSocialLinks() {
@@ -574,23 +598,53 @@ function selectBlock(block, type) {
                 socialContainer.innerHTML = '';
                 
                 const platforms = [
-                    { id: 'facebook', icon: 'facebook-f', url: '#' },
-                    { id: 'twitter', icon: 'twitter', url: '#' },
-                    { id: 'instagram', icon: 'instagram', url: '#' },
-                    { id: 'linkedin', icon: 'linkedin-in', url: '#' },
-                    { id: 'youtube', icon: 'youtube', url: '#' }
+                    { 
+                        id: 'facebook', 
+                        icon: 'facebook-f', 
+                        url: document.getElementById('facebookUrl').value || '#',
+                        checked: document.getElementById('facebook').checked
+                    },
+                    { 
+                        id: 'twitter', 
+                        icon: 'twitter', 
+                        url: document.getElementById('twitterUrl').value || '#',
+                        checked: document.getElementById('twitter').checked
+                    },
+                    { 
+                        id: 'instagram', 
+                        icon: 'instagram', 
+                        url: document.getElementById('instagramUrl').value || '#',
+                        checked: document.getElementById('instagram').checked
+                    },
+                    { 
+                        id: 'linkedin', 
+                        icon: 'linkedin-in', 
+                        url: document.getElementById('linkedinUrl').value || '#',
+                        checked: document.getElementById('linkedin').checked
+                    },
+                    { 
+                        id: 'youtube', 
+                        icon: 'youtube', 
+                        url: document.getElementById('youtubeUrl').value || '#',
+                        checked: document.getElementById('youtube').checked
+                    }
                 ];
                 
                 platforms.forEach(platform => {
-                    if (document.getElementById(platform.id).checked) {
+                    if (platform.checked) {
                         const link = document.createElement('a');
                         link.href = platform.url;
                         link.title = platform.id.charAt(0).toUpperCase() + platform.id.slice(1);
                         link.innerHTML = `<i class="fab fa-${platform.icon}"></i>`;
+                        link.target = "_blank";
+                        link.rel = "noopener noreferrer";
                         socialContainer.appendChild(link);
                     }
                 });
             }
+            
+            // Initialize with current values
+            updateSocialLinks();
             break;
             
         case "spacer":
