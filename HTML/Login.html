@@ -11,11 +11,15 @@
   </head>
   <body>
    <div id="header-placeholder"></div>
-  <!-- LOGIN FORM -->
-  <section class="form-container">
-    <form action="/login" method="post" class="login-form">
+   
+  <section class="form-container" style="padding-top: 50px; padding-bottom: 50px;">
+    <form action="../php/auth.php" method="post" class="login-form">
+      <input type="hidden" name="action" value="login">
       <h1 class="title-text"><i class="fa-solid fa-leaf"></i> AgriHub</h1>
       <p class="subtitle-text" data-i18n-key="login.subtitle">Welcome to AgriHub. Login to your account</p>
+
+      <!-- This is where error messages will appear -->
+      <div id="form-message-placeholder"></div>
 
       <div class="input-box">
         <label for="email" data-i18n-key="login.emailLabel">Email Address</label>
@@ -37,5 +41,6 @@
   </section>
 
   <script type="module" src="../Js/site.js"></script>
+  <div id="footer-placeholder"></div>
 </body>
 </html>

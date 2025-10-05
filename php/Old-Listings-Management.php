@@ -14,8 +14,9 @@ $email = $_SESSION['email'] ?? '';
 $initial = !empty($name) ? strtoupper($name[0]) : '?';
 
 // Filtering and searching
-$q = filter_input(INPUT_GET, 'q', FILTER_SANITIZE_STRING) ?? '';
-$statusFilter = filter_input(INPUT_GET, 'status', FILTER_SANITIZE_STRING) ?? '';
+// Use a safe way to get input, as FILTER_SANITIZE_STRING is deprecated/removed.
+$q = $_GET['q'] ?? '';
+$statusFilter = $_GET['status'] ?? '';
 
 // Handle actions (approve, reject, delete)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'], $_POST['product_id'])) {
@@ -42,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'], $_POST['pro
 // Fetch listings from DB
 $sql = "SELECT p.id, p.title, p.price, p.unit, p.status, u.name as seller_name, c.name as category_name 
         FROM products p 
-        JOIN users u ON p.user_id = u.id 
+        JOIN users u ON p.seller_id = u.id
         JOIN categories c ON p.category_id = c.id
         WHERE 1=1";
 

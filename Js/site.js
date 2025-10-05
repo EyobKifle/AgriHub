@@ -7,6 +7,49 @@ import { initializeMarketplace } from './marketplace.js';
 import { initializeNewsPage } from './news.js';
 import { initializeGuidancePage } from './guidance.js';
 
+/**
+ * Checks the URL for query parameters like 'error' or 'success' and displays
+ * a message in a designated placeholder element on the page.
+ */
+function displayFlashMessages() {
+  const placeholder = document.getElementById('form-message-placeholder');
+  if (!placeholder) return;
+
+  const params = new URLSearchParams(window.location.search);
+  const error = params.get('error');
+  const success = params.get('success');
+
+  let message = '';
+  let messageType = '';
+
+  // Define all possible messages
+  const errorMessages = {
+    'invalid': 'Invalid email or password. Please try again.',
+    'missing': 'Please fill in all required fields.',
+    'invalid_email': 'The email address you entered is not valid.',
+    'password_mismatch': 'The passwords you entered do not match.',
+    'email_taken': 'An account with this email address already exists.',
+    'server': 'A server error occurred. Please try again later.'
+  };
+
+  if (error && errorMessages[error]) {
+      message = errorMessages[error];
+      messageType = 'error';
+  }
+
+  const successMessages = {
+      'logged_out': 'You have been successfully logged out.'
+  };
+  if (success && successMessages[success]) {
+      message = successMessages[success];
+      messageType = 'success';
+  }
+
+  if (message) {
+    placeholder.innerHTML = `<div class="form-message ${messageType}">${message}</div>`;
+  }
+}
+
 /*
  * This is the main entry point for the site's global JavaScript.
  * It runs on every page to set up the common elements.
@@ -29,6 +72,9 @@ const initializeSite = async () => {
   // 3. Now that the header/footer are in the DOM, apply translations to them.
   applyTranslationsToPage();
   updateLangSwitcher(); // Ensure the language dropdown text is correct.
+
+  // Display any flash messages from redirects (e.g., login errors)
+  displayFlashMessages();
 
   // 4. Initialize all interactive scripts.
   initializeHeaderScripts();

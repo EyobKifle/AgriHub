@@ -2,6 +2,7 @@
 session_start();
 require_once __DIR__ . '/config.php';
 
+
 function redirect($path) {
     header("Location: $path");
     exit();
@@ -53,8 +54,14 @@ if ($action === 'signup') {
     }
     $stmt->bind_param('sssss', $email, $hash, $name, $phone, $location);
     if ($stmt->execute()) {
+        // Signup successful, now automatically log the user in.
+        $_SESSION['user_id'] = (int)$stmt->insert_id;
+        $_SESSION['email'] = $email;
+        $_SESSION['name'] = $name;
+        $_SESSION['role'] = 'user';
+        session_regenerate_id(true); // Prevent session fixation
         $stmt->close();
-        redirect('../HTML/Login.html?registered=1');
+        redirect('User-Dashboard.php'); // Redirect to the correct PHP file
     } else {
         $stmt->close();
         redirect('../HTML/Signup.html?error=server');
@@ -63,19 +70,19 @@ if ($action === 'signup') {
 
 if ($action === 'login') {
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-        redirect('../HTML/Login.html');
+        redirect('../HTML/login.html');
     }
 
     $email = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
 
     if ($email === '' || $password === '') {
-        redirect('../HTML/Login.html?error=missing');
+        redirect('../HTML/login.html?error=missing');
     }
 
     $stmt = $conn->prepare('SELECT id, password_hash, name, role FROM users WHERE email = ? AND status = "active"');
     if (!$stmt) {
-        redirect('../HTML/Login.html?error=server');
+        redirect('../HTML/login.html?error=server');
     }
     $stmt->bind_param('s', $email);
     $stmt->execute();
@@ -83,6 +90,7 @@ if ($action === 'login') {
 
     if ($row = $result->fetch_assoc()) {
         if (password_verify($password, $row['password_hash'])) {
+            session_regenerate_id(true); // Prevent session fixation
             $_SESSION['user_id'] = (int)$row['id'];
             $_SESSION['email'] = $email;
             $_SESSION['name'] = $row['name'];
@@ -93,18 +101,28 @@ if ($action === 'login') {
             $conn->query("UPDATE users SET last_login = NOW() WHERE id = $uid");
 
             $stmt->close();
-            redirect('../HTML/user/User-Dashboard.php');
+            // Redirect based on user role
+            if ($row['role'] === 'admin') {
+                redirect('Admin-Dashboard.php');
+            } else {
+                redirect('User-Dashboard.php');
+            }
+        } else {
+            // Password did not match
+            $stmt->close();
+            redirect('../HTML/login.html?error=invalid');
         }
+    } else {
+        // User with that email not found
+        $stmt->close();
+        redirect('../HTML/login.html?error=invalid');
     }
-
-    $stmt->close();
-    redirect('../HTML/Login.html?error=invalid');
 }
 
 if ($action === 'logout') {
     session_unset();
     session_destroy();
-    redirect('../HTML/Login.html?logged_out=1');
+    redirect('../HTML/login.html?logged_out=1');
 }
 
 http_response_code(400);

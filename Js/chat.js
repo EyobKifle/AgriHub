@@ -3,80 +3,57 @@
  * It orchestrates the UI, data, and event handling for the chat.
  */
 
-import { addMessage, updateMessage, deleteMessage } from './chat/chat-api.js';
-import { els, renderAll, createAttachmentPreview, toggleEditState } from './chat/chat-ui.js';
+import { getMessages, addMessage, updateMessage, deleteMessage } from './chat-api.js';
+import { els, renderAll, createAttachmentPreview, toggleEditState } from './chat-ui.js';
 
 /**
- * A helper function to get the current time as a standard string.
- * ISOString format looks like: "2024-01-01T12:30:00.000Z"
+ * Fetches messages from the server and renders them.
+ * @param {string} discussionId The ID of the discussion.
+ * @param {object} currentUser The currently logged-in user object.
  */
-function nowISO() { return new Date().toISOString(); }
-
-/**
- * Converts a list of files from an input into a format that can be saved.
- * For images, it creates a "Data URL" which is a long string representing the image.
- * For other files, it creates a temporary blob URL.
- */
-async function filesToAttachments(files) {
-  const atts = [];
-  for (const f of files) {
-    if (f.type.startsWith('image/')) {
-      const dataUrl = await new Promise(res => { const r = new FileReader(); r.onload = e => res(e.target.result); r.readAsDataURL(f); });
-      atts.push({ type: 'image', url: dataUrl, name: f.name });
-    } else if (f.type === 'application/pdf') {
-      // For persistence in localStorage, we must use a Data URL, but for a real backend, a blob would be uploaded.
-      const blobUrl = URL.createObjectURL(f);
-      atts.push({ type: 'pdf', url: blobUrl, name: f.name });
-    }
+async function refreshMessages(discussionId, currentUser) {
+  try {
+    const messages = await getMessages(discussionId);
+    renderAll(messages, currentUser);
+  } catch (error) {
+    console.error('Failed to refresh messages:', error);
+    els.messages.innerHTML = `<div class="error-state">Could not load messages. Please try refreshing the page.</div>`;
   }
-  return atts;
 }
-
-/**
- * A function to simulate another user replying to a message.
- * It waits a short time and then adds a new message to the list.
- */
-function scheduleBotReply() {
-  // Simulate real-time by storing a bot reply; will propagate via storage event to other tabs
-  const botUser = { id: 999, name: 'AgriBot', avatar: 'https://placehold.co/48x48/94a3b8/FFF?text=B' };
-  setTimeout(() => {
-    const msg = { id: crypto.randomUUID(), user: botUser, text: `@${getCurrentUser().name} thanks for sharing!`, attachments: [], createdAt: nowISO(), discussionId: getDiscussionId() };
-    addMessage(msg).then(() => {
-      renderAll(getDiscussionId());
-    }).catch(err => {
-      console.error("Bot failed to reply:", err);
-    });
-  }, 1200);
-}
-
-// --- INITIALIZATION ---
 
 function getDiscussionId() {
-  // In a real app, this would come from the URL or a data attribute
-  return new URLSearchParams(window.location.search).get('id') || 'general';
+  // The discussion ID is now reliably set on the body element by the PHP script.
+  return document.body.dataset.discussionId || '0';
 }
 
 function getCurrentUser() {
-    const userDataEl = document.getElementById('user-data');
-    if (userDataEl) {
-        return JSON.parse(userDataEl.textContent);
+    const userEl = document.getElementById('user-data');
+    if (userEl && userEl.textContent) {
+        return JSON.parse(userEl.textContent);
     }
-    // Fallback for development if the element isn't there
-    console.warn('Could not find #user-data element. Using fallback user.');
-    return { id: 1, name: 'Dev User', avatar: 'https://placehold.co/48x48/a78bfa/FFF?text=D' };
+    return { id: 0, name: 'Guest', avatar: 'https://placehold.co/48x48/cccccc/FFF?text=G' };
 }
 
 // When the page first loads, run these functions.
-function initializeChat() {
-  renderAll(getDiscussionId());
-  initializeEventListeners();
+async function initializeChat() {
+  const discussionId = getDiscussionId();
+  const currentUser = getCurrentUser();
+
+  if (!discussionId || discussionId === '0') {
+    els.messages.innerHTML = '<div class="error-state">Invalid or missing discussion ID. Cannot load chat.</div>';
+    els.form.style.display = 'none';
+    return;
+  }
+
+  await refreshMessages(discussionId, currentUser);
+  initializeEventListeners(discussionId, currentUser);
 }
 
 /**
  * Groups all event listener attachments in one place.
  */
-function initializeEventListeners() {
-  els.form.addEventListener('submit', handleFormSubmit);
+function initializeEventListeners(discussionId, currentUser) {
+  els.form.addEventListener('submit', (e) => handleFormSubmit(e, discussionId, currentUser));
   els.messages.addEventListener('click', handleMessageActions);
   els.file.addEventListener('change', handleFileSelection);
 }
@@ -86,33 +63,29 @@ function initializeEventListeners() {
  * based on whether we are in 'new' or 'edit' mode.
  * @param {Event} e The form submission event.
  */
-async function handleFormSubmit(e) {
+async function handleFormSubmit(e, discussionId, currentUser) {
   e.preventDefault();
   const mode = els.form.dataset.mode;
 
   if (mode === 'edit') {
-    await handleEditMessageSubmit();
+    await handleEditMessageSubmit(discussionId, currentUser);
   } else {
-    await handleNewMessageSubmit();
+    await handleNewMessageSubmit(discussionId, currentUser);
   }
-
-  renderAll(getDiscussionId());
 }
 
 /**
  * Handles the logic for submitting a new message.
  */
-async function handleNewMessageSubmit() {
+async function handleNewMessageSubmit(discussionId, currentUser) {
   const text = els.input.value.trim();
-  const files = Array.from(els.file.files);
-  if (!text && files.length === 0) return;
+  // Note: File attachments are not yet handled by the backend.
+  if (!text) return;
 
-  const attachments = await filesToAttachments(files);
   const msg = {
-    user: getCurrentUser(),
+    // The backend will use the session user, but we send text and discussionId.
     text,
-    attachments,
-    discussionId: getDiscussionId(),
+    discussionId: discussionId,
   };
 
   try {
@@ -120,7 +93,9 @@ async function handleNewMessageSubmit() {
     els.input.value = '';
     els.file.value = '';
     els.previews.innerHTML = '';
-    scheduleBotReply(); // Schedule a fake reply from a bot.
+    
+    // Refresh the chat to show the new message
+    await refreshMessages(discussionId, currentUser);
   } catch (err) {
     console.error("Failed to send message:", err);
     alert("Could not send message. Please try again.");
@@ -130,13 +105,15 @@ async function handleNewMessageSubmit() {
 /**
  * Handles the logic for submitting an edited message.
  */
-async function handleEditMessageSubmit() {
+async function handleEditMessageSubmit(discussionId, currentUser) {
   const messageId = els.form.dataset.editingId;
   const text = els.input.value.trim();
   if (!text || !messageId) return;
 
   try {
     await updateMessage(messageId, text);
+    // Refresh the chat to show the edited message
+    await refreshMessages(discussionId, currentUser);
     toggleEditState(null); // Exit edit mode
   } catch (err) {
     console.error("Failed to update message:", err);
@@ -147,7 +124,7 @@ async function handleEditMessageSubmit() {
 /**
  * Handles clicks on Edit and Delete buttons using event delegation.
  */
-function handleMessageActions(e) {
+async function handleMessageActions(e) {
   const editButton = e.target.closest('.edit-btn');
   if (editButton) {
     toggleEditState(editButton.dataset.messageId);
@@ -157,10 +134,12 @@ function handleMessageActions(e) {
   const deleteButton = e.target.closest('.delete-btn');
   if (deleteButton) {
     const messageId = deleteButton.dataset.messageId;
+    const discussionId = getDiscussionId();
+    const currentUser = getCurrentUser();
     if (confirm('Are you sure you want to delete this message?')) {
-      deleteMessage(messageId)
-        .then(() => renderAll(getDiscussionId()))
-        .catch(err => alert("Could not delete the message. Please try again."));
+      await deleteMessage(messageId).catch(err => alert("Could not delete the message. Please try again."));
+      // Refresh the chat after deletion
+      await refreshMessages(discussionId, currentUser);
     }
   }
 }

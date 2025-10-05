@@ -1,5 +1,3 @@
-import { fetchMessages } from './chat-api.js';
-
 // A handy object to store references to the HTML elements we'll be working with.
 export const els = {
   messages: document.getElementById('chat-messages'),
@@ -68,8 +66,7 @@ export function createAttachmentPreview(file, onRemove) {
  * Creates the complete HTML for a single chat message bubble.
  * It handles messages sent by the current user differently from received messages.
  */
-function renderMessage(m) {
-  const currentUser = getCurrentUser();
+function renderMessage(m, currentUser) {
   const isMe = m.user.id === currentUser.id;
   const row = document.createElement('div');
     row.className = `message ${isMe ? 'sent' : 'received'}`;
@@ -143,19 +140,6 @@ function renderMessage(m) {
   return row;
 }
 
-function getCurrentUser() {
-    const userDataEl = document.getElementById('chat-container'); // Or any other main container
-    if (userDataEl && userDataEl.dataset.user) {
-        try {
-            return JSON.parse(userDataEl.dataset.user);
-        } catch (e) {
-            console.error('Failed to parse user data from data attribute:', e);
-        }
-    }
-    console.error('Could not find user data. Using a fallback user. This should not happen in production.');
-    return { id: 1, name: 'Dev User', avatar: 'https://placehold.co/48x48/a78bfa/FFF?text=D' };
-}
-
 /**
  * Toggles the UI into or out of "edit mode" for a specific message.
  * @param {string|null} messageId - The ID of the message to edit, or null to exit edit mode.
@@ -185,11 +169,10 @@ export function toggleEditState(messageId) {
  * The main rendering function. It clears the chat window,
  * loads all messages, and displays them one by one.
  */
-export async function renderAll(discussionId) {
-  const list = await fetchMessages(discussionId); // Fetch from API
+export function renderAll(messages, currentUser) {
   els.messages.innerHTML = '';
   const frag = document.createDocumentFragment();
-  list.forEach(m => frag.appendChild(renderMessage(m)));
+  messages.forEach(m => frag.appendChild(renderMessage(m, currentUser)));
   els.messages.appendChild(frag);
   scrollToBottom();
 }

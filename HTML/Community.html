@@ -1,86 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Community</title>
-    <!-- Global Styles (for Header, Footer, etc.) -->
-    <link rel="stylesheet" href="../Css/header.css">
-    <link rel="stylesheet" href="../Css/footer.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="../Css/community.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Community</title>
+  <link rel="stylesheet" href="../Css/header.css">
+  <link rel="stylesheet" href="../Css/footer.css">
+  <link rel="stylesheet" href="../Css/community.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
-    <!-- Header Placeholder -->
-    <div id="header-placeholder"></div>
+  <div id="header-placeholder"></div>
 
-    <section class="community">
-        <h1 data-i18n-key="community.page.title">Community Forum</h1>
-        <p data-i18n-key="community.page.subtitle">Connect with fellow farmers, share knowledge, and get answers to your questions</p>
-        <div class="content-container">
-            <aside class="sidebar">
-                <h2 data-i18n-key="community.sidebar.categories">Categories</h2>
-                <ul>
-                    <li><a href="Community.php" data-i18n-key="community.cat.all">All Discussions <span>(<?php echo $totalDiscussions; ?>)</span></a></li>
-                    <?php foreach ($categories as $cat): ?>
-                        <li><a href="Community.php?category=<?php echo e($cat['id']); ?>"><?php echo e($cat['name']); ?> <span>(<?php echo (int)$cat['count']; ?>)</span></a></li>
-                    <?php endforeach; ?>
-                </ul>
-                <div class="community-stats">
-                    <h3 data-i18n-key="community.stats.title">Community Stats</h3>
-                    <p><span>👥</span> <?php echo number_format($activeMembers); ?> Active Members</p>
-                    <p><span>💬</span> <?php echo number_format($totalDiscussions); ?> Discussions</p>
-                </div>
-            </aside>
-            <main class="main-content">
-                <div class="new-discussion">
-                    <h2 data-i18n-key="community.new.title">Start a New Discussion</h2>
-                    <?php if (!$userId): ?>
-                        <p>Please <a href="Login.html">login</a> or <a href="Signup.html">create an account</a> to post.</p>
-                    <?php else: ?>
-                        <form method="post" action="Community.php">
-                            <input type="hidden" name="action" value="create_discussion">
-                            <input type="text" name="title" data-i18n-placeholder-key="community.new.placeholder.title" placeholder="Discussion title..." required>
-                            <select name="category_id" required>
-                                <option value="">Select a category</option>
-                                <?php foreach ($categories as $cat): ?>
-                                    <option value="<?php echo (int)$cat['id']; ?>"><?php echo e($cat['name']); ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                            <textarea name="content" data-i18n-placeholder-key="community.new.placeholder.body" placeholder="What would you like to discuss?" required></textarea>
-                            <?php if ($formError): ?><p style="color: #900;"><?php echo $formError; ?></p><?php endif; ?>
-                            <button type="submit" class="btn post" data-i18n-key="community.new.button">Post Discussion</button>
-                        </form>
-                    <?php endif; ?>
-                </div>
-                <div class="discussions">
-                    <?php if (empty($discussions)): ?>
-                        <p>No discussions found. Be the first to start one!</p>
-                    <?php else: ?>
-                        <?php foreach ($discussions as $d): ?>
-                            <div class="discussion-card">
-                                <span class="category"><?php echo e($d['category_name']); ?></span>
-                                <span class="time"><?php echo time_ago($d['updated_at']); ?></span>
-                                <h3><a href="discussion.php?id=<?php echo (int)$d['id']; ?>"><?php echo e($d['title']); ?></a></h3>
-                                <p><?php echo e(mb_strimwidth($d['content'], 0, 150, "...")); ?></p>
-                                <p class="author">by <?php echo e($d['author_name']); ?></p>
-                                <div class="interaction">
-                                    <span><i class="fa-regular fa-thumbs-up"></i> <?php echo (int)$d['like_count']; ?></span>
-                                    <span><i class="fa-regular fa-comment"></i> <?php echo (int)$d['comment_count']; ?></span>
-                                </div>
-                            </div>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                </div>
-            </main>
+  <section class="community">
+    <h1>Community Forum</h1>
+    <p>Connect with fellow farmers, share knowledge, and get answers to your questions</p>
+
+    <div class="content-container">
+      <aside class="sidebar">
+        <h2>Categories</h2>
+        <ul id="category-list">
+          <li>All Discussions <span>(0)</span></li>
+          <!-- PHP will inject categories here -->
+        </ul>
+
+        <div class="community-stats">
+          <h3>Community Stats</h3>
+          <p><span>👥</span> <span id="active-members">0</span> Active Members</p>
+          <p><span>💬</span> <span id="total-discussions">0</span> Discussions</p>
         </div>
-    </section>
+      </aside>
 
+      <main class="main-content">
+        <div class="new-discussion">
+          <h2>Start a New Discussion</h2>
+          <p id="login-message">Please <a href="Login.html">login</a> or <a href="Signup.html">create an account</a> to post.</p>
+          <!-- PHP will inject form if user is logged in -->
+        </div>
 
-    <!-- Footer Placeholder -->
-    <div id="footer-placeholder"></div>
+        <div class="discussions" id="discussion-cards">
+          <!-- Default discussion card -->
+          <div class="discussion-card">
+            <span class="category">General</span>
+            <span class="time">Just now</span>
+            <h3><a href="#">Welcome to the Community!</a></h3>
+            <p>Start sharing knowledge and connecting with other members.</p>
+            <p class="author">by Admin</p>
+            <div class="interaction">
+              <span><i class="fa-regular fa-thumbs-up"></i> 0</span>
+              <span><i class="fa-regular fa-comment"></i> 0</span>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </section>
 
-    <!-- Script to load header and footer -->
-    <script type="module" src="../Js/site.js"></script>
+  <div id="footer-placeholder"></div>
+  <script type="module" src="../Js/site.js"></script>
 </body>
 </html>

@@ -8,7 +8,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/config.php';
 
 $userId = (int)$_SESSION['user_id'];
 
