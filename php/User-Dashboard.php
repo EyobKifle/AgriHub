@@ -5,20 +5,11 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 require_once __DIR__ . '/../php/config.php';
+require_once __DIR__ . '/utils.php';
 
 $userId = (int)($_SESSION['user_id'] ?? 0);
 $name = isset($_SESSION['name']) ? $_SESSION['name'] : 'User';
 $initial = strtoupper(mb_substr($name, 0, 1));
-
-function time_ago($ts) {
-    $t = strtotime($ts);
-    if (!$t) return '';
-    $diff = time() - $t;
-    if ($diff < 60) return $diff . 's ago';
-    if ($diff < 3600) return floor($diff/60) . 'm ago';
-    if ($diff < 86400) return floor($diff/3600) . 'h ago';
-    return floor($diff/86400) . 'd ago';
-}
 
 // Active listings count (all listings by the user)
 $activeListingsCount = 0;

@@ -1,7 +1,55 @@
 AgriHub - Development TODO List
 ===============================
 
-This file contains a list of tasks to improve the codebase, focusing on maintainability, performance, and best practices.
+This file contains a prioritized list of tasks to improve the codebase, focusing on maintainability, performance, and best practices.
+
+
+### P0: Critical Bugs & Refactoring
+
+1.  [ ] **Fix `Js/User-Listings.js`:**
+    -   The file is currently broken with duplicated code and syntax errors.
+    -   Rewrite the file from scratch, using the `els` object pattern for DOM caching and ensuring event listeners are only attached once.
+    -   The goal is to restore the "Add New Listing" and "Edit Listing" functionality.
+
+2.  [ ] **Consolidate Database Connections:**
+    -   Modify `php/get_news.php` to use `require_once 'config.php';` instead of `db_connect.php`.
+    -   Delete the redundant file `php/db_connect.php`.
+
+
+### P1: Architectural Improvements
+
+1.  [ ] **Separate PHP Logic from HTML Views:**
+    -   Refactor `php/User-Dashboard.php`, `php/User-Listings.php`, `php/User-Orders.php`, `php/User-Profile.php`, `php/User-Settings.php`, and `php/marketplace.php`.
+    -   Follow the pattern established in `Community.php`, where all data fetching happens at the top, and the corresponding `.html` file is included at the bottom to render the data.
+
+2.  [ ] **Modernize `Js/marketplace.js`:**
+    -   Convert the file to an ES6 module that is initialized by `site.js`.
+    -   Remove the global `window.marketplace` variable.
+    -   Use event delegation on the `#products-grid` container to handle clicks on "Details" and "Add to Cart" buttons instead of inline `onclick` attributes.
+
+
+### P2: Security & Data Integrity
+
+1.  [ ] **Dynamically Load Current User in Chat:**
+    -   In `discussion.php`, use PHP to echo the logged-in user's ID, name, and avatar URL into a global JavaScript variable or a data attribute.
+    -   Remove the hardcoded `currentUser` from `Js/chat/chat-config.js` and have the chat system use the data provided by the server.
+
+2.  [ ] **Clean up Chat `localStorage` Logic:**
+    -   The chat system has been refactored to use an API, but `chat.js` and `chat-data.js` still contain logic for `localStorage`.
+    -   Remove the `LS_KEY`, `loadMessages`, `saveMessages`, and the `storage` event listener to prevent conflicts and confusion.
+
+
+### P3: Code Quality & Minor Improvements
+
+1.  [ ] **Consolidate Logout Logic:**
+    -   Move the logic from `php/logout.php` into `php/auth.php` as a new case for `?action=logout`.
+    -   Update all "Logout" links to point to the new URL.
+    -   Delete the `php/logout.php` file.
+
+2.  [ ] **Review `Newsletter Template/script.js`:**
+    -   This file is very large and uses a lot of `document.getElementById`.
+    -   Consider refactoring it into a class-based structure to better manage state and event listeners.
+    -   Break down the large `selectBlock` function into smaller helper functions for each block type to improve readability.
 
 
 ### P1: Critical Refactoring (Reduce Duplication)
@@ -42,13 +90,66 @@ This file contains a list of tasks to improve the codebase, focusing on maintain
 
 3.  [x] **Standardize DOM Element Selection:**
     -   Cached DOM element selections at the top of `User-Listings.js` to improve performance and readability.
+    System Alignment TODO List
+This list outlines discrepancies found between the UI/frontend code, the backend PHP scripts, and the agrihub.sql database schema.
 
+P0: Critical Misalignments (Data Integrity & Security)
+These issues could lead to incorrect data being saved, features not working as intended, or security vulnerabilities.
 
-### P4: New Feature Backend Implementation
+Inconsistent ON DELETE Behavior for Users:
 
-1.  [ ] **Create Chat API Endpoint (`api/messages.php`):**
-    -   Implement `GET` to fetch messages for a `discussion_id`.
-    -   Implement `POST` to add a new message (calls `sp_CreateDiscussionMessage` if exists).
-    -   Implement `PUT` to update a message (calls `sp_UpdateDiscussionMessage`).
-    -   Implement `DELETE` to remove a message (calls `sp_DeleteDiscussionMessage`).
-    -   Ensure all endpoints validate that the `author_id` matches the logged-in user for edit/delete operations.
+Problem: The user_profiles table has ON DELETE CASCADE, while products, orders, and discussions use ON DELETE RESTRICT. This creates a conflicting state where deleting a user is blocked by their products, but if it could proceed, it would cascade-delete their profile, leading to unpredictable behavior.
+Recommendation: Standardize the behavior for user deletion. Using RESTRICT across all dependent tables (user_profiles included) is safer, as it forces the application to handle content archival or transfer before allowing a user to be deleted.
+File to Fix: agrihub.sql
+Missing is_active Status Filter in User Management:
+
+Problem: The User-Management.html page provides filter options for user status (Active, Pending, Banned), but the backend script (User-Management.php) only handles active. The logic for pending and banned incorrectly sets is_active = 0 for both, making them indistinguishable. The users table itself only has a boolean is_active flag, with no way to represent "pending" or "banned" states.
+Recommendation:
+Modify the users table. Change is_active from BOOLEAN to an ENUM('active', 'pending', 'banned', 'inactive') NOT NULL DEFAULT 'pending'.
+Update User-Management.php to correctly query against these new ENUM values.
+Files to Fix: agrihub.sql, php/User-Management.php
+Incomplete User Role Management:
+
+Problem: The agrihub.sql schema was updated to support more user roles (admin, user, moderator, seller), but the User-Management.html filter dropdown only shows "Admin" and "User". The backend script (User-Management.php) also only queries for these two roles.
+Recommendation: Update the <select> dropdown in User-Management.html and the corresponding PHP logic in User-Management.php to include and handle the moderator and seller roles.
+Files to Fix: HTML/User-Management.html, php/User-Management.php
+P1: Feature & UI Inconsistencies
+These issues cause a disconnect between what the user sees and what the system can actually do.
+
+Admin Settings Page is Static and Disconnected:
+
+Problem: The Settings.html page for the admin dashboard is a static HTML file. Its forms for "Platform Configuration" (transaction fee, listing limit) do not load data from or save data to the system_settings table.
+Recommendation:
+Rename Settings.html to Settings.php.
+Add PHP logic at the top of Settings.php to fetch all key-value pairs from the system_settings table.
+Populate the form input values with the data fetched from the database.
+Implement POST handling logic in the same file to update the settings in the database when the form is submitted.
+Files to Fix: HTML/Settings.html (rename and add PHP), create logic.
+User Profile Page Missing Fields:
+
+Problem: The user_profiles table contains fields for user preferences (language_preference, pref_email_notifications, pref_theme) which are mentioned in the documentation. However, the User-Profile.php page and its HTML counterpart do not include form inputs for a user to view or edit these settings.
+Recommendation: Add the corresponding form fields (e.g., dropdown for language, toggles for notifications and theme) to User-Profile.html and update User-Profile.php to handle fetching and saving this data.
+Files to Fix: HTML/User-Profile.html (or the file it's included in), php/User-Profile.php.
+Redundant Logout Logic:
+
+Problem: The todo.txt file correctly identifies that there is a php/logout.php file and also a logout action within php/auth.php. This is redundant and can lead to confusion. The auth.php file provided in the context even has the logout action block duplicated.
+Recommendation:
+Remove the duplicated if ($action === 'logout') block from auth.php.
+Update all logout links in the application (e.g., in User-Management.html) to point to php/auth.php?action=logout.
+Delete the php/logout.php file.
+Files to Fix: php/auth.php, all HTML files with a logout link.
+P2: Code Quality & Future-Proofing
+These are opportunities to improve code maintainability and align with modern practices.
+
+Duplicated Hamburger Menu JavaScript:
+
+Problem: The admin pages (Admin-Dashboard.html, Listings-Management.html, etc.) each contain an identical, inline <script> block to handle the hamburger menu toggle. This is a classic case of code duplication.
+Recommendation: As noted in todo.txt, create a central Js/admin-dashboard.js file. Move the hamburger menu logic into this file. Include this single script file in all admin-related HTML/PHP pages.
+Files to Fix: HTML/Admin-Dashboard.html, HTML/Listings-Management.html, HTML/Reports-Management.html, HTML/Settings.html, HTML/User-Management.html.
+Chat System Still References Hardcoded User:
+
+Problem: The chat-ui.js file imports and uses a hardcoded currentUser from chat-config.js. The todo.txt correctly flags this as a security and functionality issue. The chat should always operate as the currently logged-in user.
+Recommendation:
+In the PHP file that renders the chat page (e.g., discussion-detail.php), embed the logged-in user's details (ID, name, avatar URL) into the page, for example, in a data-* attribute on the <body> tag.
+Modify the chat's JavaScript to read this data from the DOM instead of importing the hardcoded object.
+Files to Fix: Js/chat-ui.js, Js/chat/chat-config.js, and the main PHP file for the chat view.

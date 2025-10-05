@@ -1,94 +1,126 @@
 <?php
 session_start();
 if (!isset($_SESSION['user_id'])) {
-    header('Location: Login.html');
+    http_response_code(401);
+    echo json_encode(['error' => 'User not authenticated.']);
     exit();
 }
-require_once __DIR__ . '/../php/config.php';
+
+require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/utils.php';
 
 $userId = (int)$_SESSION['user_id'];
-$name = $_SESSION['name'] ?? 'User';
-$email = $_SESSION['email'] ?? '';
-$initial = strtoupper(mb_substr($name, 0, 1));
 
-$composeError = '';
+header('Content-Type: application/json');
 
-// Handle compose POST
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && (($_POST['action'] ?? '') === 'compose')) {
+try {
+    if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+        handleGet($conn, $userId);
+    } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        handlePost($conn, $userId);
+    } else {
+        http_response_code(405);
+        echo json_encode(['error' => 'Method Not Allowed']);
+    }
+} catch (Exception $e) {
+    http_response_code(500);
+    error_log("User-Messages.php Error: " . $e->getMessage());
+    echo json_encode(['error' => 'An unexpected server error occurred.']);
+} finally {
+    $conn->close();
+}
+
+/**
+ * Handles GET requests to fetch initial page data.
+ */
+function handleGet($conn, $userId) {
+    $name = $_SESSION['name'] ?? 'User';
+    $email = $_SESSION['email'] ?? '';
+    $initial = strtoupper(mb_substr($name, 0, 1));
+
+    // This query is complex. It finds conversations involving the user,
+    // gets the other participant's name, the last message, and a count of unread messages.
+    $stmt = $conn->prepare("
+        SELECT
+            c.id, c.subject, c.updated_at,
+            (SELECT body FROM messages WHERE conversation_id = c.id ORDER BY created_at DESC LIMIT 1) AS last_message,
+            (SELECT COUNT(*) FROM messages WHERE conversation_id = c.id AND recipient_id = ? AND is_read = 0) AS unread_count,
+            other_user.name AS other_participant_name
+        FROM conversations c
+        JOIN conversation_participants cp ON c.id = cp.conversation_id
+        JOIN users other_user ON cp.user_id = other_user.id
+        WHERE c.id IN (SELECT conversation_id FROM conversation_participants WHERE user_id = ?)
+          AND cp.user_id != ?
+        GROUP BY c.id
+        ORDER BY c.updated_at DESC
+    ");
+    $stmt->bind_param('iii', $userId, $userId, $userId);
+    $stmt->execute();
+    $conversations = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    $stmt->close();
+
+    echo json_encode([
+        'user' => ['name' => $name, 'email' => $email, 'initial' => $initial],
+        'conversations' => $conversations,
+    ]);
+}
+
+/**
+ * Handles POST requests to compose a new message.
+ */
+function handlePost($conn, $userId) {
     $recipientEmail = trim($_POST['recipient_email'] ?? '');
     $subject = trim($_POST['subject'] ?? '');
     $body = trim($_POST['body'] ?? '');
 
-    if ($recipientEmail === '' || $subject === '' || $body === '') {
-        $composeError = 'Please fill in recipient, subject and message.';
-    } elseif (strcasecmp($recipientEmail, $_SESSION['email'] ?? '') === 0) {
-        $composeError = 'You cannot send a message to yourself.';
-    } else {
-        $conn->begin_transaction();
-        try {
-            // Find recipient by email
-            $stmt = $conn->prepare('SELECT id FROM users WHERE email = ? AND is_active = 1');
-            $stmt->bind_param('s', $recipientEmail);
-            $stmt->execute();
-            $res = $stmt->get_result();
-            $recipient = $res->fetch_assoc();
-            $stmt->close();
+    if (empty($recipientEmail) || empty($subject) || empty($body)) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Please fill in all fields.']);
+        return;
+    }
 
-            if (!$recipient) {
-                throw new Exception('Recipient not found or inactive.');
-            }
-            $recipientId = (int)$recipient['id'];
+    // Find recipient
+    $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
+    $stmt->bind_param('s', $recipientEmail);
+    $stmt->execute();
+    $recipient = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
 
-            // Create a new conversation
-            $stmt = $conn->prepare('INSERT INTO conversations (subject) VALUES (?)');
-            $stmt->bind_param('s', $subject);
-            $stmt->execute();
-            $conversationId = $stmt->insert_id;
-            $stmt->close();
+    if (!$recipient) {
+        http_response_code(404);
+        echo json_encode(['error' => 'Recipient not found.']);
+        return;
+    }
+    $recipientId = (int)$recipient['id'];
 
-            // Add sender and recipient to the conversation
-            $stmt = $conn->prepare('INSERT INTO conversation_participants (conversation_id, user_id) VALUES (?, ?), (?, ?)');
-            $stmt->bind_param('iiii', $conversationId, $userId, $conversationId, $recipientId);
-            $stmt->execute();
-            $stmt->close();
+    if ($recipientId === $userId) {
+        http_response_code(400);
+        echo json_encode(['error' => 'You cannot send a message to yourself.']);
+        return;
+    }
 
-            // Insert the first message
-            $stmt = $conn->prepare('INSERT INTO messages (conversation_id, sender_id, body) VALUES (?, ?, ?)');
-            $stmt->bind_param('iis', $conversationId, $userId, $body);
-            $stmt->execute();
-            $stmt->close();
+    $conn->begin_transaction();
+    try {
+        // 1. Create conversation
+        $stmt = $conn->prepare("INSERT INTO conversations (subject) VALUES (?)");
+        $stmt->bind_param('s', $subject);
+        $stmt->execute();
+        $convoId = $conn->insert_id;
 
-            $conn->commit();
-            header('Location: User-Messages.php?sent=1');
-            exit();
-        } catch (Exception $e) {
-            $conn->rollback();
-            $composeError = $e->getMessage();
-        }
+        // 2. Add participants
+        $stmt = $conn->prepare("INSERT INTO conversation_participants (conversation_id, user_id) VALUES (?, ?), (?, ?)");
+        $stmt->bind_param('iiii', $convoId, $userId, $convoId, $recipientId);
+        $stmt->execute();
+
+        // 3. Add message
+        $stmt = $conn->prepare("INSERT INTO messages (conversation_id, sender_id, recipient_id, body) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param('iiis', $convoId, $userId, $recipientId, $body);
+        $stmt->execute();
+
+        $conn->commit();
+        echo json_encode(['success' => true, 'message' => 'Message sent successfully.']);
+    } catch (Exception $e) {
+        $conn->rollback();
+        throw $e; // Re-throw to be caught by the main try-catch block
     }
 }
-
-// Load conversations for the current user
-$conversations = [];
-$sql = "SELECT
-            c.id,
-            c.subject,
-            c.updated_at,
-            (SELECT m.body FROM messages m WHERE m.conversation_id = c.id ORDER BY m.created_at DESC LIMIT 1) as last_message,
-            (SELECT u.name FROM users u JOIN conversation_participants cp_other ON u.id = cp_other.user_id WHERE cp_other.conversation_id = c.id AND cp_other.user_id != ?) as other_participant_name,
-            (SELECT COUNT(*) FROM messages m WHERE m.conversation_id = c.id AND m.created_at > cp.last_read_at) as unread_count
-        FROM conversations c
-        JOIN conversation_participants cp ON c.id = cp.conversation_id
-        WHERE cp.user_id = ?
-        ORDER BY c.updated_at DESC";
-
-$stmt = $conn->prepare($sql);
-$stmt->bind_param('ii', $userId, $userId);
-$stmt->execute();
-$result = $stmt->get_result();
-while ($row = $result->fetch_assoc()) {
-    $conversations[] = $row;
-}
-$stmt->close();
-
-include '../HTML/User-Messages.html';

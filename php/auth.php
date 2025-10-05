@@ -47,7 +47,7 @@ if ($action === 'signup') {
 
     $hash = password_hash($password, PASSWORD_DEFAULT);
 
-    $stmt = $conn->prepare("INSERT INTO users (email, password_hash, name, phone, location, role, is_active) VALUES (?, ?, ?, ?, ?, 'user', 1)");
+    $stmt = $conn->prepare("INSERT INTO users (email, password_hash, name, phone, location, role, status) VALUES (?, ?, ?, ?, ?, 'user', 'active')");
     if (!$stmt) {
         redirect('../HTML/Signup.html?error=server');
     }
@@ -73,7 +73,7 @@ if ($action === 'login') {
         redirect('../HTML/Login.html?error=missing');
     }
 
-    $stmt = $conn->prepare('SELECT id, password_hash, name, role FROM users WHERE email = ? AND is_active = 1');
+    $stmt = $conn->prepare('SELECT id, password_hash, name, role FROM users WHERE email = ? AND status = "active"');
     if (!$stmt) {
         redirect('../HTML/Login.html?error=server');
     }

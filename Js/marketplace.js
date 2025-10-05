@@ -1,21 +1,26 @@
 import { escapeHtml } from './utils.js';
 
 class Marketplace {
-  constructor() {
-    this.currentFilters = {
+  constructor(container) {
+    this.els = {
+      grid: document.getElementById('products-grid'),
+      categoryList: document.getElementById('category-list'),
+      searchInput: document.getElementById('search-input'),
+      priceMin: document.getElementById('price-min'),
+      priceMax: document.getElementById('price-max'),
+      priceApply: document.getElementById('price-apply'),
+      sortSelect: document.getElementById('sort-select'),
+      emptyState: document.getElementById('empty-state'),
+      container: container,
+    };
+    this.filters = {
       category: 'all',
       min_price: '',
       max_price: '',
       search: '',
       sort: 'latest'
     };
-    this.init();
-  }
-
-  init() {
-    this.loadCategories();
-    this.loadProducts();
-    this.setupEventListeners();
+    this.searchTimeout = null;
   }
 
   async loadProducts() {
@@ -23,12 +28,11 @@ class Marketplace {
       this.showLoading();
 
       const params = new URLSearchParams();
-      params.append('action', 'get_products');
-      for (const [key, value] of Object.entries(this.currentFilters)) {
+      for (const [key, value] of Object.entries(this.filters)) {
         if (value) params.append(key, value);
       }
 
-      const response = await fetch(`marketplace.php?${params}`);
+      const response = await fetch(`../php/api/ProductApi.php?action=get_products&${params}`);
       const data = await response.json();
 
       if (data.success) {
@@ -45,7 +49,7 @@ class Marketplace {
 
   async loadCategories() {
     try {
-      const response = await fetch('marketplace.php?action=get_categories');
+      const response = await fetch('../php/api/ProductApi.php?action=get_categories');
       const data = await response.json();
       
       if (data.success) {
@@ -58,6 +62,7 @@ class Marketplace {
 
   renderProducts(products) {
     const grid = document.getElementById('products-grid');
+    this.hideLoading();
     
     if (products.length === 0) {
       grid.innerHTML = '';
@@ -84,8 +89,8 @@ class Marketplace {
             <span class="product-stock">${product.quantity_available} ${product.unit} available</span>
           </div>
           <div class="product-actions">
-            <button class="btn btn-secondary" onclick="marketplace.viewProduct(${product.id})">Details</button>
-            <button class="btn btn-primary" onclick="marketplace.addToCart(${product.id})">
+            <button class="btn btn-secondary details-btn" data-product-id="${product.id}">Details</button>
+            <button class="btn btn-primary add-cart-btn" data-product-id="${product.id}">
               <i class="fas fa-shopping-cart"></i> Add to Cart</button>
           </div>
         </div>
@@ -96,9 +101,9 @@ class Marketplace {
   updateCategoryList(categoryCounts) {
     const categoryList = document.getElementById('category-list');
     let totalProducts = Object.values(categoryCounts).reduce((sum, count) => sum + parseInt(count, 10), 0);
-    let allProductsHTML = `<li data-category="all" class="${this.currentFilters.category === 'all' ? 'active' : ''}">All Products <span class="count" data-cat="all">(${totalProducts})</span></li>`;
+    let allProductsHTML = `<li data-category="all" class="${this.filters.category === 'all' ? 'active' : ''}">All Products <span class="count" data-cat="all">(${totalProducts})</span></li>`;
     let categoriesHTML = Object.entries(categoryCounts).map(([slug, count]) => {
-      const isActive = this.currentFilters.category === slug;
+      const isActive = this.filters.category === slug;
       const name = slug.charAt(0).toUpperCase() + slug.slice(1);
       return `
         <li data-category="${slug}" class="${isActive ? 'active' : ''}">
@@ -121,52 +126,63 @@ class Marketplace {
     let searchTimeout;
     searchInput.addEventListener('input', (e) => {
       clearTimeout(searchTimeout);
-      searchTimeout = setTimeout(() => {
-        this.currentFilters.search = e.target.value;
+      this.searchTimeout = setTimeout(() => {
+        this.filters.search = e.target.value;
         this.loadProducts();
       }, 500);
     });
 
     const sortSelect = document.getElementById('sort-select');
     sortSelect.addEventListener('change', (e) => {
-      this.currentFilters.sort = e.target.value;
+      this.filters.sort = e.target.value;
       this.loadProducts();
     });
 
     const priceApply = document.getElementById('price-apply');
     priceApply.addEventListener('click', () => {
-      const minPrice = document.getElementById('price-min').value;
-      const maxPrice = document.getElementById('price-max').value;
-      this.currentFilters.min_price = minPrice;
-      this.currentFilters.max_price = maxPrice;
+      this.filters.min_price = document.getElementById('price-min').value;
+      this.filters.max_price = document.getElementById('price-max').value;
       this.loadProducts();
     });
 
     document.getElementById('price-min').addEventListener('input', (e) => {
-      if (!e.target.value) this.currentFilters.min_price = '';
+      if (!e.target.value) this.filters.min_price = '';
     });
     document.getElementById('price-max').addEventListener('input', (e) => {
-      if (!e.target.value) this.currentFilters.max_price = '';
+      if (!e.target.value) this.filters.max_price = '';
+    });
+
+    // Event Delegation for product actions
+    this.els.grid.addEventListener('click', (e) => {
+      const button = e.target.closest('button');
+      if (!button) return;
+
+      const productId = button.closest('.product-card')?.dataset.productId;
+      if (!productId) return;
+
+      if (button.classList.contains('details-btn')) {
+        this.viewProduct(productId);
+      } else if (button.classList.contains('add-cart-btn')) {
+        this.addToCart(productId);
+      }
     });
   }
 
   setCategoryFilter(category) {
-    this.currentFilters.category = category;
+    this.filters.category = category;
     this.loadProducts();
     
     document.querySelectorAll('#category-list li').forEach(li => {
       li.classList.toggle('active', li.dataset.category === category);
     });
   }
-
+  
   showLoading() {
-    const grid = document.getElementById('products-grid');
-    grid.innerHTML = `
-      <div class="loading-state" style="grid-column: 1 / -1; display: flex; flex-direction: column; align-items: center; padding: 3rem; color: #666;">
-        <i class="fas fa-spinner fa-spin" style="font-size: 2rem; margin-bottom: 1rem;"></i>
-        <p>Loading products...</p>
-      </div>
-    `;
+    this.els.container.classList.add('loading');
+  }
+
+  hideLoading() {
+    this.els.container.classList.remove('loading');
   }
 
   showError(message) {
@@ -175,7 +191,7 @@ class Marketplace {
       <div class="error-state" style="grid-column: 1 / -1; display: flex; flex-direction: column; align-items: center; padding: 3rem; color: #dc2626;">
         <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 1rem;"></i>
         <p>${message}</p>
-        <button class="btn btn-primary" onclick="marketplace.loadProducts()" style="margin-top: 1rem;">Retry</button>
+        <button class="btn btn-primary retry-btn" style="margin-top: 1rem;">Retry</button>
       </div>
     `;
   }
@@ -198,6 +214,12 @@ class Marketplace {
   }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  window.marketplace = new Marketplace();
-});
+export const initializeMarketplace = () => {
+  const marketplaceContainer = document.querySelector('.marketplace-layout');
+  if (marketplaceContainer) {
+    const marketplace = new Marketplace(marketplaceContainer);
+    marketplace.loadCategories();
+    marketplace.loadProducts();
+    marketplace.setupEventListeners();
+  }
+};

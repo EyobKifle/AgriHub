@@ -3,7 +3,7 @@
  * It's designed to interact with a backend that connects to the database.
  */
 
-const API_BASE = '../php/api/messages.php'; // Example API endpoint
+const API_BASE = '../php/api/chat.php'; // API endpoint for discussion chat
 
 /**
  * Fetches all messages for a specific discussion.
@@ -11,14 +11,12 @@ const API_BASE = '../php/api/messages.php'; // Example API endpoint
  * @returns {Promise<Array>} A promise that resolves to an array of message objects.
  */
 export async function fetchMessages(discussionId) {
-  // In a real implementation, this would fetch from the backend.
-  // For now, it returns an empty array to prevent errors.
   console.log(`Fetching messages for discussion: ${discussionId}`);
-  // const response = await fetch(`${API_BASE}?discussion_id=${discussionId}`);
-  // if (!response.ok) throw new Error('Failed to fetch messages');
-  // const data = await response.json();
-  // return data.messages;
-  return []; // Replace with actual API call
+  const response = await fetch(`${API_BASE}?discussion_id=${discussionId}`);
+  if (!response.ok) throw new Error('Failed to fetch messages');
+  const data = await response.json();
+  if (data.error) throw new Error(data.error);
+  return data.messages || [];
 }
 
 /**
@@ -28,10 +26,9 @@ export async function fetchMessages(discussionId) {
  */
 export async function addMessage(messageData) {
   console.log('Adding new message:', messageData);
-  // const response = await fetch(API_BASE, { method: 'POST', body: JSON.stringify(messageData), headers: {'Content-Type': 'application/json'} });
-  // if (!response.ok) throw new Error('Failed to send message');
-  // return await response.json();
-  return messageData; // Simulate successful API call
+  const response = await fetch(API_BASE, { method: 'POST', body: JSON.stringify(messageData), headers: {'Content-Type': 'application/json'} });
+  if (!response.ok) throw new Error('Failed to send message');
+  return await response.json();
 }
 
 /**
@@ -41,7 +38,8 @@ export async function addMessage(messageData) {
  */
 export async function updateMessage(messageId, content) {
   console.log(`Updating message ${messageId} with content: "${content}"`);
-  // await fetch(API_BASE, { method: 'PUT', body: JSON.stringify({ messageId, content }), headers: {'Content-Type': 'application/json'} });
+  const response = await fetch(API_BASE, { method: 'PUT', body: JSON.stringify({ messageId, content }), headers: {'Content-Type': 'application/json'} });
+  if (!response.ok) throw new Error('Failed to update message');
 }
 
 /**
@@ -50,5 +48,6 @@ export async function updateMessage(messageId, content) {
  */
 export async function deleteMessage(messageId) {
   console.log(`Deleting message ${messageId}`);
-  // await fetch(API_BASE, { method: 'DELETE', body: JSON.stringify({ messageId }), headers: {'Content-Type': 'application/json'} });
+  const response = await fetch(API_BASE, { method: 'DELETE', body: JSON.stringify({ messageId }), headers: {'Content-Type': 'application/json'} });
+  if (!response.ok) throw new Error('Failed to delete message');
 }

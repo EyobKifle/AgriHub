@@ -1,5 +1,5 @@
-import { currentUser } from './chat-config.js';
 import { fetchMessages } from './chat-api.js';
+import { session } from './chat/chat-session.js';
 
 // A handy object to store references to the HTML elements we'll be working with.
 export const els = {
@@ -70,7 +70,7 @@ export function createAttachmentPreview(file, onRemove) {
  * It handles messages sent by the current user differently from received messages.
  */
 function renderMessage(m) {
-  const isMe = m.user.id === currentUser.id;
+  const isMe = m.user.id === session.currentUser.id;
   const row = document.createElement('div');
     row.className = `message ${isMe ? 'sent' : 'received'}`;
   row.setAttribute('data-message-id', m.id);

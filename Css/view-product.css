@@ -1,0 +1,155 @@
+/* --- Root Variables (from header.css for consistency) --- */
+:root {
+    --primary-green: #1E4620;
+    --light-green: rgb(42, 119, 42);
+    --light-bg: #FBF9F4;
+    --text-dark: #1C1C1C;
+    --text-light: #555;
+    --border-color: #E5E7EB;
+    --white: #FFFFFF;
+    --accent-orange: #D97706;
+}
+
+/* --- General Layout --- */
+main {
+    padding: 4rem 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.product-detail-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: start;
+}
+
+/* --- Image Slider --- */
+.image-slider-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    background-color: var(--white);
+}
+
+.image-slider {
+    position: relative;
+}
+
+.slider-images {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+.slider-images img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    display: none; /* Hidden by default, JS will show one */
+}
+
+.slider-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 1.5rem;
+    z-index: 10;
+    transition: background-color 0.3s;
+}
+
+.slider-nav:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.slider-nav.prev {
+    left: 10px;
+    border-radius: 50%;
+}
+
+.slider-nav.next {
+    right: 10px;
+    border-radius: 50%;
+}
+
+/* --- Product Info --- */
+.product-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.product-info .category {
+    display: inline-block;
+    background-color: #e8f5e9;
+    color: var(--primary-green);
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    align-self: flex-start;
+}
+
+.product-info h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.product-info .price {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-green);
+    margin-bottom: 0.5rem;
+}
+
+.product-info .price .unit {
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--text-light);
+}
+
+.product-info .stock {
+    font-size: 1rem;
+    color: var(--text-light);
+    margin-bottom: 2rem;
+}
+
+.description, .seller-info {
+    margin-bottom: 2rem;
+}
+
+.description h3, .seller-info h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 0.5rem;
+}
+
+.seller-info p {
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.seller-info i {
+    color: var(--primary-green);
+    margin-right: 8px;
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+    .product-detail-layout {
+        grid-template-columns: 1fr;
+    }
+}

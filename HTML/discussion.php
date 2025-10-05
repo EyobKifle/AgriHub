@@ -1,3 +1,31 @@
+<?php
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    header('Location: Login.html');
+    exit();
+}
+
+require_once __DIR__ . '/../php/config.php';
+
+$discussionId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+if ($discussionId === 0) {
+    // Or redirect to a 404 page
+    die('No discussion ID provided.');
+}
+
+$currentUserId = (int)$_SESSION['user_id'];
+$currentUserName = $_SESSION['name'] ?? 'User';
+
+// Fetch user's avatar URL
+$stmt = $conn->prepare("SELECT avatar_url FROM users WHERE id = ?");
+$stmt->bind_param('i', $currentUserId);
+$stmt->execute();
+$res = $stmt->get_result();
+$user = $res->fetch_assoc();
+$currentUserAvatar = !empty($user['avatar_url']) ? '../' . $user['avatar_url'] : 'https://placehold.co/48x48/2a9d8f/FFF?text=' . strtoupper(mb_substr($currentUserName, 0, 1));
+$stmt->close();
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,7 +38,12 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="../Css/discussion.css">
 </head>
-<body data-discussion-id=""> 
+<body 
+    data-discussion-id="<?php echo $discussionId; ?>"
+    data-user-id="<?php echo $currentUserId; ?>"
+    data-user-name="<?php echo htmlspecialchars($currentUserName, ENT_QUOTES, 'UTF-8'); ?>"
+    data-user-avatar="<?php echo htmlspecialchars($currentUserAvatar, ENT_QUOTES, 'UTF-8'); ?>"
+> 
   <div id="header-placeholder"></div>
 
   <main class="chat-area">

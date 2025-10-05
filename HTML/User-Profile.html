@@ -59,40 +59,36 @@
                 <!-- Profile Picture Card -->
                 <div class="card profile-picture-card">
                     <h3 class="card-title" data-i18n-key="user.profile.picture.title">Profile Picture</h3>
-                    <div class="profile-picture-preview">
-                        <img src="<?php echo !empty($avatar_url) ? '../' . htmlspecialchars($avatar_url, ENT_QUOTES, 'UTF-8') : 'https://placehold.co/150x150/2a9d8f/FFF?text=' . urlencode($initial); ?>" alt="Current profile picture" id="profile-image-preview">
-                    </div>
+                    <div class="profile-picture-preview"><img src="https://placehold.co/150x150/cccccc/FFF?text=?" alt="Current profile picture" id="profile-image-preview"></div>
                     <label for="avatar-upload" class="btn btn-secondary full-width" data-i18n-key="user.profile.picture.upload">Upload New Picture</label>
                     <p class="form-text" data-i18n-key="user.profile.picture.help">For best results, use an image at least 200x200px in .jpg or .png format.</p>
                 </div>
 
                 <!-- Profile Details Card -->
                 <div class="card profile-details-card">
-                    <?php if (isset($_GET['updated'])): ?>
-                        <div style="margin: 0 0 12px 0; color: #090;">Profile updated.</div>
-                    <?php endif; ?>
-                    <form id="profile-form" class="settings-form" method="post" enctype="multipart/form-data">
+                    <div id="form-status-message" style="margin-bottom: 1rem;"></div>
+                    <form id="profile-form" class="settings-form" enctype="multipart/form-data">
                         <input type="file" id="avatar-upload" name="avatar" accept="image/*" style="display:none;">
-                        <input type="hidden" name="existing_avatar_url" value="<?php echo htmlspecialchars($avatar_url, ENT_QUOTES, 'UTF-8'); ?>">
+                        <input type="hidden" name="existing_avatar_url" id="existing_avatar_url" value="">
                         <h3 class="card-title" data-i18n-key="user.profile.details.title">Personal Information</h3>
                         <div class="form-grid">
                             <div class="form-group">
                                 <label for="full-name" data-i18n-key="user.profile.details.name">Full Name</label>
-                                <input type="text" id="full-name" name="full_name" value="<?php echo htmlspecialchars($name, ENT_QUOTES, 'UTF-8'); ?>" required>
+                                <input type="text" id="full-name" name="full_name" value="" required>
                             </div>
                             <div class="form-group">
                                 <label for="email" data-i18n-key="user.profile.details.email">Email Address</label>
-                                <input type="email" id="email" value="<?php echo htmlspecialchars($email, ENT_QUOTES, 'UTF-8'); ?>" disabled>
+                                <input type="email" id="email" value="" disabled>
                             </div>
                         </div>
                         <div class="form-grid">
                             <div class="form-group">
                                 <label for="phone" data-i18n-key="user.profile.details.phone">Phone Number</label>
-                                <input type="tel" id="phone" name="phone" value="<?php echo htmlspecialchars($phone, ENT_QUOTES, 'UTF-8'); ?>" placeholder="+251 9...">
+                                <input type="tel" id="phone" name="phone" value="" placeholder="+251 9...">
                             </div>
                             <div class="form-group">
                                 <label for="location" data-i18n-key="user.profile.details.location">Location / Region</label>
-                                <input type="text" id="location" name="location" value="<?php echo htmlspecialchars($location, ENT_QUOTES, 'UTF-8'); ?>" placeholder="e.g., Amhara, Gojjam">
+                                <input type="text" id="location" name="location" value="" placeholder="e.g., Amhara, Gojjam">
                             </div>
                         </div>
                         <hr style="margin: 2rem 0;">
@@ -100,29 +96,61 @@
                         <div class="form-grid">
                              <div class="form-group">
                                 <label for="farm-size">Farm Size (Hectares)</label>
-                                <input type="number" step="0.1" id="farm-size" name="farm_size_hectares" value="<?php echo htmlspecialchars($farm_size, ENT_QUOTES, 'UTF-8'); ?>" placeholder="e.g., 5.5">
+                                <input type="number" step="0.1" id="farm-size" name="farm_size_hectares" value="" placeholder="e.g., 5.5">
                             </div>
                             <div class="form-group">
                                 <label for="experience">Years of Experience</label>
-                                <input type="number" id="experience" name="experience_years" value="<?php echo htmlspecialchars($experience, ENT_QUOTES, 'UTF-8'); ?>" placeholder="e.g., 10">
+                                <input type="number" id="experience" name="experience_years" value="" placeholder="e.g., 10">
                             </div>
                         </div>
                          <div class="form-group">
                             <label for="specialization">Specialization</label>
-                            <input type="text" id="specialization" name="specialization" value="<?php echo htmlspecialchars($specialization, ENT_QUOTES, 'UTF-8'); ?>" placeholder="e.g., Grains, Dairy, Coffee">
+                            <input type="text" id="specialization" name="specialization" value="" placeholder="e.g., Grains, Dairy, Coffee">
                         </div>
                         <div class="form-group">
                             <label for="bio" data-i18n-key="user.profile.details.about">About Me / My Farm (Optional)</label>
-                            <textarea id="bio" name="bio" rows="4" placeholder="Describe your farm, the crops you grow, or your farming practices..."><?php echo htmlspecialchars($bio, ENT_QUOTES, 'UTF-8'); ?></textarea>
+                            <textarea id="bio" name="bio" rows="4" placeholder="Describe your farm, the crops you grow, or your farming practices..."></textarea>
                         </div>
                         <div class="form-group">
                             <label for="business-name">Business Name (Optional)</label>
-                            <input type="text" id="business-name" name="business_name" value="<?php echo htmlspecialchars($business_name, ENT_QUOTES, 'UTF-8'); ?>">
+                            <input type="text" id="business-name" name="business_name" value="">
                         </div>
                         <div class="form-group">
                             <label for="business-address">Business Address (Optional)</label>
-                            <textarea id="business-address" name="business_address" rows="2"><?php echo htmlspecialchars($business_address, ENT_QUOTES, 'UTF-8'); ?></textarea>
+                            <textarea id="business-address" name="business_address" rows="2"></textarea>
                         </div>
+
+                        <hr style="margin: 2rem 0;">
+                        <h3 class="card-title">Preferences</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="language-preference">Preferred Language</label>
+                                <select id="language-preference" name="language_preference">
+                                    <option value="en">English</option>
+                                    <option value="am">Amharic</option>
+                                    <option value="om">Oromo</option>
+                                    <option value="ti">Tigrinya</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="theme-preference">Theme</label>
+                                <select id="theme-preference" name="pref_theme">
+                                    <option value="light">Light</option>
+                                    <option value="dark">Dark</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-group-toggle">
+                                <label for="email-notifications">Email Notifications</label>
+                                <label class="switch">
+                                    <input type="checkbox" id="email-notifications" name="pref_email_notifications">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <p class="form-text">Receive updates about your listings and messages via email.</p>
+                        </div>
+
                         <div class="form-actions">
                             <button type="submit" class="btn btn-primary" data-i18n-key="user.profile.details.save">Save Changes</button>
                         </div>
@@ -133,6 +161,6 @@
         </main>
     </div>
 
-    <script src="../Js/User-Profile.js"></script>
+    <script src="../Js/dashboard.js" type="module"></script>
 </body>
 </html>

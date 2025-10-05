@@ -36,14 +36,11 @@ if ($roleFilter !== '') {
     $params[] = $roleFilter; $types .= 's';
 }
 if ($statusFilter !== '') {
-    if ($statusFilter === 'active') {
-        $where[] = 'u.is_active = 1';
-    } elseif ($statusFilter === 'pending' || $statusFilter === 'banned') {
-        $where[] = 'u.is_active = 0';
-    }
+    $where[] = 'u.status = ?';
+    $params[] = $statusFilter; $types .= 's';
 }
 
-$sql = 'SELECT u.id, u.name, u.email, u.role, u.is_active, u.created_at FROM users u';
+$sql = 'SELECT u.id, u.name, u.email, u.role, u.status, u.created_at FROM users u';
 if (!empty($where)) {
     $sql .= ' WHERE ' . implode(' AND ', $where);
 }

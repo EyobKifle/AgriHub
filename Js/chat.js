@@ -3,9 +3,9 @@
  * It orchestrates the UI, data, and event handling for the chat.
  */
 
-import { LS_KEY, currentUser, demoUsers } from './chat/chat-config.js';
-import { loadMessages, saveMessages } from './chat/chat-data.js';
-import { els, renderAll, createAttachmentPreview } from './chat/chat-ui.js';
+import { addMessage, updateMessage, deleteMessage } from './chat/chat-api.js';
+import { session } from './chat/chat-session.js';
+import { els, renderAll, createAttachmentPreview, toggleEditState } from './chat/chat-ui.js';
 
 /**
  * A helper function to get the current time as a standard string.
@@ -34,39 +34,128 @@ async function filesToAttachments(files) {
 }
 
 /**
- * If the chat is empty when the page loads, this function adds some
- * example messages to show how it works.
- */
-function seedDemoIfEmpty() {
-  const list = loadMessages();
-  if (list.length) return;
-  const demo = [
-    { id: crypto.randomUUID(), user: demoUsers[0], text: 'Welcome to the community chat! Share your tips.', attachments: [], createdAt: nowISO() },
-    { id: crypto.randomUUID(), user: currentUser, text: 'Hi all! Uploading a PDF checklist.', attachments: [{ type: 'pdf', url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', name: 'Checklist.pdf' }], createdAt: nowISO() },
-    { id: crypto.randomUUID(), user: demoUsers[1], text: 'Here is an image of my drip setup.', attachments: [{ type: 'image', url: 'https://placehold.co/600x400/1e4620/FFF?text=Drip+Setup', name: 'drip.png' }], createdAt: nowISO() }
-  ];
-  saveMessages(demo);
-}
-
-/**
  * A function to simulate another user replying to a message.
  * It waits a short time and then adds a new message to the list.
  */
 function scheduleBotReply() {
   // Simulate real-time by storing a bot reply; will propagate via storage event to other tabs
+  const botUser = { id: 999, name: 'AgriBot', avatar: 'https://placehold.co/48x48/94a3b8/FFF?text=B' };
   setTimeout(() => {
-    const msg = { id: crypto.randomUUID(), user: demoUsers[2], text: `@${currentUser.name} thanks for sharing!`, attachments: [], createdAt: nowISO() };
-    const list = loadMessages();
-    list.push(msg);
-    saveMessages(list);
-    renderAll();
+    const msg = { id: crypto.randomUUID(), user: botUser, text: `@${session.currentUser.name} thanks for sharing!`, attachments: [], createdAt: nowISO(), discussionId: getDiscussionId() };
+    addMessage(msg).then(() => {
+      renderAll(getDiscussionId());
+    }).catch(err => {
+      console.error("Bot failed to reply:", err);
+    });
   }, 1200);
 }
 
-// --- EVENT LISTENERS ---
+// --- INITIALIZATION ---
 
-// When the user selects a file to upload, show the previews.
-els.file.addEventListener('change', () => {
+function getDiscussionId() {
+  return session.discussionId;
+}
+
+// When the page first loads, run these functions.
+function initializeChat() {
+  renderAll(getDiscussionId());
+  initializeEventListeners();
+}
+
+/**
+ * Groups all event listener attachments in one place.
+ */
+function initializeEventListeners() {
+  els.form.addEventListener('submit', handleFormSubmit);
+  els.messages.addEventListener('click', handleMessageActions);
+  els.file.addEventListener('change', handleFileSelection);
+}
+
+/**
+ * Handles the main form submission, delegating to the correct handler
+ * based on whether we are in 'new' or 'edit' mode.
+ * @param {Event} e The form submission event.
+ */
+async function handleFormSubmit(e) {
+  e.preventDefault();
+  const mode = els.form.dataset.mode;
+
+  if (mode === 'edit') {
+    await handleEditMessageSubmit();
+  } else {
+    await handleNewMessageSubmit();
+  }
+
+  renderAll(getDiscussionId());
+}
+
+/**
+ * Handles the logic for submitting a new message.
+ */
+async function handleNewMessageSubmit() {
+  const text = els.input.value.trim();
+  const files = Array.from(els.file.files);
+  if (!text && files.length === 0) return;
+
+  const attachments = await filesToAttachments(files);
+  const msg = {
+    user: session.currentUser,
+    text,
+    attachments,
+    discussionId: getDiscussionId(),
+  };
+
+  try {
+    await addMessage(msg);
+    els.input.value = '';
+    els.file.value = '';
+    els.previews.innerHTML = '';
+    scheduleBotReply(); // Schedule a fake reply from a bot.
+  } catch (err) {
+    console.error("Failed to send message:", err);
+    alert("Could not send message. Please try again.");
+  }
+}
+
+/**
+ * Handles the logic for submitting an edited message.
+ */
+async function handleEditMessageSubmit() {
+  const messageId = els.form.dataset.editingId;
+  const text = els.input.value.trim();
+  if (!text || !messageId) return;
+
+  try {
+    await updateMessage(messageId, text);
+    toggleEditState(null); // Exit edit mode
+  } catch (err) {
+    console.error("Failed to update message:", err);
+    alert("Could not update message. Please try again.");
+  }
+}
+
+/**
+ * Handles clicks on Edit and Delete buttons using event delegation.
+ */
+function handleMessageActions(e) {
+  const editButton = e.target.closest('.edit-btn');
+  if (editButton) {
+    toggleEditState(editButton.dataset.messageId);
+    return;
+  }
+
+  const deleteButton = e.target.closest('.delete-btn');
+  if (deleteButton) {
+    const messageId = deleteButton.dataset.messageId;
+    if (confirm('Are you sure you want to delete this message?')) {
+      deleteMessage(messageId)
+        .then(() => renderAll(getDiscussionId()))
+        .catch(err => alert("Could not delete the message. Please try again."));
+    }
+  }
+}
+
+function handleFileSelection() {
   els.previews.innerHTML = '';
   const onRemove = (fileToRemove) => {
     const files = Array.from(els.file.files).filter(f => f !== fileToRemove);
@@ -78,50 +167,6 @@ els.file.addEventListener('change', () => {
   Array.from(els.file.files).forEach(f => {
     els.previews.appendChild(createAttachmentPreview(f, onRemove));
   });
-});
+}
 
-// When the user submits the chat form (by clicking Send or pressing Enter).
-els.form.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const text = els.input.value.trim();
-  const files = Array.from(els.file.files);
-  if (!text && files.length === 0) return;
-
-  const attachments = await filesToAttachments(files);
-  // Create a new message object with all the necessary info.
-  const msg = {
-    id: crypto.randomUUID(),
-    user: currentUser,
-    text,
-    attachments,
-    createdAt: nowISO(),
-  };
-
-  // Add the new message to our list and save it.
-  const list = loadMessages();
-  list.push(msg);
-  saveMessages(list);
-
-  // Reset the form, clear the previews, and re-render the chat.
-  els.input.value = '';
-  els.file.value = '';
-  els.previews.innerHTML = '';
-  renderAll();
-
-  // Schedule a fake reply from a bot.
-  scheduleBotReply();
-});
-
-// This is a key part of the "real-time" update feature.
-// It listens for changes to `localStorage` that happen in other tabs.
-// If the chat data changes, it re-renders the chat in this tab.
-window.addEventListener('storage', (e) => {
-  if (e.key === LS_KEY) {
-    renderAll();
-  }
-});
-
-// --- INITIALIZATION ---
-// When the page first loads, run these functions.
-seedDemoIfEmpty();
-renderAll();
+initializeChat();

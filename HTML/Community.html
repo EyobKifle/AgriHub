@@ -18,66 +18,61 @@
         <h1 data-i18n-key="community.page.title">Community Forum</h1>
         <p data-i18n-key="community.page.subtitle">Connect with fellow farmers, share knowledge, and get answers to your questions</p>
         <div class="content-container">
-            <div class="sidebar">
+            <aside class="sidebar">
                 <h2 data-i18n-key="community.sidebar.categories">Categories</h2>
                 <ul>
-                    <li><a href="#" data-i18n-key="community.cat.all">All Discussions <span>(156)</span></a></li>
-                    <li><a href="#" data-i18n-key="community.cat.crop">Crop Management <span>(45)</span></a></li>
-                    <li><a href="#" data-i18n-key="community.cat.livestock">Livestock <span>(32)</span></a></li>
-                    <li><a href="#" data-i18n-key="community.cat.market">Market Info <span>(28)</span></a></li>
-                    <li><a href="#" data-i18n-key="community.cat.pest">Pest Control <span>(24)</span></a></li>
-                    <li><a href="#" data-i18n-key="community.cat.water">Water Management <span>(18)</span></a></li>
-                    <li><a href="#" data-i18n-key="community.cat.equipment">Equipment <span>(9)</span></a></li>
+                    <li><a href="Community.php" data-i18n-key="community.cat.all">All Discussions <span>(<?php echo $totalDiscussions; ?>)</span></a></li>
+                    <?php foreach ($categories as $cat): ?>
+                        <li><a href="Community.php?category=<?php echo e($cat['id']); ?>"><?php echo e($cat['name']); ?> <span>(<?php echo (int)$cat['count']; ?>)</span></a></li>
+                    <?php endforeach; ?>
                 </ul>
                 <div class="community-stats">
                     <h3 data-i18n-key="community.stats.title">Community Stats</h3>
-                    <p data-i18n-key="community.stats.members"><span>👥</span> 2,847 Active Members</p>
-                    <p data-i18n-key="community.stats.discussions"><span>💬</span> 156 Discussions</p>
-                    <p data-i18n-key="community.stats.answers"><span>👍</span> 1,234 Helpful Answers</p>
+                    <p><span>👥</span> <?php echo number_format($activeMembers); ?> Active Members</p>
+                    <p><span>💬</span> <?php echo number_format($totalDiscussions); ?> Discussions</p>
                 </div>
-            </div>
-            <div class="main-content">
-                <div class="search-filter">
-                    <input type="text" data-i18n-placeholder-key="community.search.placeholder" placeholder="Search discussions...">
-                    <select>
-                        <option value="" data-i18n-key="community.search.filter">Filter</option>
-                    </select>
-                </div>
+            </aside>
+            <main class="main-content">
                 <div class="new-discussion">
                     <h2 data-i18n-key="community.new.title">Start a New Discussion</h2>
-                    <p data-i18n-key="community.new.subtitle">Share your knowledge or ask a question to the community</p>
-                    <form>
-                        <input type="text" data-i18n-placeholder-key="community.new.placeholder.title" placeholder="Discussion title...">
-                        <textarea data-i18n-placeholder-key="community.new.placeholder.body" placeholder="What would you like to discuss?"></textarea>
-                        <input type="text" data-i18n-placeholder-key="community.new.placeholder.tags" placeholder="Add tags (comma separated)">
-                        <button type="submit" class="btn post" data-i18n-key="community.new.button">Post Discussion</button>
-                    </form>
+                    <?php if (!$userId): ?>
+                        <p>Please <a href="Login.html">login</a> or <a href="Signup.html">create an account</a> to post.</p>
+                    <?php else: ?>
+                        <form method="post" action="Community.php">
+                            <input type="hidden" name="action" value="create_discussion">
+                            <input type="text" name="title" data-i18n-placeholder-key="community.new.placeholder.title" placeholder="Discussion title..." required>
+                            <select name="category_id" required>
+                                <option value="">Select a category</option>
+                                <?php foreach ($categories as $cat): ?>
+                                    <option value="<?php echo (int)$cat['id']; ?>"><?php echo e($cat['name']); ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <textarea name="content" data-i18n-placeholder-key="community.new.placeholder.body" placeholder="What would you like to discuss?" required></textarea>
+                            <?php if ($formError): ?><p style="color: #900;"><?php echo $formError; ?></p><?php endif; ?>
+                            <button type="submit" class="btn post" data-i18n-key="community.new.button">Post Discussion</button>
+                        </form>
+                    <?php endif; ?>
                 </div>
                 <div class="discussions">
-                    <div class="discussion-card">
-                        <span class="category" data-i18n-key="community.cat.crop">Crop Management</span>
-                        <span class="time" data-i18n-key="community.post.time" data-i18n-time-ago="2">2 hours ago</span>
-                        <h3><a href="discussion.html" data-i18n-key="community.post1.title">Best practices for teff cultivation in highland areas</a></h3>
-                        <p data-i18n-key="community.post1.desc">I've been growing teff for 5 years and want to share some techniques that have improved my yields...</p>
-                        <p class="author" data-i18n-key="community.post1.author">by Alemayhu T. <span class="tags">teff, highland, cultivation</span></p>
-                        <div class="interaction">
-                            <span>👍 12</span>
-                            <span>💬 24</span>
-                        </div>
-                    </div>
-                    <div class="discussion-card">
-                        <span class="category" data-i18n-key="community.cat.pest">Pest Control</span>
-                        <span class="time" data-i18n-key="community.post.time" data-i18n-time-ago="4">4 hours ago</span>
-                        <h3><a href="discussion.html" data-i18n-key="community.post2.title">Organic pest control methods for vegetable gardens</a></h3>
-                        <p data-i18n-key="community.post2.desc">Looking for natural alternatives to chemical pesticides. What has worked for your vegetable crops?</p>
-                        <p class="author" data-i18n-key="community.post2.author">by Meron K. <span class="tags">organic, pest-control, vegetables</span></p>
-                        <div class="interaction">
-                            <span>👍 8</span>
-                            <span>💬 18</span>
-                        </div>
-                    </div>
+                    <?php if (empty($discussions)): ?>
+                        <p>No discussions found. Be the first to start one!</p>
+                    <?php else: ?>
+                        <?php foreach ($discussions as $d): ?>
+                            <div class="discussion-card">
+                                <span class="category"><?php echo e($d['category_name']); ?></span>
+                                <span class="time"><?php echo time_ago($d['updated_at']); ?></span>
+                                <h3><a href="discussion.php?id=<?php echo (int)$d['id']; ?>"><?php echo e($d['title']); ?></a></h3>
+                                <p><?php echo e(mb_strimwidth($d['content'], 0, 150, "...")); ?></p>
+                                <p class="author">by <?php echo e($d['author_name']); ?></p>
+                                <div class="interaction">
+                                    <span><i class="fa-regular fa-thumbs-up"></i> <?php echo (int)$d['like_count']; ?></span>
+                                    <span><i class="fa-regular fa-comment"></i> <?php echo (int)$d['comment_count']; ?></span>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </div>
-            </div>
+            </main>
         </div>
     </section>
 

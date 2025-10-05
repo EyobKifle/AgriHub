@@ -23,7 +23,7 @@
         </div>
         <div class="header-right">
             <a href="User-Profile.php" class="profile-link" aria-label="User Profile">
-                <div class="profile-avatar"><?php echo htmlspecialchars($initial, ENT_QUOTES, 'UTF-8'); ?></div>
+                <div class="profile-avatar" id="user-initial-avatar"></div>
             </a>
         </div>
     </header>
@@ -42,11 +42,9 @@
             <div class="sidebar-footer">
                 <div class="profile-dropdown">
                     <div>
-                        <div class="profile-name"><?php echo htmlspecialchars($name, ENT_QUOTES, 'UTF-8'); ?></div>
-                        <div class="profile-email" style="opacity:.8; font-size:12px;">
-                            <?php echo htmlspecialchars($email, ENT_QUOTES, 'UTF-8'); ?>
-                        </div>
-                        <small><a href="../php/auth.php?action=logout" style="color:inherit; text-decoration:none;">Logout</a></small>
+                        <div class="profile-name" id="user-profile-name"></div>
+                        <div class="profile-email" id="user-profile-email" style="opacity:.8; font-size:12px;"></div>
+                        <small><a href="../php/auth.php?action=logout" style="color:inherit; text-decoration:none;" data-i18n-key="user.nav.logout">Logout</a></small>
                     </div>
                 </div>
             </div>
@@ -54,59 +52,48 @@
 
         <main class="main-content">
             <div class="main-header">
-                <h1>My Listings</h1>
-                <p>Products you are selling.</p>
+                <h1 data-i18n-key="user.listings.title">My Listings</h1>
+                <p data-i18n-key="user.listings.subtitle">Manage the products you are selling on the marketplace.</p>
             </div>
 
             <div class="page-controls">
-                <button type="button" id="create-listing-btn" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Add New Listing</button>
-                <?php if (isset($_GET['created'])): ?>
-                    <span style="margin-left:12px; color:#090;">Listing created.</span>
-                <?php endif; ?>
-                <?php if (isset($_GET['updated'])): ?>
-                    <span style="margin-left:12px; color:#090;">Listing updated.</span>
-                <?php endif; ?>
-                <?php if ($formError): ?>
-                    <span style="margin-left:12px; color:#900;"><?php echo htmlspecialchars($formError, ENT_QUOTES, 'UTF-8'); ?></span>
-                <?php endif; ?>
+                <button type="button" id="create-listing-btn" class="btn btn-primary" data-i18n-key="user.listings.add"><i class="fa-solid fa-plus"></i> Add New Listing</button>
+                <span id="form-status-message" style="margin-left:12px;"></span>
             </div>
 
-            <div class="card" id="create-listing-card" style="display: <?php echo $formError ? 'block' : 'none'; ?>;">
+            <div class="card" id="create-listing-card" style="display: none;">
                 <h3 class="card-title" id="form-title">New Listing</h3>
-                <form method="post" enctype="multipart/form-data">
-                    <input type="hidden" name="action" value="create_listing">
+                <form id="listing-form" enctype="multipart/form-data">
+                    <input type="hidden" name="action" value="save_listing">
                     <input type="hidden" name="product_id" id="product_id" value="0">
                     <div class="form-grid">
                         <div class="form-group">
                             <label for="title">Title</label>
-                            <input type="text" id="form_title" name="title" required>
+                            <input type="text" id="form-title-input" name="title" required>
                         </div>
                         <div class="form-group">
                             <label for="category_id">Category</label>
-                            <select id="form_category_id" name="category_id" required>
-                                <option value="">Select category</option>
-                                <?php foreach ($categories as $cat): ?>
-                                    <option value="<?php echo (int)$cat['id']; ?>"><?php echo e($cat['name']); ?></option>
-                                <?php endforeach; ?>
+                            <select id="form-category-id" name="category_id" required>
+                                <!-- Options will be populated by JS -->
                             </select>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="description">Description</label>
-                        <textarea id="form_description" name="description" rows="3" placeholder="Describe your product..."></textarea>
+                        <textarea id="form-description" name="description" rows="3" placeholder="Describe your product..."></textarea>
                     </div>
                     <div class="form-grid">
                         <div class="form-group">
                             <label for="price">Price</label>
-                            <input type="number" step="0.01" id="form_price" name="price" required>
+                            <input type="number" step="0.01" id="form-price" name="price" required>
                         </div>
                         <div class="form-group">
                             <label for="unit">Unit</label>
-                            <input type="text" id="form_unit" name="unit" placeholder="e.g., kg, quintal, bag" required>
+                            <input type="text" id="form-unit" name="unit" placeholder="e.g., kg, quintal, bag" required>
                         </div>
                         <div class="form-group">
                             <label for="quantity">Quantity Available</label>
-                            <input type="number" step="0.01" id="form_quantity" name="quantity_available" required>
+                            <input type="number" step="0.01" id="form-quantity" name="quantity_available" required>
                         </div>
                     </div>
                     <div class="form-group">
@@ -132,37 +119,8 @@
                             <th data-i18n-key="user.listings.table.actions">Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <?php if (empty($listings)): ?>
-                            <tr>
-                                <td colspan="5" style="text-align:center; opacity:.8;">You have no listings yet.</td>
-                            </tr>
-                        <?php else: ?>
-                            <?php foreach ($listings as $it): ?>
-                                <tr class="listing-row"
-                                    data-id="<?php echo e($it['id']); ?>"
-                                    data-title="<?php echo e($it['title']); ?>"
-                                    data-description="<?php echo e($it['description']); ?>"
-                                    data-category_id="<?php echo e($it['category_id']); ?>"
-                                    data-price="<?php echo e($it['price']); ?>"
-                                    data-unit="<?php echo e($it['unit']); ?>"
-                                    data-quantity_available="<?php echo e($it['quantity_available']); ?>"
-                                >
-                                    <td>
-                                        <div class="product-info">
-                                            <span><?php echo e($it['title']); ?></span>
-                                        </div>
-                                    </td>
-                                    <td><?php echo e($it['category_name']); ?></td>
-                                    <td><?php echo number_format((float)$it['price'], 2) . ' / ' . e($it['unit']); ?></td>
-                                    <td><span class="status status-<?php echo e(strtolower($it['status'])); ?>"><?php echo e(ucfirst($it['status'])); ?></span></td>
-                                    <td class="action-buttons">
-                                        <button class="edit-btn" data-i18n-title-key="user.listings.actions.edit" title="Edit Listing"><i class="fa-solid fa-pen"></i></button>
-                                        <button data-i18n-title-key="user.listings.actions.delete" title="Delete Listing"><i class="fa-solid fa-trash"></i></button>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
+                    <tbody id="listings-table-body">
+                        <!-- Listing rows will be populated by JS -->
                     </tbody>
                 </table>
             </div>

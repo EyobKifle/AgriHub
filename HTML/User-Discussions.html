@@ -23,7 +23,7 @@
         </div>
         <div class="header-right">
             <a href="User-Profile.php" class="profile-link" aria-label="User Profile">
-                <div class="profile-avatar"><?php echo htmlspecialchars($initial, ENT_QUOTES, 'UTF-8'); ?></div>
+                <div class="profile-avatar" id="user-initial-avatar"></div>
             </a>
         </div>
     </header>
@@ -42,9 +42,9 @@
              <div class="sidebar-footer">
                 <div class="profile-dropdown">
                     <div>
-                        <div class="profile-name"><?php echo htmlspecialchars($name, ENT_QUOTES, 'UTF-8'); ?></div>
-                        <div class="profile-email" style="opacity:.8; font-size:12px;"><?php echo htmlspecialchars($email, ENT_QUOTES, 'UTF-8'); ?></div>
-                        <small><a href="../php/auth.php?action=logout" style="color:inherit; text-decoration:none;">Logout</a></small>
+                        <div class="profile-name" id="user-profile-name"></div>
+                        <div class="profile-email" id="user-profile-email" style="opacity:.8; font-size:12px;"></div>
+                        <small><a href="../php/auth.php?action=logout" style="color:inherit; text-decoration:none;" data-i18n-key="user.nav.logout">Logout</a></small>
                     </div>
                 </div>
             </div>
@@ -58,17 +58,12 @@
 
             <div class="page-controls">
                 <button type="button" id="create-discussion-btn" class="btn btn-primary" data-i18n-key="user.discussions.new"><i class="fa-solid fa-plus"></i> Start New Discussion</button>
-                <?php if (isset($_GET['created'])): ?>
-                    <span style="margin-left:12px; color:#090;">Discussion created.</span>
-                <?php endif; ?>
-                <?php if (!empty($formError)): ?>
-                    <span style="margin-left:12px; color:#900;">&nbsp;<?php echo htmlspecialchars($formError, ENT_QUOTES, 'UTF-8'); ?></span>
-                <?php endif; ?>
+                <span id="form-status-message" style="margin-left:12px;"></span>
             </div>
 
-            <div class="card" id="create-discussion-card" style="display: <?php echo $formError ? 'block' : 'none'; ?>;">
-                <h3 class="card-title">Start New Discussion</h3>
-                <form method="post">
+            <div class="card" id="create-discussion-card" style="display: none;">
+                <h3 class="card-title" data-i18n-key="user.discussions.newDiscussionTitle">Start New Discussion</h3>
+                <form id="create-discussion-form">
                     <input type="hidden" name="action" value="create_discussion">
                     <div class="form-grid">
                         <div class="form-group">
@@ -78,10 +73,7 @@
                         <div class="form-group">
                             <label for="category_id">Category</label>
                             <select id="category_id" name="category_id" required>
-                                <option value="">Select category</option>
-                                <?php foreach ($categories as $cat): ?>
-                                    <option value="<?php echo (int)$cat['id']; ?>"><?php echo htmlspecialchars($cat['name'], ENT_QUOTES, 'UTF-8'); ?></option>
-                                <?php endforeach; ?>
+                                <!-- Categories will be populated by JS -->
                             </select>
                         </div>
                     </div>
@@ -90,7 +82,7 @@
                         <textarea id="content" name="content" rows="4" placeholder="Write your discussion topic..." required></textarea>
                     </div>
                     <div class="form-actions">
-                        <button type="submit" class="btn btn-primary">Create</button>
+                        <button type="submit" class="btn btn-primary" data-i18n-key="user.discussions.actions.create">Create</button>
                     </div>
                 </form>
             </div>
@@ -106,24 +98,8 @@
                             <th data-i18n-key="user.discussions.table.actions">Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <?php if (empty($rows)): ?>
-                        <tr>
-                            <td colspan="5" style="text-align:center; opacity:.8;">You haven't started any discussions yet.</td>
-                        </tr>
-                        <?php else: ?>
-                        <?php foreach ($rows as $r): ?>
-                        <tr>
-                            <td><?php echo htmlspecialchars($r['title'], ENT_QUOTES, 'UTF-8'); ?></td>
-                            <td><?php echo htmlspecialchars($r['category_name'], ENT_QUOTES, 'UTF-8'); ?></td>
-                            <td><?php echo htmlspecialchars(time_ago($r['updated_at']), ENT_QUOTES, 'UTF-8'); ?></td>
-                            <td><?php echo (int)$r['comment_count']; ?></td>
-                            <td class="action-buttons">
-                                <button title="View Discussion" data-i18n-title-key="user.discussions.actions.view"><i class="fa-solid fa-eye"></i></button>
-                            </td>
-                        </tr>
-                        <?php endforeach; ?>
-                        <?php endif; ?>
+                    <tbody id="discussions-table-body">
+                        <!-- Discussion rows will be populated by JS -->
                     </tbody>
                 </table>
             </div>
@@ -131,5 +107,6 @@
     </div>
     
     <script type="module" src="../Js/dashboard.js"></script>
+    <script type="module" src="../Js/User-Discussions.js"></script>
 </body>
 </html>

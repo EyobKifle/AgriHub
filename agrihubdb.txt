@@ -7,11 +7,11 @@ CREATE TABLE `users` (
     `email` VARCHAR(255) NOT NULL UNIQUE,
     `password_hash` VARCHAR(255) NOT NULL,
     `name` VARCHAR(100) NOT NULL,
-    `role` ENUM('admin', 'user', 'moderator', 'seller') NOT NULL DEFAULT 'user',
+    `role` ENUM('admin', 'user') NOT NULL DEFAULT 'user',
     `avatar_url` VARCHAR(512) DEFAULT NULL,
     `phone` VARCHAR(30) DEFAULT NULL,
     `location` VARCHAR(150) DEFAULT NULL,
-    `status` ENUM('active', 'pending', 'banned', 'inactive') NOT NULL DEFAULT 'pending',
+    `is_active` BOOLEAN NOT NULL DEFAULT TRUE,
     `last_login` TIMESTAMP NULL DEFAULT NULL,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -44,12 +44,7 @@ CREATE TABLE `categories` (
     `description_key` VARCHAR(255) DEFAULT NULL, -- For i18n
     `product_count` INT UNSIGNED NOT NULL DEFAULT 0,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `created_by` INT UNSIGNED,
-    `updated_by` INT UNSIGNED,
-    CONSTRAINT `fk_categories_parent_id` FOREIGN KEY (`parent_id`) REFERENCES `categories` (`id`) ON DELETE SET NULL,
-    CONSTRAINT `fk_categories_created_by` FOREIGN KEY (`created_by`) REFERENCES `users`(`id`) ON DELETE SET NULL,
-    CONSTRAINT `fk_categories_updated_by` FOREIGN KEY (`updated_by`) REFERENCES `users`(`id`) ON DELETE SET NULL
+    CONSTRAINT `fk_categories_parent_id` FOREIGN KEY (`parent_id`) REFERENCES `categories` (`id`) ON DELETE SET NULL
 );
 
 CREATE TABLE `products` (
@@ -65,12 +60,9 @@ CREATE TABLE `products` (
     `is_featured` BOOLEAN NOT NULL DEFAULT FALSE,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    CONSTRAINT `fk_products_seller_id` FOREIGN KEY (`seller_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT,
+    CONSTRAINT `fk_products_seller_id` FOREIGN KEY (`seller_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
     CONSTRAINT `fk_products_category_id` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE RESTRICT,
-    CONSTRAINT `check_price` CHECK (`price` > 0),
-    CONSTRAINT `check_quantity_available` CHECK (`quantity_available` >= 0),
-    INDEX `idx_products_seller_id` (`seller_id`),
-    INDEX `idx_products_category_status` (`category_id`, `status`),
+    INDEX `idx_products_status` (`status`),
     INDEX `idx_products_price` (`price`)
 );
 
@@ -95,7 +87,6 @@ CREATE TABLE `orders` (
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT `fk_orders_buyer_id` FOREIGN KEY (`buyer_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT,
-    INDEX `idx_orders_buyer_id` (`buyer_id`),
     INDEX `idx_orders_status` (`status`)
 );
 
@@ -106,12 +97,11 @@ CREATE TABLE `order_items` (
     `seller_id` INT UNSIGNED NOT NULL,
     `quantity` DECIMAL(10, 2) NOT NULL,
     `unit_price` DECIMAL(12, 2) NOT NULL,
+    `line_total` DECIMAL(14, 2) NOT NULL,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT `fk_order_items_order_id` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE,
     CONSTRAINT `fk_order_items_product_id` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE RESTRICT,
-    CONSTRAINT `fk_order_items_seller_id` FOREIGN KEY (`seller_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT,
-    CONSTRAINT `check_quantity` CHECK (`quantity` > 0),
-    CONSTRAINT `check_unit_price` CHECK (`unit_price` > 0)
+    CONSTRAINT `fk_order_items_seller_id` FOREIGN KEY (`seller_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT
 );
 
 CREATE TABLE `reviews` (
@@ -137,7 +127,6 @@ CREATE TABLE `discussion_categories` (
     `discussion_count` INT UNSIGNED NOT NULL DEFAULT 0,
     `display_order` SMALLINT NOT NULL DEFAULT 0,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX `idx_discussion_categories_display_order` (`display_order`)
 );
 
@@ -153,10 +142,8 @@ CREATE TABLE `discussions` (
     `comment_count` INT UNSIGNED NOT NULL DEFAULT 0,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    CONSTRAINT `fk_discussions_author_id` FOREIGN KEY (`author_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT,
-    CONSTRAINT `fk_discussions_category_id` FOREIGN KEY (`category_id`) REFERENCES `discussion_categories` (`id`) ON DELETE RESTRICT,
-    INDEX `idx_discussions_author_id` (`author_id`),
-    INDEX `idx_discussions_category_status` (`category_id`, `status`)
+    CONSTRAINT `fk_discussions_author_id` FOREIGN KEY (`author_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `fk_discussions_category_id` FOREIGN KEY (`category_id`) REFERENCES `discussion_categories` (`id`) ON DELETE RESTRICT
 );
 
 CREATE TABLE `discussion_comments` (
@@ -169,8 +156,8 @@ CREATE TABLE `discussion_comments` (
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT `fk_comments_discussion_id` FOREIGN KEY (`discussion_id`) REFERENCES `discussions` (`id`) ON DELETE CASCADE,
-    CONSTRAINT `fk_comments_author_id` FOREIGN KEY (`author_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT,
-    CONSTRAINT `fk_comments_parent_id` FOREIGN KEY (`parent_comment_id`) REFERENCES `discussion_comments` (`id`) ON DELETE SET NULL
+    CONSTRAINT `fk_comments_author_id` FOREIGN KEY (`author_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `fk_comments_parent_id` FOREIGN KEY (`parent_comment_id`) REFERENCES `discussion_comments` (`id`) ON DELETE CASCADE
 );
 
 CREATE TABLE `tags` (
@@ -213,9 +200,7 @@ CREATE TABLE `articles` (
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT `fk_articles_category_id` FOREIGN KEY (`category_id`) REFERENCES `content_categories` (`id`) ON DELETE RESTRICT,
-    CONSTRAINT `fk_articles_author_id` FOREIGN KEY (`author_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT,
-    INDEX `idx_articles_author_id` (`author_id`),
-    FULLTEXT INDEX `idx_articles_content` (`title`, `content`)
+    CONSTRAINT `fk_articles_author_id` FOREIGN KEY (`author_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT
 );
 
 -- Junction table for many-to-many relationship between articles and tags.
@@ -251,7 +236,7 @@ CREATE TABLE `conversation_participants` (
     `last_read_at` TIMESTAMP NULL DEFAULT NULL,
     PRIMARY KEY (`conversation_id`, `user_id`),
     CONSTRAINT `fk_convo_participants_convo_id` FOREIGN KEY (`conversation_id`) REFERENCES `conversations` (`id`) ON DELETE CASCADE,
-    CONSTRAINT `fk_convo_participants_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT
+    CONSTRAINT `fk_convo_participants_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 );
 
 CREATE TABLE `messages` (
@@ -263,7 +248,7 @@ CREATE TABLE `messages` (
     `attachment_type` VARCHAR(50) DEFAULT NULL,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT `fk_messages_convo_id` FOREIGN KEY (`conversation_id`) REFERENCES `conversations` (`id`) ON DELETE CASCADE,
-    CONSTRAINT `fk_messages_sender_id` FOREIGN KEY (`sender_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT
+    CONSTRAINT `fk_messages_sender_id` FOREIGN KEY (`sender_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 );
 
 CREATE TABLE `reports` (
@@ -276,7 +261,7 @@ CREATE TABLE `reports` (
     `resolved_by` INT UNSIGNED DEFAULT NULL,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    CONSTRAINT `fk_reports_reporter_id` FOREIGN KEY (`reporter_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT,
+    CONSTRAINT `fk_reports_reporter_id` FOREIGN KEY (`reporter_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
     CONSTRAINT `fk_reports_resolved_by` FOREIGN KEY (`resolved_by`) REFERENCES `users` (`id`) ON DELETE SET NULL,
     INDEX `idx_reports_status` (`status`)
 );
@@ -298,9 +283,7 @@ CREATE TABLE `user_activity_log` (
     `activity_type` VARCHAR(100) NOT NULL,
     `related_item_id` INT UNSIGNED DEFAULT NULL,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT `fk_activity_log_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
-    INDEX `idx_activity_log_type` (`activity_type`),
-    INDEX `idx_activity_log_related_item` (`related_item_id`)
+    CONSTRAINT `fk_activity_log_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 );
 
 -- This table was missing but is required by Settings.html for admin configurations.
@@ -308,22 +291,9 @@ CREATE TABLE `system_settings` (
     `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     `setting_key` VARCHAR(100) NOT NULL UNIQUE,
     `setting_value` TEXT,
-    `value_type` ENUM('string', 'number', 'boolean', 'json') NOT NULL DEFAULT 'string',
     `description` VARCHAR(255) DEFAULT NULL,
     `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
-
--- For i18n support
-CREATE TABLE `translations` (
-    `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    `table_name` VARCHAR(50) NOT NULL,
-    `field_name` VARCHAR(50) NOT NULL,
-    `record_id` INT UNSIGNED NOT NULL,
-    `language_code` VARCHAR(10) NOT NULL,
-    `translated_value` TEXT NOT NULL,
-    UNIQUE `uq_translation` (`table_name`, `field_name`, `record_id`, `language_code`)
-);
-
 
 -- Insert Marketplace Categories
 INSERT INTO `categories` (`name`, `name_key`, `slug`) VALUES
@@ -352,10 +322,10 @@ INSERT INTO `content_categories` (`type`, `name_key`, `slug`, `display_order`) V
 
 -- Insert Sample Users (assuming IDs 1, 2, 3)
 -- Passwords are 'password' hashed. Use hash.js to generate your own.
-INSERT INTO `users` (`id`, `email`, `password_hash`, `name`, `role`, `location`, `status`) VALUES
-(1, 'admin@agrihub.com', '$2b$12$V/g.b8hXGkFw2HSyLhTj..dKjLdGz/y.2sL/Z.p9.B5.y.x5.y.z6', 'Admin User', 'admin', 'Addis Ababa', 'active'),
-(2, 'johndoe@test.com', '$2b$12$V/g.b8hXGkFw2HSyLhTj..dKjLdGz/y.2sL/Z.p9.B5.y.x5.y.z6', 'John Doe', 'user', 'Gojjam', 'active'),
-(3, 'janedoe@test.com', '$2b$12$V/g.b8hXGkFw2HSyLhTj..dKjLdGz/y.2sL/Z.p9.B5.y.x5.y.z6', 'Jane Doe', 'user', 'Jimma', 'pending');
+INSERT INTO `users` (`id`, `email`, `password_hash`, `name`, `role`, `location`) VALUES
+(1, 'admin@agrihub.com', '$2b$12$V/g.b8hXGkFw2HSyLhTj..dKjLdGz/y.2sL/Z.p9.B5.y.x5.y.z6', 'Admin User', 'admin', 'Addis Ababa'),
+(2, 'johndoe@test.com', '$2b$12$V/g.b8hXGkFw2HSyLhTj..dKjLdGz/y.2sL/Z.p9.B5.y.x5.y.z6', 'John Doe', 'user', 'Gojjam'),
+(3, 'janedoe@test.com', '$2b$12$V/g.b8hXGkFw2HSyLhTj..dKjLdGz/y.2sL/Z.p9.B5.y.x5.y.z6', 'Jane Doe', 'user', 'Jimma');
 
 -- Insert Sample Products
 INSERT INTO `products` (`seller_id`, `category_id`, `title`, `description`, `price`, `unit`, `quantity_available`, `status`) VALUES
@@ -377,74 +347,7 @@ INSERT INTO `discussions` (`author_id`, `category_id`, `title`, `content`) VALUE
 INSERT INTO `discussion_comments` (`discussion_id`, `author_id`, `content`) VALUES
 (1, 3, 'Thanks for starting this discussion! For fertilization, I have found that using a mix of compost and a small amount of DAP at planting time works best.');
 
--- Insert Sample Order
-INSERT INTO `orders` (`buyer_id`, `order_code`, `total_amount`, `status`, `delivery_address`) VALUES
-(3, 'ORD001', 1700.00, 'pending', '123 Farm Road, Jimma');
-
-INSERT INTO `order_items` (`order_id`, `product_id`, `seller_id`, `quantity`, `unit_price`) VALUES
-(1, 1, 2, 2, 850.00);
-
 -- Insert System Settings
 INSERT INTO `system_settings` (`setting_key`, `setting_value`, `description`) VALUES
 ('marketplace_fee_percent', '5', 'The percentage fee charged on each successful marketplace transaction.'),
 ('user_listing_limit', '10', 'The maximum number of active listings a regular user can have.');
-
--- Triggers for maintaining counter caches
-DELIMITER //
-
--- Product Count Triggers
-CREATE TRIGGER after_product_insert
-AFTER INSERT ON products
-FOR EACH ROW
-BEGIN
-    UPDATE categories SET product_count = product_count + 1 WHERE id = NEW.category_id;
-END//
-
-CREATE TRIGGER after_product_delete
-AFTER DELETE ON products
-FOR EACH ROW
-BEGIN
-    UPDATE categories SET product_count = GREATEST(0, product_count - 1) WHERE id = OLD.category_id;
-END//
-
-CREATE TRIGGER after_product_update
-AFTER UPDATE ON products
-FOR EACH ROW
-BEGIN
-    IF OLD.category_id <> NEW.category_id THEN
-        UPDATE categories SET product_count = GREATEST(0, product_count - 1) WHERE id = OLD.category_id;
-        UPDATE categories SET product_count = product_count + 1 WHERE id = NEW.category_id;
-    END IF;
-END//
-
--- Discussion Count Triggers
-CREATE TRIGGER after_discussion_insert
-AFTER INSERT ON discussions
-FOR EACH ROW
-BEGIN
-    UPDATE discussion_categories SET discussion_count = discussion_count + 1 WHERE id = NEW.category_id;
-END//
-
-CREATE TRIGGER after_discussion_delete
-AFTER DELETE ON discussions
-FOR EACH ROW
-BEGIN
-    UPDATE discussion_categories SET discussion_count = GREATEST(0, discussion_count - 1) WHERE id = OLD.category_id;
-END//
-
--- Article Count Triggers
-CREATE TRIGGER after_article_insert
-AFTER INSERT ON articles
-FOR EACH ROW
-BEGIN
-    UPDATE content_categories SET article_count = article_count + 1 WHERE id = NEW.category_id;
-END//
-
-CREATE TRIGGER after_article_delete
-AFTER DELETE ON articles
-FOR EACH ROW
-BEGIN
-    UPDATE content_categories SET article_count = GREATEST(0, article_count - 1) WHERE id = OLD.category_id;
-END//
-
-DELIMITER ;
