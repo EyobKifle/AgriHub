@@ -33,7 +33,11 @@ async function renderGuidanceCategories() {
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    const categoryGroups = await response.json();
+    const text = await response.text();
+    if (text.trim().startsWith('<?php')) {
+      throw new Error('PHP is not being executed. Please ensure the Apache server in XAMPP is running and access the site via http://localhost/AgriHub/ instead of opening the HTML file directly.');
+    }
+    const categoryGroups = JSON.parse(text);
 
     if (categoryGroups.length === 0) {
       placeholder.innerHTML = '<p>No guidance categories found.</p>';
@@ -68,9 +72,8 @@ async function renderGuidanceCategories() {
   }
 }
 
-/**
- * Filters the displayed categories based on the search input.
- */
+//Filters the displayed categories based on the search input.
+ 
 function filterCategories() {
   const searchInput = document.getElementById('category-search-input');
   if (!searchInput) return;
