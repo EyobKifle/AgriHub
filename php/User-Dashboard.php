@@ -26,9 +26,9 @@ if ($stmt = $conn->prepare('SELECT COUNT(*) AS cnt FROM products WHERE seller_id
 // Unread messages placeholder (no messages table implemented yet)
 $unreadMessagesCount = 0;
 
-// Sales this month (sum of total_price for orders where user is seller)
+// Sales this month (sum of quantity * unit_price for order_items where user is seller)
 $salesThisMonth = 0.0;
-if ($stmt = $conn->prepare('SELECT COALESCE(SUM(total_price),0) AS total FROM orders WHERE seller_id = ? AND YEAR(created_at) = YEAR(CURDATE()) AND MONTH(created_at) = MONTH(CURDATE())')) {
+if ($stmt = $conn->prepare('SELECT COALESCE(SUM(oi.quantity * oi.unit_price), 0) AS total FROM order_items oi JOIN orders o ON oi.order_id = o.id WHERE oi.seller_id = ? AND YEAR(o.created_at) = YEAR(CURDATE()) AND MONTH(o.created_at) = MONTH(CURDATE())')) {
     $stmt->bind_param('i', $userId);
     $stmt->execute();
     $res = $stmt->get_result();
@@ -49,7 +49,7 @@ if ($stmt = $conn->prepare('SELECT title AS label, created_at AS ts, "listing" A
     $stmt->close();
 }
 // Orders involving user
-if ($stmt = $conn->prepare('SELECT CONCAT("Order #", id) AS label, created_at AS ts, "order" AS type FROM orders WHERE seller_id = ? OR buyer_id = ? ORDER BY created_at DESC LIMIT 10')) {
+if ($stmt = $conn->prepare('SELECT CONCAT("Order #", o.id) AS label, o.created_at AS ts, "order" AS type FROM orders o LEFT JOIN order_items oi ON o.id = oi.order_id WHERE o.buyer_id = ? OR oi.seller_id = ? GROUP BY o.id ORDER BY o.created_at DESC LIMIT 10')) {
     $stmt->bind_param('ii', $userId, $userId);
     $stmt->execute();
     $res = $stmt->get_result();
