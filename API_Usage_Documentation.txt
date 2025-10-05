@@ -7,7 +7,7 @@ This document outlines the JSON API endpoints used throughout the AgriHub applic
 1. Marketplace API
 ------------------
 
-Endpoint: `/php/api/ProductApi.php`
+Endpoint: `/php/ProductApi.php`
 Method: `GET`
 Description: The primary API for fetching product and category data for the marketplace page's dynamic frontend.
 

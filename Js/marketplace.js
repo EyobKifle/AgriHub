@@ -32,7 +32,7 @@ class Marketplace {
         if (value) params.append(key, value);
       }
 
-      const response = await fetch(`../php/api/ProductApi.php?action=get_products&${params}`);
+      const response = await fetch(`../php/ProductApi.php?action=get_products&${params}`);
       const data = await response.json();
 
       if (data.success) {
@@ -49,7 +49,7 @@ class Marketplace {
 
   async loadCategories() {
     try {
-      const response = await fetch('../php/api/ProductApi.php?action=get_categories');
+      const response = await fetch('../php/ProductApi.php?action=get_categories');
       const data = await response.json();
       
       if (data.success) {
