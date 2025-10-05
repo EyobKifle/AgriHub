@@ -15,7 +15,7 @@ function createCategoryCard(category) {
     <a href="${categoryLink}" class="category-card">
       <img src="${imageUrl}" alt="${category.name}" class="category-card-image">
       <div class="category-card-content">
-        <span>${category.name}</span>
+        <span data-i18n-key="${category.name_key}">${category.name}</span>
       </div>
     </a>
   `;
@@ -124,7 +124,7 @@ function createArticleCard(article) {
     <a href="${articleLink}" class="article-card">
       <img src="${imageUrl}" alt="${article.title}" class="article-card-image">
       <div class="article-card-content">
-        <h3 class="article-card-title">${article.title}</h3>
+        <h3 class="article-card-title" data-i18n-key="${article.title_key}">${article.title}</h3>
         <p class="article-card-excerpt">${excerpt}</p>
         <div class="article-card-meta">
           <span>By ${author}</span>
