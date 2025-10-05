@@ -391,3 +391,40 @@ VALUES (
     NOW(),
     NOW()
 );
+
+ALTER TABLE categories
+ADD COLUMN image_url VARCHAR(512) DEFAULT NULL AFTER description_key;
+
+INSERT INTO categories (name, name_key, slug, description_key, created_by)
+VALUES ('Crops', 'crops', 'crops', 'crops_desc', 1);
+
+INSERT INTO categories (parent_id, name, name_key, slug, description_key, image_url, created_by)
+VALUES
+(1, 'Teff', 'teff', 'teff', 'desc_teff', 'https://images.unsplash.com/photo-teff-field.jpg', 1),
+(1, 'Wheat', 'wheat', 'wheat', 'desc_wheat', 'https://images.unsplash.com/photo-wheat-harvest.jpg', 1),
+(1, 'Maize', 'maize', 'maize', 'desc_maize', 'https://images.unsplash.com/photo-maize-crop.jpg', 1),
+(1, 'Coffee', 'coffee', 'coffee', 'desc_coffee', 'https://images.unsplash.com/photo-coffee-beans.jpg', 1),
+(1, 'Vegetables', 'vegetables', 'vegetables', 'desc_vegetables', 'https://images.unsplash.com/photo-vegetable-farm.jpg', 1),
+(1, 'Fruits', 'fruits', 'fruits', 'desc_fruits', 'https://images.unsplash.com/photo-fruits-orchard.jpg', 1),
+(1, 'Barley', 'barley', 'barley', 'desc_barley', 'https://images.unsplash.com/photo-barley-field.jpg', 1),
+(1, 'Sorghum', 'sorghum', 'sorghum', 'desc_sorghum', 'https://images.unsplash.com/photo-sorghum-crop.jpg', 1),
+(1, 'Beans', 'beans', 'beans', 'desc_beans', 'https://images.unsplash.com/photo-bean-farm.jpg', 1),
+(1, 'Rice', 'rice', 'rice', 'desc_rice', 'https://images.unsplash.com/photo-rice-field.jpg', 1);
+
+-- Parent
+INSERT INTO categories (name, name_key, slug, description_key, created_by)
+VALUES ('Livestock', 'livestock', 'livestock', 'livestock_desc', 1);
+
+-- Children (example)
+INSERT INTO categories (parent_id, name, name_key, slug, description_key, image_url, created_by)
+VALUES
+(LAST_INSERT_ID(), 'Cattle', 'cattle', 'cattle', 'desc_cattle', 'https://images.unsplash.com/photo-cattle.jpg', 1),
+(LAST_INSERT_ID(), 'Goats', 'goats', 'goats', 'desc_goats', 'https://images.unsplash.com/photo-goats.jpg', 1),
+(LAST_INSERT_ID(), 'Sheep', 'sheep', 'sheep', 'desc_sheep', 'https://images.unsplash.com/photo-sheep.jpg', 1),
+(LAST_INSERT_ID(), 'Camels', 'camels', 'camels', 'desc_camels', 'https://images.unsplash.com/photo-camels.jpg', 1),
+(LAST_INSERT_ID(), 'Dairy', 'dairy', 'dairy', 'desc_dairy', 'https://images.unsplash.com/photo-dairy-cows.jpg', 1),
+(LAST_INSERT_ID(), 'Beef Production', 'beef', 'beef', 'desc_beef', 'https://images.unsplash.com/photo-beef-farm.jpg', 1),
+(LAST_INSERT_ID(), 'Animal Feed', 'animal_feed', 'animal-feed', 'desc_feed', 'https://images.unsplash.com/photo-animal-feed.jpg', 1),
+(LAST_INSERT_ID(), 'Animal Health', 'animal_health', 'animal-health', 'desc_health', 'https://images.unsplash.com/photo-vet-animal.jpg', 1),
+(LAST_INSERT_ID(), 'Pasture Management', 'pasture', 'pasture', 'desc_pasture', 'https://images.unsplash.com/photo-pasture.jpg', 1),
+(LAST_INSERT_ID(), 'Livestock Equipment', 'livestock_equipment', 'livestock-equipment', 'desc_equipment', 'https://images.unsplash.com/photo-livestock-equipment.jpg', 1);

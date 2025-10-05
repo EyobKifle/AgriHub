@@ -18,9 +18,16 @@
       <p data-i18n-key="guidance.subtitle">Explore categories to find articles, tips, and discussions.</p>
     </header>
 
-    <section id="guidance-categories-placeholder" class="categories-grid-container">
-      <!-- Category cards will be dynamically inserted here -->
-    </section>
+    <div class="search-bar-container">
+      <i class="fa-solid fa-search search-icon"></i>
+      <input type="search" id="category-search-input" placeholder="Search for categories like 'Teff', 'Cattle'..." data-i18n-placeholder-key="guidance.searchPlaceholder" />
+    </div>
+
+    <div id="guidance-categories-placeholder">
+      <div class="loading-spinner">
+        <p>Loading categories...</p>
+      </div>
+    </div>
   </main>
 
   <div id="footer-placeholder"></div>

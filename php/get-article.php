@@ -14,7 +14,7 @@ if (!$article_id) {
 $response = ['success' => false, 'article' => null];
 
 $sql = "SELECT 
-            a.id, a.title, a.content, a.image_url, a.created_at,
+            a.id, a.title, a.content, a.image_url, a.views, a.created_at,
             u.name as author_name,
             cat.name as category_name,
             cat.slug as category_slug
@@ -33,6 +33,12 @@ $article = $result->fetch_assoc();
 if ($article) {
     $response['success'] = true;
     $response['article'] = $article;
+
+    // Increment the view count for this article
+    $update_stmt = $conn->prepare("UPDATE articles SET views = views + 1 WHERE id = ?");
+    $update_stmt->bind_param("i", $article_id);
+    $update_stmt->execute();
+    $update_stmt->close();
 
     // Fetch 3 related articles from the same category, excluding the current one
     $related_sql = "SELECT 
