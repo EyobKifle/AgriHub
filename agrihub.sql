@@ -364,3 +364,29 @@ BEGIN
 END//
 
 DELIMITER ;
+INSERT INTO users (
+    email,
+    password_hash,
+    name,
+    role,
+    avatar_url,
+    phone,
+    location,
+    status,
+    last_login,
+    created_at,
+    updated_at
+)
+VALUES (
+    'agrihubadmin@gmail.com',
+    '$2b$12$d2XAaedjRCMo1vTlVTlsx0teqMk2J9J7BhGQa/IVcI0JTRk6QihVu', -- bcrypt hash
+    'AgriHub Admin',
+    'admin',
+    NULL,
+    '000-000-0000',
+    'Head Office',
+    'active',
+    NOW(),
+    NOW(),
+    NOW()
+);
