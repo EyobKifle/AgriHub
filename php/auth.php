@@ -11,7 +11,7 @@ $action = $_GET['action'] ?? $_POST['action'] ?? '';
 
 if ($action === 'signup') {
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-        redirect('../HTML/guest/Signup.html');
+        redirect('../HTML/Signup.html');
     }
 
     $name = trim($_POST['name'] ?? '');
@@ -22,26 +22,26 @@ if ($action === 'signup') {
     $confirm = $_POST['confirm'] ?? '';
 
     if ($name === '' || $email === '' || $phone === '' || $location === '' || $password === '' || $confirm === '') {
-        redirect('../HTML/guest/Signup.html?error=missing');
+        redirect('../HTML/Signup.html?error=missing');
     }
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        redirect('../HTML/guest/Signup.html?error=invalid_email');
+        redirect('../HTML/Signup.html?error=invalid_email');
     }
     if ($password !== $confirm) {
-        redirect('../HTML/guest/Signup.html?error=password_mismatch');
+        redirect('../HTML/Signup.html?error=password_mismatch');
     }
 
     // Check if email already exists
     $stmt = $conn->prepare('SELECT id FROM users WHERE email = ?');
     if (!$stmt) {
-        redirect('../HTML/guest/Signup.html?error=server');
+        redirect('../HTML/Signup.html?error=server');
     }
     $stmt->bind_param('s', $email);
     $stmt->execute();
     $stmt->store_result();
     if ($stmt->num_rows > 0) {
         $stmt->close();
-        redirect('../HTML/guest/Signup.html?error=email_taken');
+        redirect('../HTML/Signup.html?error=email_taken');
     }
     $stmt->close();
 
@@ -98,13 +98,13 @@ if ($action === 'login') {
     }
 
     $stmt->close();
-    redirect('../HTML/guest/Login.html?error=invalid');
+    redirect('../HTML/Login.html?error=invalid');
 }
 
 if ($action === 'logout') {
     session_unset();
     session_destroy();
-    redirect('../HTML/guest/Login.html?logged_out=1');
+    redirect('../HTML/Login.html?logged_out=1');
 }
 
 http_response_code(400);
