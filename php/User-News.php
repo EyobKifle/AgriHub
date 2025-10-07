@@ -11,7 +11,20 @@ require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/utils.php';
 
 $name = $_SESSION['name'] ?? 'User';
+$email = $_SESSION['email'] ?? '';
+$userId = (int)($_SESSION['user_id'] ?? 0);
 $initial = !empty($name) ? strtoupper(mb_substr($name, 0, 1)) : 'U';
+$avatar_url = '';
+
+// Fetch user avatar for header/sidebar
+$stmt_avatar = $conn->prepare("SELECT avatar_url FROM users WHERE id = ?");
+if ($stmt_avatar) {
+    $stmt_avatar->bind_param('i', $userId);
+    $stmt_avatar->execute();
+    $avatar_url = $stmt_avatar->get_result()->fetch_object()->avatar_url ?? '';
+    $stmt_avatar->close();
+}
+
 
 // --- Fetch Categories with Article Counts ---
 $categories = [];
@@ -99,7 +112,9 @@ $conn->close();
         </div>
         <div class="header-right">
             <a href="User-Account.php" class="profile-link" aria-label="User Profile">
-                <div class="profile-avatar"><?php echo e($initial); ?></div>
+                <div class="profile-avatar">
+                    <?php if (!empty($avatar_url)): ?><img src="/AgriHub/<?php echo e($avatar_url); ?>" alt="User Avatar"><?php else: ?><?php echo e($initial); ?><?php endif; ?>
+                </div>
             </a>
         </div>
     </header>
