@@ -105,6 +105,9 @@ const initializeSite = async () => {
     case 'article.php':
       initializeArticlePage();
       break;
+    case 'discussion.php':
+      // The chat script is already loaded via a script tag on the page
+      break;
   }
 };
 

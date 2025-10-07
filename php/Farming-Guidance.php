@@ -3,6 +3,7 @@ require_once __DIR__ . '/../php/config.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -12,6 +13,7 @@ require_once __DIR__ . '/../php/config.php';
   <link rel="stylesheet" href="/AgriHub/Css/guidance.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 </head>
+
 <body>
   <div id="header-placeholder"></div>
 
@@ -27,17 +29,17 @@ require_once __DIR__ . '/../php/config.php';
     </div>
 
     <div id="guidance-categories-placeholder">
-<?php
-try {
-    $sql = "SELECT id, name, name_key, slug, description_key 
+      <?php
+      try {
+        $sql = "SELECT id, name, name_key, slug, description_key 
             FROM content_categories 
             WHERE type='guidance' 
             ORDER BY display_order";
-    $result = $conn->query($sql);
+        $result = $conn->query($sql);
 
-    if ($result && $result->num_rows > 0) {
-        echo '<div class="categories-grid">';
-        while ($category = $result->fetch_assoc()) {
+        if ($result && $result->num_rows > 0) {
+          echo '<div class="categories-grid">';
+          while ($category = $result->fetch_assoc()) {
             $imageUrl = 'https://via.placeholder.com/300x200.png?text=' . urlencode($category['name']);
             $categoryLink = "guidance-category.php?slug={$category['slug']}";
             echo "
@@ -47,23 +49,24 @@ try {
                 <span data-i18n-key=\"{$category['name_key']}\">{$category['name']}</span>
               </div>
             </a>";
+          }
+          echo '</div>';
+        } else {
+          echo '<p>No guidance categories found.</p>';
         }
-        echo '</div>';
-    } else {
-        echo '<p>No guidance categories found.</p>';
-    }
 
-    $result->free();
-} catch (Exception $e) {
-    echo '<p>Could not load categories. Please try again later.</p>';
-}
+        $result->free();
+      } catch (Exception $e) {
+        echo '<p>Could not load categories. Please try again later.</p>';
+      }
 
-$conn->close();
-?>
+      $conn->close();
+      ?>
     </div>
   </main>
 
   <div id="footer-placeholder"></div>
   <script type="module" src="/AgriHub/Js/site.js"></script>
 </body>
+
 </html>

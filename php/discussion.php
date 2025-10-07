@@ -16,13 +16,14 @@
  */
 
 session_start();
+require_once __DIR__ . '/config.php'; // Moved to the top
 
 $isApiRequest = !empty($_REQUEST['action']);
 $isPageRequest = !$isApiRequest && isset($_GET['id']);
 
 if ($isApiRequest) {
     header('Content-Type: application/json');
-    require_once __DIR__ . '/config.php';
+    // require_once has been moved to the top of the file.
 
     function send_json_error($message, $statusCode = 400) {
         http_response_code($statusCode);
@@ -151,24 +152,46 @@ if ($isApiRequest) {
             if ($messageId <= 0) {
                 send_json_error('Message ID is required for deletion.');
             }
-            // Check ownership before deleting
-            $stmt = $conn->prepare("DELETE FROM discussion_messages WHERE id = ? AND user_id = ?");
-            $stmt->bind_param('ii', $messageId, $current_user_id);
-            $stmt->execute();
-            if ($stmt->affected_rows > 0) {
+
+            $conn->begin_transaction();
+            try {
+                // 1. Find the discussion_id and verify ownership before deleting
+                $stmt_select = $conn->prepare("SELECT discussion_id FROM discussion_messages WHERE id = ? AND user_id = ?");
+                $stmt_select->bind_param('ii', $messageId, $current_user_id);
+                $stmt_select->execute();
+                $result = $stmt_select->get_result();
+                $message = $result->fetch_assoc();
+                $stmt_select->close();
+
+                if (!$message) {
+                    throw new Exception('Message not found or you do not have permission to delete it.', 404);
+                }
+                $discussionId = $message['discussion_id'];
+
+                // 2. Delete the message
+                $stmt_delete = $conn->prepare("DELETE FROM discussion_messages WHERE id = ?");
+                $stmt_delete->bind_param('i', $messageId);
+                $stmt_delete->execute();
+                $stmt_delete->close();
+
+                // 3. Decrement the comment count on the parent discussion
+                $stmt_update = $conn->prepare("UPDATE discussions SET comment_count = GREATEST(0, comment_count - 1) WHERE id = ?");
+                $stmt_update->bind_param('i', $discussionId);
+                $stmt_update->execute();
+                $stmt_update->close();
+
+                $conn->commit();
                 send_json_success(['message' => 'Message deleted successfully.']);
-            } else {
-                send_json_error('Message not found or you do not have permission to delete it.', 404);
+            } catch (Exception $e) {
+                $conn->rollback();
+                send_json_error($e->getMessage(), $e->getCode() ?: 500);
             }
-            $stmt->close();
             break;
 
         default:
             send_json_error('Invalid action specified.');
             break;
     }
-    $conn->close();
-    exit;
 }
 
 // --- HTML Page Rendering Logic (Only if it's a page request) ---
@@ -182,7 +205,6 @@ if ($isPageRequest) {
 
     // Fetch the main discussion post details
     require_once __DIR__ . '/utils.php';
-    require_once __DIR__ . '/config.php';
     $discussion = null;
     if ($discussionId > 0) {
         $stmt = $conn->prepare("

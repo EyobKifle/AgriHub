@@ -103,6 +103,5 @@ if (!$articleId) {
 
     <?php require_once __DIR__ . '/partials/footer.php'; ?>
 
-    <script src="/AgriHub/Js/site.js" type="module"></script>
 </body>
 </html>

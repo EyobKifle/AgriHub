@@ -87,9 +87,10 @@ if ($stmt) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Community - AgriHub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="/AgriHub/Css/header.css">
-    <link rel="stylesheet" href="/AgriHub/Css/footer.css">
-    <link rel="stylesheet" href="/AgriHub/Css/community.css">
+<link rel="stylesheet" href="../Css/header.css">
+<link rel="stylesheet" href="../Css/community.css">
+<link rel="stylesheet" href="../Css/footer.css">
+
 </head>
 <body>
     <div id="header-placeholder"></div>
@@ -154,7 +155,7 @@ if ($stmt) {
         </div>
     </main>
 
-    <div id="footer-placeholder"></div>
     <script type="module" src="/AgriHub/Js/site.js"></script>
+    <div id="footer-placeholder"></div>
 </body>
 </html>

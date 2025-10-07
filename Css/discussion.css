@@ -10,16 +10,33 @@
     border: 1px solid var(--border-light);
     border-radius: 12px;
     padding: 1.5rem;
-    margin-bottom: 2rem;
+    margin: 1.2rem;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
 .back-link {
-    color: var(--primary-light, #38763a);
+    padding: 0.5rem 0.75rem;
+    margin: 1rem;
+    border: 1px solid var(--accent-color, #38763a); 
+    border-radius: 0.3rem;
+    background-color: transparent; 
+    color: var(--accent-color, #38763a); 
+    font-weight: 600; 
     text-decoration: none;
-    font-weight: 500;
-    margin-bottom: 1rem;
-    display: inline-block;
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center; 
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out; 
+}
+
+.back-link:hover,
+.back-link:focus {
+    background-color: var(--accent-color, #38763a);
+    color: var(--background-color, #ffffff); 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+    transform: translateY(-1px); 
 }
 
 .discussion-post-header h1 {
@@ -64,7 +81,7 @@
     border-radius: 12px;
     display: flex;
     flex-direction: column;
-    height: 600px;
+    height: 2rem;
     max-height: 80vh;
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(0,0,0,0.05);

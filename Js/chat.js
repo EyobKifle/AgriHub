@@ -137,7 +137,11 @@ async function handleMessageActions(e) {
     const discussionId = getDiscussionId();
     const currentUser = getCurrentUser();
     if (confirm('Are you sure you want to delete this message?')) {
-      await deleteMessage(messageId).catch(err => alert("Could not delete the message. Please try again."));
+      try {
+        await deleteMessage(messageId);
+      } catch (err) {
+        alert("Could not delete the message. Please try again.");
+      }
       // Refresh the chat after deletion
       await refreshMessages(discussionId, currentUser);
     }

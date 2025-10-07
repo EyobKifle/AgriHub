@@ -1,0 +1,111 @@
+/*
+ * Marketplace.css
+ * Styles for the main product marketplace page.
+ */
+
+:root {
+  --primary-green: #1E4620;
+  --light-green: rgb(42, 119, 42);
+  --light-bg: #FBF9F4;
+  --text-dark: #1C1C1C;
+  --text-light: #555;
+  --border-color: #E5E7EB;
+  --white: #FFFFFF;
+  --accent-orange: #D97706;
+}
+
+/*
+ * Re-using the general layout from News.css for consistency.
+ * This includes .page-container, .content-wrapper, .page-header,
+ * .news-layout, .news-sidebar, and .main-news-content.
+ * The styles below are specific to the product grid and cards.
+*/
+
+/* Product Grid */
+.product-grid {
+  display: grid;
+  /* Creates a responsive grid that shows more columns on wider screens */
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Product Card */
+.product-card {
+  background-color: var(--white);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.product-card:hover,
+.product-card:focus-within {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+}
+
+.product-card-image-link {
+  display: block;
+  aspect-ratio: 4 / 3; /* A common aspect ratio for product images */
+  background-color: #f0f0f0;
+}
+
+.product-card-image-link img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-card-image-link img {
+    transform: scale(1.05);
+}
+
+.product-card-content {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; /* Allows the content to fill the card height */
+}
+
+.product-card-category {
+  color: var(--text-light);
+  font-size: 0.8rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.product-card-title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin: 0 0 0.75rem 0;
+  line-height: 1.4;
+  flex-grow: 1; /* Pushes the price to the bottom */
+}
+
+.product-card-title a {
+  text-decoration: none;
+  color: var(--text-dark);
+}
+
+.product-card-title a:hover {
+  color: var(--primary-green);
+}
+
+.product-card-price {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--primary-green);
+  margin-top: 1rem; /* Space above the price */
+}
+
+.product-card-price span.unit {
+    font-size: 0.9rem;
+    font-weight: 400;
+    color: var(--text-light);
+}

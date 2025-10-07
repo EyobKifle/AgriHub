@@ -1,12 +1,15 @@
 // A handy object to store references to the HTML elements we'll be working with.
 export const els = {
-  messages: document.getElementById('chat-messages'),
-  form: document.getElementById('chat-form'),
+  messages: document.getElementById('messages'),
+  form: document.getElementById('message-form'),
   input: document.getElementById('message-input'),
-  file: document.getElementById('file-upload'),
-  previews: document.getElementById('file-previews'),
+  file: document.getElementById('file-input'),
+  previews: document.getElementById('previews'),
 };
-els.form.dataset.mode = 'new'; // Add a mode to the form for editing
+
+// The form only exists for logged-in users.
+// Check if it exists before trying to modify it.
+if (els.form) els.form.dataset.mode = 'new';
 
 /**
  * A helper function to format an ISO date string into a simple time like "12:30 PM".
@@ -153,16 +156,20 @@ export function toggleEditState(messageId) {
     const messageNode = document.querySelector(`.message[data-message-id="${messageId}"]`);
     if (messageNode) {
       messageNode.classList.add('editing');
-      const textContent = messageNode.querySelector('.text').textContent;
-      els.input.value = textContent;
-      els.form.dataset.mode = 'edit';
-      els.form.dataset.editingId = messageId;
-      els.input.focus();
+      const textContent = messageNode.querySelector('.text')?.textContent || '';
+      if (els.input) els.input.value = textContent;
+      if (els.form) {
+        els.form.dataset.mode = 'edit';
+        els.form.dataset.editingId = messageId;
+      }
+      if (els.input) els.input.focus();
     }
   } else {
-    els.input.value = '';
-    els.form.dataset.mode = 'new';
-    delete els.form.dataset.editingId;
+    if (els.input) els.input.value = '';
+    if (els.form) {
+      els.form.dataset.mode = 'new';
+      delete els.form.dataset.editingId;
+    }
   }
 }
 

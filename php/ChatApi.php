@@ -36,12 +36,7 @@ function send_json_error($message, $statusCode = 400) {
 function send_json_success($data = null) {
     $response = ['success' => true];
     if ($data !== null) {
-        // If data is not an associative array, wrap it.
-        if (is_array($data) && array_keys($data) === range(0, count($data) - 1)) {
-             $response['data'] = $data;
-        } else {
-            $response = array_merge($response, $data);
-        }
+        $response['data'] = $data;
     }
     echo json_encode($response);
     exit;
@@ -73,7 +68,7 @@ switch ($action) {
         $discussion_id = $_GET['discussion_id'] ?? 'general';
         // In a real app: SELECT * FROM messages WHERE discussion_id = ? ORDER BY created_at ASC
         // For now, return an empty array as the frontend uses localStorage.
-        send_json_success(['messages' => []]);
+        send_json_success(['messages' => []]); // This will now be wrapped in 'data'
         break;
 
     case 'add_message':
@@ -82,7 +77,7 @@ switch ($action) {
         }
         // In a real app: INSERT INTO messages (user_id, discussion_id, content) VALUES (?, ?, ?)
         $new_message_id = rand(100, 999); // Simulate a new database ID
-        send_json_success(['message_id' => $new_message_id]);
+        send_json_success(['id' => $new_message_id]);
         break;
 
     case 'update_message':
@@ -90,7 +85,7 @@ switch ($action) {
             send_json_error('Message ID and text are required for update.');
         }
         // In a real app: UPDATE messages SET content = ? WHERE id = ? AND user_id = ?
-        send_json_success(['message' => 'Message updated successfully.']);
+        send_json_success();
         break;
 
     case 'delete_message':
@@ -98,7 +93,7 @@ switch ($action) {
             send_json_error('Message ID is required for deletion.');
         }
         // In a real app: DELETE FROM messages WHERE id = ? AND user_id = ?
-        send_json_success(['message' => 'Message deleted successfully.']);
+        send_json_success();
         break;
 
     default:

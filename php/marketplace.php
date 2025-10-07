@@ -76,9 +76,6 @@ $conn->close();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="/AgriHub/Css/header.css">
     <link rel="stylesheet" href="/AgriHub/Css/footer.css">
-    <!-- Re-use News.css for the general page layout (sidebar + main content) -->
-    <link rel="stylesheet" href="/AgriHub/Css/News.css">
-    <!-- Load dedicated marketplace styles for product cards -->
     <link rel="stylesheet" href="/AgriHub/Css/Marketplace.css">
 </head>
 <body>
