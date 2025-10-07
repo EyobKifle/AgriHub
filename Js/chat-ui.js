@@ -92,7 +92,8 @@ function renderMessage(m, currentUser) {
 
   const text = document.createElement('div');
   text.className = 'text';
-  text.textContent = m.text || '';
+  // Use createTextNode for security to prevent XSS
+  text.appendChild(document.createTextNode(m.text || ''));
 
   // Assemble the bubble.
   bubble.appendChild(meta);

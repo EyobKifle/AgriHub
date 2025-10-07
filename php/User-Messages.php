@@ -4,15 +4,30 @@ if (!isset($_SESSION['user_id'])) {
     header('Location: ../HTML/Login.html');
     exit();
 }
+require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/utils.php';
 
+$userId = (int)$_SESSION['user_id'];
 $name = $_SESSION['name'] ?? 'User';
 $email = $_SESSION['email'] ?? '';
 $initial = strtoupper(mb_substr($name, 0, 1));
+$avatar_url = '';
+
+// Fetch user avatar for header/sidebar
+$stmt_avatar = $conn->prepare("SELECT avatar_url FROM users WHERE id = ?");
+if ($stmt_avatar) {
+    $stmt_avatar->bind_param('i', $userId);
+    $stmt_avatar->execute();
+    $avatar_url = $stmt_avatar->get_result()->fetch_object()->avatar_url ?? '';
+    $stmt_avatar->close();
+}
+$currentPage = 'User-Messages';
+
+// Check if we are starting a new conversation from a user link (e.g., product page)
+$newConversationUserId = filter_input(INPUT_GET, 'user_id', FILTER_VALIDATE_INT);
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,9 +35,7 @@ $initial = strtoupper(mb_substr($name, 0, 1));
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../Css/User-Dashboard.css">
 </head>
-
 <body>
-    <!-- Full-width Header -->
     <header class="main-header-bar">
         <div class="header-left">
             <button class="hamburger-menu" id="hamburger-menu" aria-label="Toggle Menu">
@@ -37,95 +50,64 @@ $initial = strtoupper(mb_substr($name, 0, 1));
         </div>
         <div class="header-right">
             <a href="User-Account.php" class="profile-link" aria-label="User Profile">
-                <div class="profile-avatar"><?php echo e($initial); ?></div>
+                <div class="profile-avatar">
+                    <?php if (!empty($avatar_url)): ?>
+                        <img src="../<?php echo e($avatar_url); ?>" alt="User Avatar">
+                    <?php else: echo e($initial); endif; ?>
+                </div>
             </a>
         </div>
     </header>
 
     <div class="dashboard-container">
-        <aside class="sidebar" id="sidebar">
-            <ul class="sidebar-nav">
-                <li><a href="User-Dashboard.php"><i class="fa-solid fa-house"></i> Dashboard</a></li>
-                <li><a href="User-Account.php"><i class="fa-solid fa-user"></i> My Account</a></li>
-                <li><a href="User-Listings.php"><i class="fa-solid fa-list-check"></i> My Listings</a></li>
-                <li><a href="User-Orders.php"><i class="fa-solid fa-receipt"></i> Order History</a></li>
-                <li><a href="User-Messages.php" class="active"><i class="fa-solid fa-envelope"></i> Messages</a></li>
-                <li><a href="User-Discussions.php"><i class="fa-solid fa-comments"></i> My Discussions</a></li>
-                <li><a href="User-Settings.php"><i class="fa-solid fa-gear"></i> Settings</a></li>
-                <hr>
-                <!-- Site Navigation Links -->
-                <li><a href="User-Marketplace.php" data-i18n-key="header.nav.marketplace"><i class="fa-solid fa-store"></i> Marketplace</a></li>
-                <li><a href="User-News.php" data-i18n-key="header.nav.news"><i class="fa-regular fa-newspaper"></i> News</a></li>
-                <li><a href="User-Community.php" data-i18n-key="header.nav.community"><i class="fa-solid fa-users"></i> Community</a></li>
-                <li><a href="User-Farming-Guidance.php" data-i18n-key="header.nav.guidance"><i class="fa-solid fa-book-open"></i> Farming Guidance</a></li>
-            </ul>
-            <div class="sidebar-footer">
-                <div class="profile-dropdown">
-                    <div>
-                        <div class="profile-name"><?php echo e($name); ?></div>
-                        <div class="profile-email" style="opacity:.8; font-size:12px;"><?php echo e($email); ?></div>
-                        <small><a href="auth.php?action=logout" style="color:inherit; text-decoration:none;" data-i18n-key="user.nav.logout">Logout</a></small>
+        <?php include __DIR__ . '/_sidebar.php'; ?>
+
+        <main class="main-content no-padding">
+            <div class="messages-layout" id="messages-layout" data-current-user-id="<?php echo e($userId); ?>" data-new-user-id="<?php echo e($newConversationUserId); ?>">
+
+                <div class="conversations-list">
+                    <div class="messages-header">
+                        <h2>Conversations</h2>
+                    </div>
+                    <div id="conversations-list-body">
+                        <!-- Conversations will be loaded here by JS -->
+                        <p style="padding: 1rem; text-align: center; opacity: 0.7;">Loading conversations...</p>
                     </div>
                 </div>
-            </div>
-        </aside>
 
-        <main class="main-content">
-            <div class="main-header">
-                <h1>Messages</h1>
-                <p>Send and receive messages with other users.</p>
-                <span id="form-status-message" style="margin-top:8px;"></span>
-            </div>
+                <!-- Chat Panel -->
+                <div class="chat-panel">
+                    <div class="chat-header" id="chat-header" style="display: none;">
+                        <button class="btn-icon back-to-convos" id="back-to-convos" aria-label="Back to conversations">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <h3 id="chat-with-name"></h3>
+                    </div>
 
-            <div class="card">
-                <h3 class="card-title">Compose</h3>
-                <form id="compose-form" class="settings-form">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="recipient_email">To (Email)</label>
-                            <input type="email" id="recipient_email" name="recipient_email" placeholder="recipient@example.com" required>
+                    <div class="chat-messages" id="chat-messages-area">
+                        <!-- Welcome / Empty State -->
+                        <div id="chat-empty-state" class="card" style="margin: 2rem; text-align: center; padding: 3rem;">
+                            <i class="fa-solid fa-comments" style="font-size: 3rem; color: #ccc; margin-bottom: 1rem;"></i>
+                            <h3>Select a conversation</h3>
+                            <p>Or start a new one by contacting a seller from a product page.</p>
                         </div>
-                        <div class="form-group">
-                            <label for="subject">Subject</label>
-                            <input type="text" id="subject" name="subject" required>
+                        <!-- Messages will be loaded here -->
+                    </div>
+
+                    <div class="chat-input-area" id="chat-input-area" style="display: none;">
+                        <div class="chat-input-controls">
+                            <input type="text" id="message-input" placeholder="Type a message..." autocomplete="off">
+                            <button id="send-message-btn" class="btn-icon send-btn" aria-label="Send message">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="body">Message</label>
-                        <textarea id="body" name="body" rows="3" required></textarea>
-                    </div>
-                    <div class="form-actions">
-                        <button type="submit" class="btn btn-primary">Send</button>
-                    </div>
-                </form>
-            </div>
-
-            <div class="content-section">
-                <div class="main-header">
-                    <h2>Conversations</h2>
-                    <p>Your message history.</p>
-                </div>
-                <div class="table-container">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Subject</th>
-                                <th>With</th>
-                                <th>Last Message</th>
-                                <th>Updated</th>
-                            </tr>
-                        </thead>
-                        <tbody id="conversations-table-body">
-                            <!-- Conversation rows will be populated by JS -->
-                        </tbody>
-                    </table>
                 </div>
             </div>
         </main>
     </div>
 
-    <script type="module" src="../Js/User-Messages.js"></script>
     <script type="module" src="../Js/dashboard.js"></script>
+    <script type="module" src="../Js/User-Messages.js"></script>
 </body>
-
 </html>

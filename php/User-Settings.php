@@ -1,16 +1,26 @@
 <?php
 session_start();
 if (!isset($_SESSION['user_id'])) {
-    header('Location: ../HTML/Login.html');
+    header('Location: /AgriHub/HTML/Login.html');
     exit();
 }
-require_once __DIR__ . '/../php/config.php';
+require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/utils.php';
 
 $userId = (int)$_SESSION['user_id'];
 $name = $_SESSION['name'] ?? 'User';
 $email = $_SESSION['email'] ?? '';
 $initial = strtoupper(mb_substr($name, 0, 1));
+$avatar_url = '';
+
+// Fetch user avatar for header/sidebar
+$stmt_avatar = $conn->prepare("SELECT avatar_url, language_preference, pref_email_notifications, pref_theme FROM user_profiles p JOIN users u ON p.user_id = u.id WHERE u.id = ?");
+if ($stmt_avatar) {
+    $stmt_avatar->bind_param('i', $userId);
+    $stmt_avatar->execute();
+    $avatar_url = $stmt_avatar->get_result()->fetch_object()->avatar_url ?? '';
+    $stmt_avatar->close();
+}
 
 // Load current user preferences from DB
 $prefs = [
@@ -52,8 +62,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->close();
     }
 
-    header('Location: User-Settings.php?saved=1');
-    exit();
+    // After saving, we can just let the page render with the new values.
+    // Let's re-fetch the new values to be sure.
+    $currentLang = $newLang;
+    $prefEmailNotif = $newPrefEmailNotif;
+    $prefDarkMode = ($newPrefTheme === 'dark');
+    
+    // We can show a success message without a full page reload.
+    $savedMessage = "Your settings have been saved successfully.";
 }
 
 ?>
@@ -64,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Settings - AgriHub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../Css/User-Dashboard.css">
+    <link rel="stylesheet" href="/AgriHub/Css/User-Dashboard.css">
 </head>
 <body>
     <!-- Full-width Header -->
@@ -81,54 +97,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </div>
         <div class="header-right">
-            <a href="user-profile.php" class="profile-link" aria-label="User Profile">
-                <div class="profile-avatar"><?php echo htmlspecialchars($initial, ENT_QUOTES, 'UTF-8'); ?></div>
+            <a href="User-Account.php" class="profile-link" aria-label="User Profile">
+                <div class="profile-avatar">
+                    <?php if (!empty($avatar_url)): ?><img src="/AgriHub/<?php echo e($avatar_url); ?>" alt="User Avatar">
+                    <?php else: ?><?php echo e($initial); ?><?php endif; ?>
+                </div>
             </a>
         </div>
     </header>
 
     <div class="dashboard-container">
-        <aside class="sidebar" id="sidebar">
-            <ul class="sidebar-nav">
-                <li><a href="User-Dashboard.php" data-i18n-key="user.nav.dashboard"><i class="fa-solid fa-house"></i> Dashboard</a></li>
-                <li><a href="User-Profile.php" data-i18n-key="user.nav.profile"><i class="fa-solid fa-user"></i> My Profile</a></li>
-                <li><a href="User-Listings.php" data-i18n-key="user.nav.listings"><i class="fa-solid fa-list-check"></i> My Listings</a></li>
-                <li><a href="User-Orders.php" data-i18n-key="user.nav.orders"><i class="fa-solid fa-receipt"></i> Order History</a></li>
-                <li><a href="User-Messages.php" data-i18n-key="user.nav.messages"><i class="fa-solid fa-envelope"></i> Messages</a></li>
-                <li><a href="User-Discussions.php" data-i18n-key="user.nav.discussions"><i class="fa-solid fa-comments"></i> My Discussions</a></li>
-                <li><a href="User-Settings.php" class="active" data-i18n-key="user.nav.settings"><i class="fa-solid fa-gear"></i> Settings</a></li>
-                <hr>
-                <!-- Site Navigation Links -->
-                <li><a href="User-Marketplace.php" data-i18n-key="header.nav.marketplace"><i class="fa-solid fa-store"></i> Marketplace</a></li>
-                <li><a href="User-News.php" data-i18n-key="header.nav.news"><i class="fa-regular fa-newspaper"></i> News</a></li>
-                <li><a href="User-Community.php" data-i18n-key="header.nav.community"><i class="fa-solid fa-users"></i> Community</a></li>
-                <li><a href="User-Farming-Guidance.php" data-i18n-key="header.nav.guidance"><i class="fa-solid fa-book-open"></i> Farming Guidance</a></li>
-            </ul>
-            <div class="sidebar-footer">
-                <div class="profile-dropdown">
-                    <div>
-                        <div class="profile-name"><?php echo htmlspecialchars($name, ENT_QUOTES, 'UTF-8'); ?></div>
-                        <div class="profile-email" style="opacity:.8; font-size:12px;">
-                            <?php echo htmlspecialchars($email, ENT_QUOTES, 'UTF-8'); ?>
-                        </div>
-                        <small><a href="../php/auth.php?action=logout" style="color:inherit; text-decoration:none;" data-i18n-key="user.nav.logout">Logout</a></small>
-                    </div>
-                </div>
-            </div>
-        </aside>
+        <?php 
+            $currentPage = 'User-Settings';
+            include __DIR__ . '/_sidebar.php'; 
+        ?>
 
         <main class="main-content">
             <div class="main-header">
                 <h1 data-i18n-key="user.settings.title">Settings</h1>
                 <p data-i18n-key="user.settings.subtitle">Manage your account preferences and site settings.</p>
-                <?php if (isset($_GET['saved'])): ?>
+                <?php if (isset($savedMessage)): ?>
                     <div class="alert alert-success" style="background-color: #d4edda; color: #155724; padding: 1rem; border-radius: 8px; margin-top: 1.5rem;">
-                        Your settings have been saved successfully.
+                        <?php echo e($savedMessage); ?>
                     </div>
                 <?php endif; ?>
             </div>
 
-            <form class="settings-grid" method="post" action="User-Settings.php">
+            <form class="settings-grid" method="post">
                 <!-- Notification Settings -->
                 <div class="card">
                     <h3 class="card-title" data-i18n-key="user.settings.notifications.title">Notifications</h3>
@@ -166,8 +161,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="form-group">
                             <label for="language-select" data-i18n-key="user.settings.language.preferred">Preferred Language</label>
                             <select id="language-select" name="language">
-                                <option value="en" <?php echo $currentLang==='en'?'selected':''; ?> data-i18n-key="lang.en">English</option>
-                                <option value="am" <?php echo $currentLang==='am'?'selected':''; ?> data-i18n-key="lang.amFull">Amharic (አማርኛ)</option>
+                                <option value="en" <?php echo $currentLang==='en'?'selected':''; ?> data-i18n-key="lang.en">English</option>                                <option value="am" <?php echo $currentLang==='am'?'selected':''; ?> data-i18n-key="lang.amFull">Amharic (አማርኛ)</option>
                                 <option value="om" <?php echo $currentLang==='om'?'selected':''; ?> data-i18n-key="lang.om">Oromo</option>
                                 <option value="ti" <?php echo $currentLang==='ti'?'selected':''; ?> data-i18n-key="lang.ti">Tigrinya</option>
                             </select>
@@ -185,6 +179,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </main>
     </div>
 
-    <script type="module" src="../Js/dashboard.js"></script>
+    <script type="module" src="/AgriHub/Js/dashboard.js"></script>
 </body>
 </html>

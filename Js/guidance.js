@@ -29,7 +29,7 @@ async function renderGuidanceCategories() {
   if (!placeholder) return;
 
   try {
-    const response = await fetch('../php/get-guidance-categories.php');
+    const response = await fetch('/AgriHub/php/get-guidance-categories.php');
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -72,8 +72,9 @@ async function renderGuidanceCategories() {
   }
 }
 
-//Filters the displayed categories based on the search input.
- 
+/**
+ * Filters the displayed categories based on the search input.
+ */
 function filterCategories() {
   const searchInput = document.getElementById('category-search-input');
   if (!searchInput) return;
@@ -160,7 +161,7 @@ async function renderCategoryPage() {
   }
 
   try {
-    const response = await fetch(`../php/get-articles-by-category.php?slug=${slug}&sort=${sort}`);
+    const response = await fetch(`/AgriHub/php/get-articles-by-category.php?slug=${slug}&sort=${sort}`);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -238,7 +239,7 @@ async function renderArticlePage() {
   }
 
   try {
-    const response = await fetch(`../php/get-article.php?id=${articleId}`);
+    const response = await fetch(`/AgriHub/php/get-article.php?id=${articleId}`);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }

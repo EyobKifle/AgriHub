@@ -1,0 +1,107 @@
+/* Styles for viewing an article within the user dashboard */
+
+/* The main-content container is provided by User-Dashboard.css */
+
+.article-wrapper {
+    max-width: 850px;
+    margin: 0 auto; /* Center the article content within the main area */
+}
+
+.error-message {
+    text-align: center;
+    padding: 4rem 1rem;
+    background-color: var(--surface-light, #fff);
+    border: 1px solid var(--border-light, #e5e7eb);
+    border-radius: 12px;
+}
+
+.error-message h1 {
+    color: var(--red, #e53e3e);
+}
+
+/* Article Content Styling */
+.article-content {
+    background-color: var(--surface-light, #fff);
+    border-radius: 12px;
+    border: 1px solid var(--border-light, #e5e7eb);
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.article-header {
+    padding: 2rem 2rem 1.5rem 2rem;
+    border-bottom: 1px solid var(--border-light, #e5e7eb);
+}
+
+.article-category-link {
+    display: inline-block;
+    background-color: #e0f3f1;
+    color: var(--primary-green, #1E4620);
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    margin-bottom: 1rem;
+}
+
+.article-title {
+    font-size: 2.2rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin: 0 0 1rem 0;
+    color: var(--text-primary-light, #1C1C1C);
+}
+
+.article-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    color: var(--text-secondary-light, #555);
+    font-size: 0.9rem;
+}
+
+.article-meta i {
+    margin-right: 0.25rem;
+}
+
+.article-image-container {
+    margin: 0;
+    padding: 0;
+}
+
+.article-image {
+    width: 100%;
+    height: auto;
+    max-height: 450px;
+    object-fit: cover;
+}
+
+.article-body {
+    padding: 2rem;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--text-primary-light, #1C1C1C);
+}
+
+/* Related Articles Section */
+.related-articles {
+    margin-top: 3rem;
+}
+
+.related-articles-title {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-light, #e5e7eb);
+}
+
+.related-articles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+}
+
+/* Re-use news-card styles for related articles for consistency */
+.related-article-card { text-decoration: none; color: inherit; }
+.related-article-card .news-card-image { height: 140px; }

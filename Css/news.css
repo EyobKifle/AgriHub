@@ -1,47 +1,61 @@
-/* --- Root variables are assumed to be in a global stylesheet like header.css --- */
- 
-.main {
-  padding: 2rem 5rem;
+:root {
+  --primary-green: #1E4620;
+  --light-green: rgb(42, 119, 42);
+  --light-bg: #FBF9F4;
+  --text-dark: #1C1C1C;
+  --text-light: #555;
+  --border-color: #E5E7EB;
+  --white: #FFFFFF;
+  --accent-orange: #D97706;
 }
- 
+
+/* Layout */
+/* Apply padding to the main element to match site structure */
+main {
+  max-width: 1400px; /* Optional: constrain width for very large screens */
+  margin: 0 auto;
+  padding: 2rem 5rem; /* This was the rule for .page-container */
+}
+
 .page-header {
   text-align: left;
-  margin-bottom: 1rem ;
+  margin-bottom: 1rem;
   padding-bottom: 0.5rem;
   border-bottom: 1px solid var(--border-color);
 }
- 
+
 .page-header h1 {
   font-size: 1.4rem;
   color: var(--primary-green);
 }
- 
+
 .page-header p {
   color: var(--text-light);
   font-size: 1rem;
   max-width: 900px;
 }
- 
-.content-grid {
+
+/* Layout Structure */
+.news-layout {
   display: grid;
   grid-template-columns: 260px 1fr;
   gap: 2rem;
 }
- 
-/* Sidebar */
-.sidebar {
+
+.news-sidebar {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
 }
- 
+
+/* Sidebar Sections */
 .sidebar-section {
   background-color: var(--white);
   border-radius: 0.75rem;
   padding: 1.25rem;
   border: 1px solid var(--border-color);
 }
- 
+
 .sidebar-section h3 {
   font-size: 1.1rem;
   font-weight: 600;
@@ -49,12 +63,14 @@
   padding-bottom: 0.5rem;
   border-bottom: 1px solid var(--border-color);
 }
- 
+
 .category-list {
   list-style: none;
+  padding: 0;
+  margin: 0;
 }
- 
-.category-item {
+
+.category-list li a {
   display: block;
   padding: 0.6rem 1rem;
   text-decoration: none;
@@ -64,42 +80,31 @@
   transition: background-color 0.2s, color 0.2s;
   font-weight: 500;
 }
- 
-.category-item:hover {
+
+.category-list li a:hover {
   background-color: var(--light-bg);
   color: var(--text-dark);
 }
- 
-.category-item.active {
+
+.category-list li a.active {
   background-color: var(--primary-green);
   color: var(--white);
   font-weight: 600;
 }
- 
-.trending-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+
+.category-list li a span {
+  float: right;
+  opacity: 0.8;
 }
- 
-.tag {
-  background-color: var(--light-bg);
-  color: var(--text-light);
-  padding: 0.4rem 0.8rem;
-  border-radius: 1rem;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: background-color 0.2s, color 0.2s;
-  border: 1px solid var(--border-color);
+
+/* News Grid */
+.news-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
 }
- 
-.tag:hover {
-  background-color: var(--accent-orange);
-  color: var(--white);
-  border-color: transparent;
-}
- 
-/* Main Content Area */
+
+/* News Card */
 .news-card {
   background-color: var(--white);
   border-radius: 0.75rem;
@@ -109,80 +114,67 @@
   flex-direction: column;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
+
 .news-card:hover, .news-card:focus-within {
   transform: translateY(-4px);
-  box-shadow: 0 8px 16px rgba(0,0,0,0.07);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.07);
 }
-.news-card[hidden] {
-  display: none;
-}
-.news-card.featured {
-  position: relative;
-  margin-bottom: 2rem;
-}
- 
-.featured-badge {
-  position: absolute;
-  top: 1rem;
-  left: 1rem;
-  background-color: var(--accent-orange);
-  color: var(--white);
-  padding: 0.4rem 0.8rem;
-  border-radius: 1rem;
-  font-size: 0.85rem;
-  font-weight: 600;
-  z-index: 2;
-}
-.card-image {
+
+.news-card-image-link {
+  display: block;
   aspect-ratio: 16 / 9;
 }
-.card-image img {
+
+.news-card-image-link img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
-.card-content {
+
+.news-card-content {
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
 }
-.card-category {
+
+.news-card-category {
   color: var(--light-green);
   font-size: 0.85rem;
   font-weight: 500;
   margin-bottom: 0.5rem;
   text-transform: uppercase;
 }
-.news-card h2, .news-card h3 {
-  font-size: 1.5rem;
+
+.news-card-title {
+  font-size: 1.2rem;
   margin-bottom: 0.75rem;
   line-height: 1.3;
+}
+
+.news-card-title a {
+  text-decoration: none;
   color: var(--text-dark);
+  transition: color 0.2s;
 }
-.news-card.featured h2 {
-  font-size: 1.8rem;
+
+.news-card-title a:hover {
+  color: var(--primary-green);
 }
-.news-card h3 {
-  font-size: 1.2rem;
-}
-.news-card p {
+
+.news-card-excerpt {
   color: var(--text-light);
   margin-bottom: 1rem;
   flex-grow: 1;
 }
-.card-meta {
-  display: flex;
-  gap: 1.5rem;
+
+.news-card-meta {
   color: var(--text-light);
   font-size: 0.85rem;
   margin-top: auto;
 }
-.latest-news-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.5rem;
-}
+
+/* Empty State */
 .empty-state {
   background-color: var(--white);
   border: 1px dashed var(--border-color);
@@ -190,22 +182,36 @@
   text-align: center;
   border-radius: 0.75rem;
   color: var(--text-light);
+  grid-column: 1 / -1; /* Ensures it spans the full width of the news-grid */
 }
- 
+
 /* Responsive Design */
-@media (max-width: 992px) {
-  .latest-news-grid {
-    grid-template-columns: 1fr;
+@media (max-width: 1200px) {
+  main {
+    padding: 2rem;
   }
 }
+
+@media (max-width: 992px) {
+  .news-grid {
+    grid-template-columns: 1fr; /* News items stack vertically */
+  }
+}
+
 @media (max-width: 768px) {
-  .content-grid {
-    grid-template-columns: 1fr;
+  .news-layout {
+    grid-template-columns: 1fr; /* Sidebar and Main Content stack vertically */
   }
-  .sidebar {
-    order: 2;
+
+  .news-sidebar {
+    order: 2; /* Sidebar moves below main content */
   }
+
   .main-content {
-    order: 1;
+    order: 1; /* Main content moves above sidebar */
+  }
+
+  main {
+    padding: 1rem;
   }
 }

@@ -1,0 +1,185 @@
+/* ==========================================================================
+   Base Styles (From Admin-Dashboard.css)
+   ========================================================================== */
+:root {
+  /* New Color Palette */
+  --primary-green: #1E4620;
+  --light-green: rgb(42, 119, 42);
+  --accent-orange: #D97706;
+  --red: #e76f51; /* Kept for danger/error states */
+
+  /* Light Mode */
+  --bg-light: #FBF9F4;
+  --surface-light: #FFFFFF;
+  --text-primary-light: #1C1C1C;
+  --text-secondary-light: #555;
+  --border-light: #E5E7EB;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  background-color: var(--bg-light);
+  color: var(--text-primary-light);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* --- Main Layout --- */
+.dashboard-container {
+  display: flex;
+  min-height: 100vh;
+  padding-top: 70px;
+}
+
+/* --- Sidebar --- */
+.sidebar {
+  width: 240px;
+  min-width: 240px;
+  background-color: var(--surface-light);
+  border-right: 1px solid var(--border-light);
+  transition: margin-left 0.3s ease-in-out;
+  position: fixed;
+  top: 70px;
+  left: 0;
+  height: calc(100vh - 70px);
+  z-index: 1000;
+}
+
+.sidebar-nav { list-style: none; padding: 0; margin: 0; }
+.sidebar-nav li a { display: flex; align-items: center; padding: 0.9rem 1.5rem; text-decoration: none; color: var(--text-secondary-light); font-weight: 500; border-left: 4px solid transparent; transition: all 0.3s; }
+.sidebar-nav li a i { width: 20px; margin-right: 15px; text-align: center; }
+.sidebar-nav li a:hover { background-color: var(--bg-light); color: var(--primary-green); }
+.sidebar-nav li a.active { background-color: #e0f3f1; color: var(--primary-green); border-left-color: var(--primary-green); font-weight: 700; }
+
+/* --- Header Bar --- */
+.main-header-bar { display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; height: 70px; background-color: var(--surface-light); border-bottom: 1px solid var(--border-light); position: fixed; top: 0; left: 0; right: 0; z-index: 900; }
+.header-left .hamburger-menu { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary-light); }
+.header-center .logo { display: flex; align-items: center; gap: 8px; font-size: 1.5rem; font-weight: 700; color: var(--primary-green); }
+.header-right .profile-link { display: block; text-decoration: none; }
+.profile-avatar { width: 40px; height: 40px; border-radius: 50%; background-color: var(--primary-green); color: var(--surface-light); display: flex; align-items: center; justify-content: center; font-weight: 700; }
+
+/* --- Main Content --- */
+.main-content { flex: 1; overflow-y: auto; margin-left: 240px; transition: margin-left 0.3s ease-in-out; }
+.content-wrapper { padding: 2rem; }
+.main-header { margin-bottom: 2rem; }
+.main-header h1 { margin: 0; font-size: 2rem; font-weight: 700; }
+.main-header p { color: var(--text-secondary-light); margin-top: 5px; }
+
+/* --- Page Controls (Search, Filter) --- */
+.page-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+.search-filter-group form { display: flex; gap: 1rem; flex-wrap: wrap; }
+.search-input, .filter-select { padding: 0.65rem 1rem; border-radius: 8px; border: 1px solid var(--border-light); background-color: var(--surface-light); font-size: 0.95rem; }
+.search-input { min-width: 250px; }
+
+/* --- Buttons --- */
+.btn { padding: 0.65rem 1.25rem; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }
+.btn-primary { background-color: var(--primary-green); color: white; }
+.btn-primary:hover { background-color: #143616; }
+.btn-sm { padding: 0.4rem 0.8rem; font-size: 0.85rem; border-radius: 6px; }
+.btn-success { background-color: #28a745; color: white; }
+.btn-warning { background-color: #ffc107; color: #212529; }
+.btn-secondary { background-color: #6c757d; color: white; }
+
+/* --- Status Badges --- */
+.status { padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; text-transform: capitalize; }
+.status-active { background-color: #d4edda; color: #155724; }
+.status-pending { background-color: #fff3cd; color: #856404; }
+.status-inactive { background-color: #f8d7da; color: #721c24; }
+.status-sold { background-color: #e2e3e5; color: #383d41; }
+
+/* ==========================================================================
+   Page-Specific Styles for Admin Listings Management
+   ========================================================================== */
+
+/* --- Product Grid Layout --- */
+.admin-products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+/* --- Product Card Styling --- */
+.product-card {
+    background-color: var(--surface-light);
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.08);
+}
+
+.product-card .product-image {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    display: block;
+    background-color: #f0f0f0;
+}
+
+.product-card .card-content {
+    padding: 1rem;
+    flex-grow: 1;
+}
+
+.product-card h3 {
+    font-size: 1.1rem;
+    margin: 0 0 0.5rem 0;
+    font-weight: 600;
+}
+
+.product-card h3 a {
+    text-decoration: none;
+    color: var(--text-primary-light);
+}
+
+.product-card h3 a:hover {
+    color: var(--primary-green);
+}
+
+.product-card .product-price {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--primary-green);
+    margin: 0.5rem 0;
+}
+
+.product-card .product-seller,
+.product-card .product-status {
+    font-size: 0.9rem;
+    color: var(--text-secondary-light);
+    margin: 0.25rem 0;
+}
+
+.product-card .card-actions {
+    padding: 0 1rem 1rem 1rem;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    border-top: 1px solid var(--border-light);
+    margin-top: 1rem;
+    padding-top: 1rem;
+}
+
+/* Responsive Sidebar */
+@media (max-width: 768px) {
+  .sidebar {
+    margin-left: -240px;
+    box-shadow: 5px 0 15px rgba(0,0,0,0.1);
+  }
+  .dashboard-container.sidebar-collapsed .sidebar {
+    margin-left: 0;
+  }
+  .main-content {
+    margin-left: 0;
+  }
+  .header-center {
+    display: none;
+  }
+}

@@ -5,7 +5,7 @@ try {
     header('Content-Type: application/json');
 
     $categories = [];
-    $sql = "SELECT id, parent_id, name, name_key, slug, description_key, image_url FROM categories ORDER BY parent_id, name";
+    $sql = "SELECT id, NULL as parent_id, name, name_key, slug, description_key, NULL as image_url FROM content_categories WHERE type='guidance' ORDER BY display_order";
 
     $result = $conn->query($sql);
 

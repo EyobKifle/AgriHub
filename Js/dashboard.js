@@ -1,5 +1,6 @@
 import { initializeDashboardCommon } from './dashboard-common.js';
 import { initializeI18n, applyTranslationsToPage, updateLangSwitcher } from './i18n.js';
+import { initializeUserNewsPage } from '../php/User-News.js';
 
 /**
  * This is the main entry point for the site's dashboard JavaScript.
@@ -14,14 +15,12 @@ const initializeDashboard = async () => {
   // 2. Initialize common scripts for all dashboard pages (e.g., hamburger menu).
   initializeDashboardCommon();
 
-  // 3. Dynamically load and run page-specific scripts if they exist.
-  const currentPage = window.location.pathname
-    .split('/')
-    .pop()
-    .replace(/\.(php|html)$/i, '');
-
-  if (currentPage) {
-    import(`./${currentPage}.js`).catch(err => console.log(`No specific script for ${currentPage}.js`));
+  // 3. Run page-specific scripts.
+  const currentPage = window.location.pathname.split('/').pop();
+  switch (currentPage) {
+    case 'User-News.php':
+      initializeUserNewsPage();
+      break;
   }
 };
 

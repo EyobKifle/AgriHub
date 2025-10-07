@@ -1,10 +1,12 @@
 <?php
 /**
  * AgriHub Discussion Page & API
+ * AgriHub Discussion Page & Chat API
  *
  * This script serves a dual purpose:
  * 1. If accessed via a standard GET request without an 'action', it displays the HTML for a discussion page.
  * 2. If accessed with an 'action' parameter, it functions as a JSON API for chat messages within that discussion.
+ * 2. If accessed with an 'action' parameter, it functions as a JSON API for discussions and their messages.
  *
  * Actions:
  * - get_messages: Fetches all messages for a specific discussion.
@@ -16,6 +18,7 @@
 session_start();
 
 $isApiRequest = !empty($_REQUEST['action']);
+$isPageRequest = !$isApiRequest && isset($_GET['id']);
 
 if ($isApiRequest) {
     header('Content-Type: application/json');
@@ -84,7 +87,7 @@ if ($isApiRequest) {
                     'user' => [
                         'id' => $msg['user_id'],
                         'name' => $msg['user_name'],
-                        'avatar' => !empty($msg['avatar_url']) ? '../' . $msg['avatar_url'] : 'https://placehold.co/48x48/cccccc/FFF?text=' . strtoupper(substr($msg['user_name'], 0, 1)),
+                        'avatar' => !empty($msg['avatar_url']) ? '/AgriHub/' . $msg['avatar_url'] : 'https://placehold.co/48x48/cccccc/FFF?text=' . strtoupper(substr($msg['user_name'], 0, 1)),
                     ],
                     'attachments' => [], // Attachments not implemented in DB yet
                 ];
@@ -94,19 +97,35 @@ if ($isApiRequest) {
             break;
 
         case 'add_message':
-            $messageData = $input['message'] ?? null;
-            if (!$messageData || empty($messageData['text']) || empty($messageData['discussionId'])) {
+            $discussionId = (int)($input['message']['discussionId'] ?? 0);
+            $text = trim($input['message']['text'] ?? '');
+
+            if ($discussionId <= 0 || empty($text)) {
                 send_json_error('Message data is missing or invalid.');
             }
 
-            $stmt = $conn->prepare("INSERT INTO discussion_messages (discussion_id, user_id, content) VALUES (?, ?, ?)");
-            $stmt->bind_param('iis', $messageData['discussionId'], $current_user_id, $messageData['text']);
-            if ($stmt->execute()) {
-                send_json_success(['message_id' => $conn->insert_id]);
-            } else {
+            $conn->begin_transaction();
+            try {
+                // 1. Insert the new message
+                $stmt_insert = $conn->prepare("INSERT INTO discussion_messages (discussion_id, user_id, content) VALUES (?, ?, ?)");
+                $stmt_insert->bind_param('iis', $discussionId, $current_user_id, $text);
+                $stmt_insert->execute();
+                $newMessageId = $conn->insert_id;
+                $stmt_insert->close();
+
+                // 2. Update the parent discussion's timestamp and comment count
+                $stmt_update = $conn->prepare("UPDATE discussions SET updated_at = NOW(), comment_count = comment_count + 1 WHERE id = ?");
+                $stmt_update->bind_param('i', $discussionId);
+                $stmt_update->execute();
+                $stmt_update->close();
+
+                $conn->commit();
+                send_json_success(['message_id' => $newMessageId]);
+
+            } catch (Exception $e) {
+                $conn->rollback();
                 send_json_error('Failed to save message.', 500);
             }
-            $stmt->close();
             break;
 
         case 'update_message':
@@ -152,9 +171,123 @@ if ($isApiRequest) {
     exit;
 }
 
-// --- HTML Page Rendering Logic ---
-$discussionId = (int)($_GET['id'] ?? 0);
-$html = file_get_contents('../HTML/discussion.html');
-$html = str_replace('data-discussion-id=""', 'data-discussion-id="' . $discussionId . '"', $html);
-echo $html;
+// --- HTML Page Rendering Logic (Only if it's a page request) ---
+if ($isPageRequest) {
+    $discussionId = (int)($_GET['id'] ?? 0);
+    // We need to get some user info for the header if they are logged in
+    $name = $_SESSION['name'] ?? 'Guest';
+    $initial = !empty($name) && $name !== 'Guest' ? strtoupper(mb_substr($name, 0, 1)) : '?';
+    $avatar_url = $_SESSION['avatar_url'] ?? '';
+    $isLoggedIn = isset($_SESSION['user_id']);
+
+    // Fetch the main discussion post details
+    require_once __DIR__ . '/utils.php';
+    require_once __DIR__ . '/config.php';
+    $discussion = null;
+    if ($discussionId > 0) {
+        $stmt = $conn->prepare("
+            SELECT d.title, d.content, d.created_at, u.name as author_name, c.name as category_name
+            FROM discussions d
+            JOIN users u ON d.author_id = u.id
+            JOIN discussion_categories c ON d.category_id = c.id
+            WHERE d.id = ?
+        ");
+        if ($stmt) {
+            $stmt->bind_param('i', $discussionId);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $discussion = $result->fetch_assoc();
+            $stmt->close();
+        }
+    }
+    $conn->close();
+
+    // We also need the current user's info for the chat JS
+    $currentUserJson = json_encode([
+        'id' => $_SESSION['user_id'] ?? 0,
+        'name' => $name,
+        'avatar' => !empty($avatar_url) ? '/AgriHub/' . e($avatar_url) : 'https://placehold.co/48x48/cccccc/FFF?text=' . urlencode($initial)
+    ]);
+
+    ?>
+    <!DOCTYPE html>
+    <html lang="en" data-theme="light">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Discussion - AgriHub</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link rel="stylesheet" href="/AgriHub/Css/header.css">
+        <link rel="stylesheet" href="/AgriHub/Css/footer.css">
+        <link rel="stylesheet" href="/AgriHub/Css/discussion.css">
+    </head>
+    <body data-discussion-id="<?php echo $discussionId; ?>">
+        
+        <div id="header-placeholder"></div>
+        
+        <main class="page-container">
+            <div class="content-wrapper">
+                <a href="Community.php" class="back-link" data-i18n-key="discussion.backButton">&larr; Back to Community</a>
+
+                <?php if ($discussion): ?>
+                    <div class="discussion-post">
+                        <header class="discussion-post-header">
+                            <h1><?php echo htmlspecialchars($discussion['title']); ?></h1>
+                            <div class="discussion-post-meta">
+                                By <span class="author-name"><?php echo htmlspecialchars($discussion['author_name']); ?></span> &bull; <?php echo time_ago($discussion['created_at']); ?>
+                                <span class="category-badge"><?php echo htmlspecialchars($discussion['category_name']); ?></span>
+                            </div>
+                        </header>
+                        <div class="discussion-post-body">
+                            <p><?php echo nl2br(htmlspecialchars($discussion['content'])); ?></p>
+                        </div>
+                    </div>
+                <?php endif; ?>
+                
+                <div class="chat-container">
+                    <div class="chat-messages" id="messages">
+                        <!-- Messages will be loaded here by JavaScript -->
+                    </div>
+                    
+                    <?php if ($isLoggedIn): ?>
+                    <form class="chat-input-area" id="message-form" data-mode="new" data-editing-id="">
+                        <div class="chat-file-previews" id="previews"></div>
+                        <div class="chat-input-controls">
+                            <label for="file-input" class="btn-icon" title="Attach file" data-i18n-title-key="discussion.attachFile">
+                                <i class="fas fa-paperclip"></i>
+                            </label>
+                            <input type="file" id="file-input" multiple hidden>
+                            
+                            <input type="text" id="message-input" data-i18n-placeholder-key="discussion.messagePlaceholder" placeholder="Type a message..." autocomplete="off" aria-label="Message" required>
+                            
+                            <button type="submit" class="btn-icon send-btn" aria-label="Send message" data-i18n-aria-label-key="discussion.sendButton">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                        <div class="edit-mode-indicator" id="edit-indicator" style="display: none;">
+                            Editing message... <button type="button" id="cancel-edit-btn">Cancel</button>
+                        </div>
+                    </form>
+                    <?php else: ?>
+                        <div class="login-prompt">
+                            <p>Please <a href="../HTML/Login.html">log in</a> or <a href="../HTML/Signup.html">sign up</a> to join the conversation.</p>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </main>
+
+        <div id="footer-placeholder"></div>
+
+        <!-- Pass current user data to JS -->
+        <script id="user-data" type="application/json">
+            <?php echo $currentUserJson; ?>
+        </script>
+
+        <script type="module" src="/AgriHub/Js/site.js"></script>
+        <script type="module" src="/AgriHub/Js/chat.js"></script>
+    </body>
+    </html>
+    <?php
+}
 ?>

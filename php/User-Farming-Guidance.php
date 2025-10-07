@@ -18,8 +18,8 @@ $currentPage = 'User-Farming-Guidance';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Farming Guidance - AgriHub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../Css/User-Dashboard.css">
-    <link rel="stylesheet" href="../Css/guidance.css">
+    <link rel="stylesheet" href="/AgriHub/Css/User-Dashboard.css">
+    <link rel="stylesheet" href="/AgriHub/Css/guidance.css">
 </head>
 <body>
     <header class="main-header-bar">
@@ -36,7 +36,7 @@ $currentPage = 'User-Farming-Guidance';
         </div>
         <div class="header-right">
             <a href="User-Account.php" class="profile-link" aria-label="User Profile">
-                <div class="profile-avatar"><?php echo e($initial); ?></div>
+                <div class="profile-avatar"><?php echo htmlspecialchars($initial, ENT_QUOTES, 'UTF-8'); ?></div>
             </a>
         </div>
     </header>
@@ -57,6 +57,7 @@ $currentPage = 'User-Farming-Guidance';
         </main>
     </div>
 
-    <script type="module" src="../Js/dashboard.js"></script>
+    <script type="module" src="/AgriHub/Js/dashboard.js"></script>
+    <script type="module" src="/AgriHub/Js/site.js"></script>
 </body>
 </html>

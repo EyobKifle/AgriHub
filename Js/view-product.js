@@ -58,11 +58,11 @@ function renderProduct(product) {
 
     // Render images
     if (product.images && product.images.length > 0) {
-        els.sliderImages.innerHTML = product.images.map(img =>
-            `<img src="../${escapeHtml(img)}" alt="${escapeHtml(product.title)}">`
+        els.sliderImages.innerHTML = product.images.map(imgPath =>
+            `<img src="/AgriHub/${escapeHtml(imgPath)}" alt="${escapeHtml(product.title)}">`
         ).join('');
     } else {
-        els.sliderImages.innerHTML = `<img src="../images/1.jpg" alt="Default product image">`;
+        els.sliderImages.innerHTML = `<img src="/AgriHub/images/1.jpg" alt="Default product image">`;
     }
 
     // Setup slider
@@ -91,7 +91,7 @@ async function fetchProductData() {
     }
 
     try {
-        const response = await fetch(`../php/view-product.php?id=${productId}`);
+        const response = await fetch(`/AgriHub/php/view-product.php?id=${productId}`);
         const data = await response.json();
         if (!response.ok) throw new Error(data.error || 'Failed to load product.');
         renderProduct(data);

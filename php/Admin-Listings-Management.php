@@ -1,193 +1,177 @@
 <?php
 session_start();
+
+// Ensure the user is logged in.
+if (!isset($_SESSION['user_id'])) {
+    // If not logged in, redirect to the public article page
+    $articleId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+    header('Location: article.php' . ($articleId ? '?id=' . $articleId : ''));
+    exit;
+}
+
 require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/utils.php';
 
-// Check if user is admin
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
-    header('Location: ../HTML/login.html');
-    exit();
-}
+$article = null;
+$related_articles = [];
+$error_message = null;
 
-$name = $_SESSION['name'] ?? 'Admin';
+// --- User-specific data for dashboard layout ---
+$userId = (int)$_SESSION['user_id'];
+$name = $_SESSION['name'] ?? 'User';
 $email = $_SESSION['email'] ?? '';
-$initial = !empty($name) ? strtoupper($name[0]) : 'A';
+$initial = strtoupper(mb_substr($name, 0, 1));
+$avatar_url = '';
 
-// Filtering and searching
-$q = $_GET['q'] ?? '';
-$statusFilter = $_GET['status'] ?? '';
+$stmt_avatar = $conn->prepare("SELECT avatar_url FROM users WHERE id = ?");
+if ($stmt_avatar) {
+    $stmt_avatar->bind_param('i', $userId);
+    $stmt_avatar->execute();
+    $avatar_url = $stmt_avatar->get_result()->fetch_object()->avatar_url ?? '';
+    $stmt_avatar->close();
+}
 
-// Handle actions (approve, reject, delete)
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'], $_POST['product_id'])) {
-    $productId = (int)$_POST['product_id'];
-    $action = $_POST['action'];
+$articleId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 
-    if ($action === 'approve') {
-        $stmt = $conn->prepare("UPDATE products SET status = 'active' WHERE id = ?");
-    } elseif ($action === 'reject') {
-        $stmt = $conn->prepare("UPDATE products SET status = 'inactive' WHERE id = ?");
-    } elseif ($action === 'delete') {
-        $stmt = $conn->prepare("DELETE FROM products WHERE id = ?");
+if (!$articleId) {
+    http_response_code(400);
+    $error_message = "Invalid article ID provided.";
+} else {
+    // --- Increment view count ---
+    $stmt_view = $conn->prepare("UPDATE articles SET view_count = view_count + 1 WHERE id = ?");
+    if ($stmt_view) {
+        $stmt_view->bind_param('i', $articleId);
+        $stmt_view->execute();
+        $stmt_view->close();
     }
 
-    if (isset($stmt)) {
-        $stmt->bind_param('i', $productId);
-        $stmt->execute();
-        $stmt->close();
-        header("Location: " . $_SERVER['PHP_SELF']); // Refresh to see changes
-        exit();
+    // --- Fetch the main article ---
+    $stmt_article = $conn->prepare("
+        SELECT a.id, a.title, a.content, a.image_url, a.created_at, a.view_count,
+               u.name as author_name, u.avatar_url as author_avatar,
+               cc.id as category_id, cc.name_key as category_name, cc.slug as category_slug
+        FROM articles a
+        JOIN users u ON a.author_id = u.id
+        JOIN content_categories cc ON a.category_id = cc.id
+        WHERE a.id = ? AND a.status = 'published'
+    ");
+    if ($stmt_article) {
+        $stmt_article->bind_param('i', $articleId);
+        $stmt_article->execute();
+        $result = $stmt_article->get_result();
+        $article = $result->fetch_assoc();
+        $stmt_article->close();
+    }
+
+    if (!$article) {
+        http_response_code(404);
+        $error_message = "The article you are looking for could not be found.";
+    } else {
+        // --- Fetch related articles (from the same category) ---
+        $stmt_related = $conn->prepare("
+            SELECT id, title, image_url, excerpt
+            FROM articles
+            WHERE category_id = ? AND id != ? AND status = 'published'
+            ORDER BY created_at DESC
+            LIMIT 3
+        ");
+        if ($stmt_related) {
+            $stmt_related->bind_param('ii', $article['category_id'], $article['id']);
+            $stmt_related->execute();
+            $related_articles = $stmt_related->get_result()->fetch_all(MYSQLI_ASSOC);
+            $stmt_related->close();
+        }
     }
 }
 
-// Fetch listings from DB
-$sql = "SELECT p.id, p.title, p.price, p.unit, p.status, u.name as seller_name, c.name as category_name
-        FROM products p
-        JOIN users u ON p.seller_id = u.id
-        JOIN categories c ON p.category_id = c.id
-        WHERE 1=1";
-
-$params = [];
-$types = '';
-
-if (!empty($q)) {
-    $sql .= " AND (p.title LIKE ? OR u.name LIKE ?)";
-    $searchTerm = "%{$q}%";
-    array_push($params, $searchTerm, $searchTerm);
-    $types .= 'ss';
-}
-if (!empty($statusFilter)) {
-    $sql .= " AND p.status = ?";
-    $params[] = $statusFilter;
-    $types .= 's';
-}
-$sql .= " ORDER BY p.created_at DESC";
-
-$stmt = $conn->prepare($sql);
-if (!empty($params)) {
-    $stmt->bind_param($types, ...$params);
-}
-$stmt->execute();
-$result = $stmt->get_result();
-$listings = $result->fetch_all(MYSQLI_ASSOC);
-$stmt->close();
+$conn->close();
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AgriHub - Admin Listings Management</title>
+    <title><?php echo $article ? e($article['title']) : 'Article'; ?> - AgriHub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../Css/Admin-Dashboard.css">
+    <link rel="stylesheet" href="../Css/User-Dashboard.css">
+    <link rel="stylesheet" href="../Css/User-Article.css">
+    <link rel="stylesheet" href="../Css/News.css"> <!-- For related article card styles -->
 </head>
 <body>
-
     <header class="main-header-bar">
         <div class="header-left">
-            <button class="hamburger-menu" id="hamburger-menu" aria-label="Toggle Menu">
-                <i class="fa-solid fa-bars"></i>
-            </button>
+            <button class="hamburger-menu" id="hamburger-menu" aria-label="Toggle Menu"><i class="fa-solid fa-bars"></i></button>
         </div>
         <div class="header-center">
-            <div class="logo">
-                <i class="fa-solid fa-leaf"></i>
-                <span>AgriHub</span>
-            </div>
+            <div class="logo"><i class="fa-solid fa-leaf"></i><span data-i18n-key="brand.name">AgriHub</span></div>
         </div>
         <div class="header-right">
-            <a href="Admin-Settings.php" class="profile-link" aria-label="User Settings">
-                <div class="profile-avatar"><?php echo htmlspecialchars($initial); ?></div>
+            <a href="User-Account.php" class="profile-link" aria-label="User Profile">
+                <div class="profile-avatar"><?php if (!empty($avatar_url)): ?><img src="../<?php echo e($avatar_url); ?>" alt="User Avatar"><?php else: echo e($initial); endif; ?></div>
             </a>
         </div>
     </header>
 
     <div class="dashboard-container">
-        <aside class="sidebar" id="sidebar">
-            <ul class="sidebar-nav">
-                <li><a href="Admin-Dashboard.php" data-i18n-key="admin.nav.dashboard"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
-                <li><a href="Admin-User-Management.php" data-i18n-key="admin.nav.userManagement"><i class="fa-solid fa-users"></i> User Management</a></li>
-                <li><a href="Admin-Listings-Management.php" class="active" data-i18n-key="admin.nav.listingManagement"><i class="fa-solid fa-store"></i> Listing Management</a></li>
-                <li><a href="Admin-News-Management.php" data-i18n-key="admin.nav.newsManagement"><i class="fa-solid fa-newspaper"></i> News Management</a></li>
-                <li><a href="Admin-Reports-Management.php" data-i18n-key="admin.nav.reports"><i class="fa-solid fa-flag"></i> Reports</a></li>
-            </ul>
-        </aside>
+        <?php $currentPage = 'User-News'; include '_sidebar.php'; ?>
 
         <main class="main-content">
-            <div class="content-wrapper">
-                <div class="main-header">
-                    <h1>Listings Management</h1>
-                    <p>Manage product listings on the platform.</p>
-                </div>
-
-                <div class="page-controls">
-                    <div class="search-filter-group">
-                        <form method="GET" action="">
-                            <input type="text" name="q" class="search-input" placeholder="Search listings..." value="<?php echo htmlspecialchars($q); ?>">
-                            <select name="status" class="filter-select">
-                                <option value="">All Statuses</option>
-                                <option value="active" <?php echo $statusFilter === 'active' ? 'selected' : ''; ?>>Active</option>
-                                <option value="inactive" <?php echo $statusFilter === 'inactive' ? 'selected' : ''; ?>>Inactive</option>
-                                <option value="pending" <?php echo $statusFilter === 'pending' ? 'selected' : ''; ?>>Pending</option>
-                            </select>
-                            <button type="submit" class="btn btn-primary">Search</button>
-                        </form>
+            <div class="article-wrapper">
+                <?php if ($error_message): ?>
+                    <div class="error-message">
+                        <h1>Error</h1>
+                        <p><?php echo e($error_message); ?></p>
+                        <a href="User-News.php" class="btn btn-primary">Back to News</a>
                     </div>
-                </div>
+                <?php elseif ($article): ?>
+                    <article class="article-content">
+                        <header class="article-header">
+                            <a href="User-News.php?category=<?php echo e($article['category_slug']); ?>" class="article-category-link"><?php echo e(ucfirst(str_replace('_', ' ', $article['category_name']))); ?></a>
+                            <h1 class="article-title"><?php echo e($article['title']); ?></h1>
+                            <div class="article-meta">
+                                <span>By <strong><?php echo e($article['author_name']); ?></strong></span>
+                                <span>&bull;</span>
+                                <span><?php echo date('F j, Y', strtotime($article['created_at'])); ?></span>
+                                <span>&bull;</span>
+                                <span><i class="fa-solid fa-eye"></i> <?php echo number_format($article['view_count']); ?> views</span>
+                            </div>
+                        </header>
 
-                <div class="table-container">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Title</th>
-                                <th>Seller</th>
-                                <th>Category</th>
-                                <th>Price</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($listings as $listing): ?>
-                            <tr>
-                                <td><?php echo htmlspecialchars($listing['id']); ?></td>
-                                <td><?php echo htmlspecialchars($listing['title']); ?></td>
-                                <td><?php echo htmlspecialchars($listing['seller_name']); ?></td>
-                                <td><?php echo htmlspecialchars($listing['category_name']); ?></td>
-                                <td><?php echo htmlspecialchars($listing['price'] . ' ' . $listing['unit']); ?></td>
-                                <td><span class="status status-<?php echo htmlspecialchars($listing['status']); ?>"><?php echo htmlspecialchars($listing['status']); ?></span></td>
-                                <td class="action-buttons">
-                                    <?php if ($listing['status'] !== 'active'): ?>
-                                    <form method="POST" style="display:inline;">
-                                        <input type="hidden" name="product_id" value="<?php echo $listing['id']; ?>">
-                                        <input type="hidden" name="action" value="approve">
-                                        <button type="submit" title="Approve"><i class="fa-solid fa-check"></i></button>
-                                    </form>
-                                    <?php endif; ?>
-                                    <?php if ($listing['status'] === 'active'): ?>
-                                    <form method="POST" style="display:inline;">
-                                        <input type="hidden" name="product_id" value="<?php echo $listing['id']; ?>">
-                                        <input type="hidden" name="action" value="reject">
-                                        <button type="submit" title="Reject"><i class="fa-solid fa-times"></i></button>
-                                    </form>
-                                    <?php endif; ?>
-                                    <form method="POST" style="display:inline;">
-                                        <input type="hidden" name="product_id" value="<?php echo $listing['id']; ?>">
-                                        <input type="hidden" name="action" value="delete">
-                                        <button type="submit" class="btn-danger" title="Delete"><i class="fa-solid fa-trash"></i></button>
-                                    </form>
-                                </td>
-                            </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
+                        <?php if (!empty($article['image_url'])): ?>
+                            <figure class="article-image-container">
+                                <img src="../<?php echo e($article['image_url']); ?>" alt="<?php echo e($article['title']); ?>" class="article-image">
+                            </figure>
+                        <?php endif; ?>
+
+                        <div class="article-body">
+                            <?php echo $article['content']; // Assuming content is trusted HTML from an admin editor ?>
+                        </div>
+                    </article>
+
+                    <?php if (!empty($related_articles)): ?>
+                        <aside class="related-articles">
+                            <h2 class="related-articles-title">Related Articles</h2>
+                            <div class="news-grid">
+                                <?php foreach ($related_articles as $related): ?>
+                                    <div class="news-card">
+                                        <a href="User-Article.php?id=<?php echo (int)$related['id']; ?>" class="news-card-image-link">
+                                            <img src="../<?php echo e(empty($related['image_url']) ? 'https://placehold.co/400x250' : $related['image_url']); ?>" alt="<?php echo e($related['title']); ?>" class="news-card-image">
+                                        </a>
+                                        <div class="news-card-content">
+                                            <h3 class="news-card-title"><a href="User-Article.php?id=<?php echo (int)$related['id']; ?>"><?php echo e($related['title']); ?></a></h3>
+                                            <p class="news-card-desc"><?php echo e($related['excerpt']); ?></p>
+                                            <a href="User-Article.php?id=<?php echo (int)$related['id']; ?>" class="read-more-link" data-i18n-key="common.readMore">Read More »</a>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        </aside>
+                    <?php endif; ?>
+                <?php endif; ?>
             </div>
         </main>
-    </div>
+    </main>
 
-    <script src="../Js/dashboard.js" type="module"></script>
+    <script type="module" src="../Js/dashboard.js"></script>
 </body>
 </html>
-<?php
-$conn->close();
-?>

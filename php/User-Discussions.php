@@ -4,12 +4,50 @@ if (!isset($_SESSION['user_id'])) {
     header('Location: ../HTML/Login.html');
     exit();
 }
+require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/utils.php';
 
+$currentPage = 'User-Discussions';
+$userId = (int)$_SESSION['user_id'];
 
 $name = $_SESSION['name'] ?? 'User';
 $email = $_SESSION['email'] ?? '';
 $initial = strtoupper(mb_substr($name, 0, 1));
+
+// Fetch discussion categories for the dropdown
+$categories = [];
+$stmt = $conn->prepare('SELECT id, name FROM discussion_categories ORDER BY name');
+if ($stmt) {
+    $stmt->execute();
+    $categories = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    $stmt->close();
+}
+
+// Fetch user's discussions for server-side rendering
+$discussions = [];
+$stmt = $conn->prepare(
+   "SELECT d.id, d.title, d.updated_at, d.comment_count, c.name as category_name
+    FROM discussions d
+    JOIN discussion_categories c ON d.category_id = c.id
+    WHERE d.author_id = ?
+    ORDER BY d.updated_at DESC"
+);
+if ($stmt) {
+    $stmt->bind_param('i', $userId);
+    $stmt->execute();
+    $discussions = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    $stmt->close();
+}
+
+// Fetch user avatar for header
+$avatar_url = '';
+$stmt = $conn->prepare("SELECT avatar_url FROM users WHERE id = ?");
+if ($stmt) {
+    $stmt->bind_param('i', $userId);
+    $stmt->execute();
+    $avatar_url = $stmt->get_result()->fetch_object()->avatar_url ?? '';
+    $stmt->close();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -36,38 +74,17 @@ $initial = strtoupper(mb_substr($name, 0, 1));
         </div>
         <div class="header-right">
             <a href="User-Profile.php" class="profile-link" aria-label="User Profile">
-                <div class="profile-avatar" id="user-initial-avatar"><?php echo e($initial); ?></div>
+                <div class="profile-avatar">
+                    <?php if (!empty($avatar_url)): ?>
+                        <img src="../<?php echo e($avatar_url); ?>" alt="User Avatar">
+                    <?php else: echo e($initial); endif; ?>
+                </div>
             </a>
         </div>
     </header>
     
     <div class="dashboard-container">
-        <aside class="sidebar" id="sidebar">
-            <ul class="sidebar-nav">
-                <li><a href="User-Dashboard.php" data-i18n-key="user.nav.dashboard"><i class="fa-solid fa-house"></i> Dashboard</a></li>
-                <li><a href="User-Profile.php" data-i18n-key="user.nav.profile"><i class="fa-solid fa-user"></i> My Profile</a></li>
-                <li><a href="User-Listings.php" data-i18n-key="user.nav.listings"><i class="fa-solid fa-list-check"></i> My Listings</a></li>
-                <li><a href="User-Orders.php" data-i18n-key="user.nav.orders"><i class="fa-solid fa-receipt"></i> Order History</a></li>
-                <li><a href="User-Messages.php" data-i18n-key="user.nav.messages"><i class="fa-solid fa-envelope"></i> Messages</a></li>
-                <li><a href="User-Discussions.php" class="active" data-i18n-key="user.nav.discussions"><i class="fa-solid fa-comments"></i> My Discussions</a></li>
-                <li><a href="User-Settings.php" data-i18n-key="user.nav.settings"><i class="fa-solid fa-gear"></i> Settings</a></li>
-                <hr>
-                <!-- Site Navigation Links -->
-                <li><a href="User-Marketplace.php" data-i18n-key="header.nav.marketplace"><i class="fa-solid fa-store"></i> Marketplace</a></li>
-                <li><a href="User-News.php" data-i18n-key="header.nav.news"><i class="fa-regular fa-newspaper"></i> News</a></li>
-                <li><a href="User-Community.php" data-i18n-key="header.nav.community"><i class="fa-solid fa-users"></i> Community</a></li>
-                <li><a href="User-Farming-Guidance.php" data-i18n-key="header.nav.guidance"><i class="fa-solid fa-book-open"></i> Farming Guidance</a></li>
-            </ul>
-             <div class="sidebar-footer">
-                <div class="profile-dropdown">
-                    <div>
-                        <div class="profile-name" id="user-profile-name"><?php echo e($name); ?></div>
-                        <div class="profile-email" id="user-profile-email" style="opacity:.8; font-size:12px;"><?php echo e($email); ?></div>
-                        <small><a href="auth.php?action=logout" style="color:inherit; text-decoration:none;" data-i18n-key="user.nav.logout">Logout</a></small>
-                    </div>
-                </div>
-            </div>
-        </aside>
+        <?php include __DIR__ . '/_sidebar.php'; ?>
 
         <main class="main-content">
             <div class="main-header">
@@ -82,7 +99,7 @@ $initial = strtoupper(mb_substr($name, 0, 1));
 
             <div class="card" id="create-discussion-card" style="display: none;">
                 <h3 class="card-title" data-i18n-key="user.discussions.newDiscussionTitle">Start New Discussion</h3>
-                <form id="create-discussion-form">
+                <form id="create-discussion-form" action="Community.php" method="POST">
                     <input type="hidden" name="action" value="create_discussion">
                     <div class="form-grid">
                         <div class="form-group">
@@ -91,8 +108,11 @@ $initial = strtoupper(mb_substr($name, 0, 1));
                         </div>
                         <div class="form-group">
                             <label for="category_id">Category</label>
-                            <select id="category_id" name="category_id" required>
-                                <!-- Categories will be populated by JS -->
+                            <select name="category_id" id="category_id" required>
+                                <option value="">Select a category...</option>
+                                <?php foreach ($categories as $category): ?>
+                                    <option value="<?php echo (int)$category['id']; ?>"><?php echo e($category['name']); ?></option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                     </div>
@@ -118,7 +138,21 @@ $initial = strtoupper(mb_substr($name, 0, 1));
                         </tr>
                     </thead>
                     <tbody id="discussions-table-body">
-                        <!-- Discussion rows will be populated by JS -->
+                        <?php if (empty($discussions)): ?>
+                            <tr><td colspan="5" style="text-align:center; opacity:.8;">You have not started any discussions yet.</td></tr>
+                        <?php else: ?>
+                            <?php foreach ($discussions as $item): ?>
+                                <tr data-id="<?php echo (int)$item['id']; ?>">
+                                    <td><a href="discussion.php?id=<?php echo (int)$item['id']; ?>"><?php echo e($item['title']); ?></a></td>
+                                    <td><?php echo e($item['category_name']); ?></td>
+                                    <td><?php echo time_ago($item['updated_at']); ?></td>
+                                    <td><?php echo (int)$item['comment_count']; ?></td>
+                                    <td class="action-buttons">
+                                        <button class="delete-btn" title="Delete Discussion"><i class="fa-solid fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>

@@ -1,166 +1,145 @@
 <?php
-// Include the central database connection
+session_start();
 require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/utils.php';
 
-// Check if the connection is established
-if (!$conn) {
-    // You can output a JSON error or a more user-friendly message
-    die("Database connection failed.");
+// --- Fetch Categories with Product Counts ---
+$categories = [];
+$sql_cat = "
+    SELECT c.id, c.name, c.slug, COUNT(p.id) as product_count
+    FROM categories c
+    LEFT JOIN products p ON c.id = p.category_id AND p.status = 'active'
+    GROUP BY c.id, c.name, c.slug
+    ORDER BY c.name ASC
+";
+$stmt_cat = $conn->prepare($sql_cat);
+if ($stmt_cat) {
+    $stmt_cat->execute();
+    $categories = $stmt_cat->get_result()->fetch_all(MYSQLI_ASSOC);
+    $stmt_cat->close();
 }
 
-// Product class
-class Product {
-    private $conn;
-    private $table_name = "products";
+// --- Handle Category Filtering ---
+$selected_category_slug = isset($_GET['category']) ? trim($_GET['category']) : null;
+$selected_category_id = null;
 
-    public function __construct($mysqli_conn) {
-        $this->conn = $mysqli_conn;
-    }
-
-    // Handle API requests
-    public function handleRequest() {
-        if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
-            header('Content-Type: application/json');
-
-            if ($_GET['action'] === 'get_products') {
-                echo $this->getProducts();
-            } elseif ($_GET['action'] === 'get_categories') {
-                echo $this->getCategoryCounts();
-            }
-            exit;
-        }
-    }
-
-    // Get products with filters
-    private function getProducts() {
-        $filters = [
-            'category' => $_GET['category'] ?? 'all',
-            'min_price' => $_GET['min_price'] ?? '',
-            'max_price' => $_GET['max_price'] ?? '',
-            'search' => $_GET['search'] ?? '',
-            'sort' => $_GET['sort'] ?? 'latest'
-        ];
-
-        try {
-            $query = "SELECT
-                        p.*,
-                        c.name as category_name,
-                        u.name as seller_name,
-                        pi.image_url
-                    FROM " . $this->table_name . " p
-                    LEFT JOIN categories c ON p.category_id = c.id
-                    LEFT JOIN users u ON p.seller_id = u.id
-                    LEFT JOIN (
-                        SELECT product_id, MIN(image_url) AS image_url
-                        FROM product_images
-                        GROUP BY product_id
-                    ) pi ON p.id = pi.product_id
-                    WHERE p.status = 'active'";
-
-            $conditions = [];
-            $params = [];
-
-            // Category filter
-            if (!empty($filters['category']) && $filters['category'] !== 'all') {
-                $conditions[] = "c.slug = ?";
-                $params[] = $filters['category'];
-            }
-
-            // Price range filter
-            if (!empty($filters['min_price'])) {
-                $conditions[] = "p.price >= ?";
-                $params[] = $filters['min_price'];
-            }
-            if (!empty($filters['max_price'])) {
-                $conditions[] = "p.price <= ?";
-                $params[] = $filters['max_price'];
-            }
-
-            // Search filter
-            if (!empty($filters['search'])) {
-                $conditions[] = "(p.title LIKE ? OR p.description LIKE ?)";
-                $search_term = '%' . $filters['search'] . '%';
-                $params[] = $search_term;
-                $params[] = $search_term;
-            }
-
-            // Add conditions to query
-            if (!empty($conditions)) {
-                $query .= " AND " . implode(" AND ", $conditions);
-            }
-
-
-            // Sorting
-            $sort_options = [
-                'latest' => 'p.created_at DESC',
-                'price-asc' => 'p.price ASC',
-                'price-desc' => 'p.price DESC'
-            ];
-            $sort = $filters['sort'];
-            $query .= " ORDER BY " . ($sort_options[$sort] ?? 'p.created_at DESC');
-
-            $stmt = $this->conn->prepare($query);
-            if (!empty($params)) {
-                // Dynamically bind parameters
-                $types = str_repeat('s', count($params)); // Assuming all are strings for simplicity
-                $stmt->bind_param($types, ...$params);
-            }
-            $stmt->execute();
-            $result = $stmt->get_result();
-            $products = $result->fetch_all(MYSQLI_ASSOC);
-            $stmt->close();
-
-            return json_encode([
-                'success' => true,
-                'products' => $products,
-                'total_products' => count($products)
-            ]);
-
-        } catch (Exception $e) {
-            return json_encode([
-                'success' => false,
-                'message' => 'Error loading products'
-            ]);
-        }
-    }
-
-    // Get category counts
-    private function getCategoryCounts() {
-        try {
-            $query = "SELECT
-                        c.slug as category_slug,
-                        COUNT(p.id) as product_count
-                    FROM categories c
-                    LEFT JOIN products p ON c.id = p.category_id AND p.status = 'active'
-                    GROUP BY c.id, c.slug";
-
-            $stmt = $this->conn->prepare($query);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            $counts = [];
-            while ($row = $result->fetch_assoc()) {
-                $counts[$row['category_slug']] = $row['product_count'];
-            }
-            $stmt->close();
-
-            return json_encode([
-                'success' => true,
-                'category_counts' => $counts
-            ]);
-
-        } catch (Exception $e) {
-            return json_encode([
-                'success' => false,
-                'message' => 'Error loading categories'
-            ]);
+if ($selected_category_slug) {
+    foreach ($categories as $cat) {
+        if ($cat['slug'] === $selected_category_slug) {
+            $selected_category_id = (int)$cat['id'];
+            break;
         }
     }
 }
 
-// Initialize database and handle API requests
-if ($conn) {
-    $product = new Product($conn);
-    $product->handleRequest();
+// --- Fetch Products ---
+$products = [];
+$sql_products = "
+    SELECT
+        p.id, p.title, p.price, p.unit,
+        c.name as category_name,
+        (SELECT image_url FROM product_images WHERE product_id = p.id ORDER BY is_primary DESC, id ASC LIMIT 1) as image_url
+    FROM products p
+    JOIN categories c ON p.category_id = c.id
+    WHERE p.status = 'active'
+";
+
+$params = [];
+$types = '';
+
+if ($selected_category_id) {
+    $sql_products .= " AND p.category_id = ?";
+    $params[] = $selected_category_id;
+    $types .= 'i';
 }
 
-include 'marketplace.html';
+$sql_products .= " ORDER BY p.created_at DESC LIMIT 30";
+
+$stmt_products = $conn->prepare($sql_products);
+if ($stmt_products) {
+    if (!empty($params)) {
+        $stmt_products->bind_param($types, ...$params);
+    }
+    $stmt_products->execute();
+    $products = $stmt_products->get_result()->fetch_all(MYSQLI_ASSOC);
+    $stmt_products->close();
+}
+
+$conn->close();
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marketplace - AgriHub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="/AgriHub/Css/header.css">
+    <link rel="stylesheet" href="/AgriHub/Css/footer.css">
+    <!-- Re-use News.css for the general page layout (sidebar + main content) -->
+    <link rel="stylesheet" href="/AgriHub/Css/News.css">
+    <!-- Load dedicated marketplace styles for product cards -->
+    <link rel="stylesheet" href="/AgriHub/Css/Marketplace.css">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+
+    <main class="page-container">
+        <div class="content-wrapper">
+            <div class="page-header">
+                <h1 data-i18n-key="marketplace.title">Marketplace</h1>
+                <p data-i18n-key="marketplace.subtitle">Browse fresh produce, seeds, and equipment from sellers across the nation.</p>
+            </div>
+
+            <div class="news-layout">
+                <aside class="news-sidebar">
+                    <div class="sidebar-section">
+                        <h3 data-i18n-key="marketplace.categories">Categories</h3>
+                        <ul class="category-list">
+                            <li><a href="marketplace.php" class="<?php echo !$selected_category_slug ? 'active' : ''; ?>">All Products</a></li>
+                            <?php foreach ($categories as $category): ?>
+                                <li>
+                                    <a href="marketplace.php?category=<?php echo e($category['slug']); ?>" class="<?php echo $selected_category_slug === $category['slug'] ? 'active' : ''; ?>">
+                                        <?php echo e($category['name']); ?>
+                                        <span><?php echo (int)$category['product_count']; ?></span>
+                                    </a>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
+                </aside>
+
+                <div class="main-news-content">
+                    <div class="product-grid">
+                        <?php if (empty($products)): ?>
+                            <div class="empty-state">
+                                <p>No products found in this category.</p>
+                            </div>
+                        <?php else: ?>
+                            <?php foreach ($products as $product): ?>
+                            <div class="product-card">
+                                <a href="product-detail.php?id=<?php echo (int)$product['id']; ?>" class="product-card-image-link">
+                                    <img src="/AgriHub/<?php echo e(empty($product['image_url']) ? 'https://placehold.co/400x250?text=No+Image' : $product['image_url']); ?>" alt="<?php echo e($product['title']); ?>" class="news-card-image">
+                                </a>
+                                <div class="product-card-content">
+                                    <div class="product-card-category"><?php echo e($product['category_name']); ?></div>
+                                    <h3 class="product-card-title">
+                                        <a href="product-detail.php?id=<?php echo (int)$product['id']; ?>"><?php echo e($product['title']); ?></a>
+                                    </h3>
+                                    <div class="product-card-price">
+                                        ETB <?php echo number_format($product['price'], 2); ?> <span class="unit">/ <?php echo e($product['unit']); ?></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="footer-placeholder"></div>
+    <script type="module" src="/AgriHub/Js/site.js"></script>
+</body>
+</html>

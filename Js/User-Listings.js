@@ -27,32 +27,14 @@ const els = {
     priceInput: document.getElementById('form-price'),
     unitInput: document.getElementById('form-unit'),
     quantityInput: document.getElementById('form-quantity'),
+    statusGroup: document.getElementById('status-form-group'),
+    statusSelect: document.getElementById('form-status'),
     // Table
     tableBody: document.getElementById('listings-table-body'),
 };
 
 let allListings = [];
 let allCategories = [];
-
-/**
- * Fetches all necessary data from the backend API.
- */
-async function fetchData() {
-    try {
-        const response = await fetch('../php/api/listings.php'); // Corrected path
-        if (!response.ok) {
-            if (response.status === 401) window.location.href = '../HTML/guest/Login.html';
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        allListings = data.listings || [];
-        allCategories = data.categories || [];
-        renderPage(data.user);
-    } catch (error) {
-        console.error('Error fetching page data:', error);
-        els.tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; color: #900;">Failed to load data.</td></tr>`;
-    }
-}
 
 /**
  * Populates the page with data from the server.
@@ -63,33 +45,10 @@ function renderPage(user) {
         els.userProfileName.textContent = user.name;
         els.userProfileEmail.textContent = user.email;
     }
-
-    let categoryOptions = '<option value="">Select category</option>';
-    allCategories.forEach(cat => {
-        categoryOptions += `<option value="${cat.id}">${escapeHtml(cat.name)}</option>`;
-    });
-    els.categorySelect.innerHTML = categoryOptions;
-
-    let listingRows = '';
-    if (allListings.length > 0) {
-        allListings.forEach(item => {
-            const priceFormatted = `${Number(item.price).toFixed(2)} / ${escapeHtml(item.unit)}`;
-            listingRows += `
-                <tr data-id="${item.id}">
-                    <td>${escapeHtml(item.title)}</td>
-                    <td>${escapeHtml(item.category_name)}</td>
-                    <td>${priceFormatted}</td>
-                    <td><span class="status status-${escapeHtml(item.status.toLowerCase())}">${escapeHtml(item.status)}</span></td>
-                    <td class="action-buttons">
-                        <button class="edit-btn" title="Edit Listing"><i class="fa-solid fa-pen"></i></button>
-                        <button class="delete-btn" title="Delete Listing"><i class="fa-solid fa-trash"></i></button>
-                    </td>
-                </tr>`;
-        });
-    } else {
-        listingRows = `<tr><td colspan="5" style="text-align:center; opacity:.8;">You have no listings yet.</td></tr>`;
-    }
-    els.tableBody.innerHTML = listingRows;
+    // The page is now rendered by PHP. We just need to fetch the data for the edit form.
+    fetch('../php/listings.php').then(res => res.json()).then(data => {
+        allListings = data.listings || [];
+    }).catch(err => console.error("Could not fetch listings for editing.", err));
 }
 
 function showFormForEdit(listingId) {
@@ -104,9 +63,12 @@ function showFormForEdit(listingId) {
     els.priceInput.value = listing.price;
     els.unitInput.value = listing.unit;
     els.quantityInput.value = listing.quantity_available;
+    els.statusSelect.value = listing.status;
 
     els.formTitle.textContent = 'Edit Listing';
+    els.submitBtn.textContent = 'Save Changes';
     els.cancelBtn.style.display = 'inline-flex';
+    els.statusGroup.style.display = 'block';
     els.createCard.style.display = 'block';
     els.createCard.scrollIntoView({ behavior: 'smooth' });
 }
@@ -115,7 +77,9 @@ function resetAndHideForm() {
     els.form.reset();
     els.productIdInput.value = '0';
     els.formTitle.textContent = 'New Listing';
+    els.submitBtn.textContent = 'Create';
     els.cancelBtn.style.display = 'none';
+    els.statusGroup.style.display = 'none';
     els.createCard.style.display = 'none';
 }
 
@@ -125,13 +89,13 @@ async function handleFormSubmit(e) {
     showStatus('Saving...', '#555');
 
     try {
-        const response = await fetch('../php/api/listings.php', { method: 'POST', body: formData }); // Corrected path
+        const response = await fetch('../php/listings.php', { method: 'POST', body: formData });
         const result = await response.json();
         if (!response.ok) throw new Error(result.error || 'An unknown error occurred.');
         
         showStatus(result.message, '#090');
         resetAndHideForm();
-        fetchData(); // Refresh the data
+        window.location.reload(); // Easiest way to refresh the list
     } catch (error) {
         showStatus(`Error: ${error.message}`, '#900');
     }
@@ -147,12 +111,12 @@ async function handleDelete(listingId) {
     showStatus('Deleting...', '#555');
 
     try {
-        const response = await fetch('../php/api/listings.php', { method: 'POST', body: formData }); // Corrected path
+        const response = await fetch('../php/listings.php', { method: 'POST', body: formData });
         const result = await response.json();
         if (!response.ok) throw new Error(result.error || 'An unknown error occurred.');
 
         showStatus(result.message, '#090');
-        fetchData(); // Refresh the data
+        window.location.reload(); // Easiest way to refresh the list
     } catch (error) {
         showStatus(`Error: ${error.message}`, '#900');
     }
@@ -194,9 +158,9 @@ function initializeEventListeners() {
 
 function init() {
     if (!els.tableBody) return; // Make sure we are on the correct page
-    
+
     initializeEventListeners();
-    fetchData();
+    renderPage(); // This will now just fetch data for the edit form
 }
 
-init();
+document.addEventListener('DOMContentLoaded', init);

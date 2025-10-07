@@ -1,10 +1,11 @@
-import { loadHeader, initializeHeaderScripts } from './header.js';
-import { loadFooter } from './footer.js';
+import { loadHeader, initializeHeaderScripts } from './header.js'; // Assumes header.js uses absolute paths
+import { loadFooter } from './footer.js'; // Assumes footer.js uses absolute paths
 import { initializeImageSlider } from './imageSlider.js';
 import { initializeI18n, applyTranslationsToPage, updateLangSwitcher } from './i18n.js';
 import { highlightActiveLink } from './navigation.js';
-import { initializeMarketplace } from './marketplace.js';
 import { initializeGuidancePage, initializeGuidanceCategoryPage, initializeArticlePage } from './guidance.js';
+import { initializeNewsPage } from './news.js'; // This will now point to the new, simpler file.
+
 
 /**
  * Checks the URL for query parameters like 'error' or 'success' and displays
@@ -91,18 +92,17 @@ const initializeSite = async () => {
       initializeImageSlider();
       break;
     case 'Marketplace.html':
-      initializeMarketplace();
       break;
-    case 'News.html':
+    case 'News.php':
       initializeNewsPage();
       break;
-    case 'Farming-Guidance.html':
+    case 'Farming-Guidance.php':
       initializeGuidancePage();
       break;
-    case 'guidance-category.html':
+    case 'guidance-category.php':
       initializeGuidanceCategoryPage();
       break;
-    case 'article.html':
+    case 'article.php':
       initializeArticlePage();
       break;
   }

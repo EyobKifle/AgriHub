@@ -428,3 +428,17 @@ VALUES
 (LAST_INSERT_ID(), 'Animal Health', 'animal_health', 'animal-health', 'desc_health', 'https://images.unsplash.com/photo-vet-animal.jpg', 1),
 (LAST_INSERT_ID(), 'Pasture Management', 'pasture', 'pasture', 'desc_pasture', 'https://images.unsplash.com/photo-pasture.jpg', 1),
 (LAST_INSERT_ID(), 'Livestock Equipment', 'livestock_equipment', 'livestock-equipment', 'desc_equipment', 'https://images.unsplash.com/photo-livestock-equipment.jpg', 1);
+
+-- Insert guidance categories into content_categories
+INSERT INTO content_categories (type, name_key, slug, description_key, display_order) VALUES
+('guidance', 'crops', 'crops', 'crops_desc', 1),
+('guidance', 'livestock', 'livestock', 'livestock_desc', 2),
+('guidance', 'soil_health', 'soil-health', 'soil_health_desc', 3),
+('guidance', 'pest_management', 'pest-management', 'pest_management_desc', 4),
+('guidance', 'water_management', 'water-management', 'water_management_desc', 5);
+
+-- Insert sample articles
+INSERT INTO articles (category_id, author_id, title, content, excerpt, status) VALUES
+(1, 1, 'Introduction to Crop Farming', '<p>Crop farming is the cultivation of plants for food, fiber, and other products. It involves preparing the soil, planting seeds, and harvesting the crops.</p><p>Key steps include soil preparation, seed selection, irrigation, and pest control.</p>', 'Learn the basics of crop farming.', 'published'),
+(2, 1, 'Livestock Management Tips', '<p>Managing livestock requires knowledge of animal health, nutrition, and housing. Proper care ensures productivity and animal welfare.</p><p>Topics include feeding, vaccination, and breeding.</p>', 'Essential tips for managing livestock.', 'published'),
+(3, 1, 'Improving Soil Health', '<p>Soil health is crucial for successful farming. Practices like crop rotation, organic matter addition, and reduced tillage can improve soil structure and fertility.</p>', 'How to improve soil health for better yields.', 'published');

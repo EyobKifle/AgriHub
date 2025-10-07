@@ -19,8 +19,8 @@ $response = [
 ];
 
 try {
-    // 1. Get category details from the 'categories' table using the slug
-    $stmt_cat = $conn->prepare("SELECT id, name, description_key FROM categories WHERE slug = ?");
+    // 1. Get category details from the 'content_categories' table using the slug
+    $stmt_cat = $conn->prepare("SELECT id, name, description_key FROM content_categories WHERE slug = ? AND type = 'guidance'");
     $stmt_cat->bind_param("s", $slug);
     $stmt_cat->execute();
     $category_result = $stmt_cat->get_result();
@@ -37,16 +37,15 @@ try {
             $orderBy = "ORDER BY a.views DESC, a.created_at DESC";
         }
 
-        // 2. Get articles. We assume articles are linked via the category's name_key matching the content_categories' name_key. Also fetch title_key for translation.
+        // 2. Get articles for this category
         $sql_articles = "SELECT a.id, a.title, a.title_key, a.excerpt, a.image_url, a.views, a.created_at, u.name as author_name
              FROM articles a
              JOIN users u ON a.author_id = u.id
-             JOIN content_categories cc ON a.category_id = cc.id
-             WHERE cc.name_key = ? AND a.status = 'published'
+             WHERE a.category_id = ? AND a.status = 'published'
              $orderBy";
 
         $stmt_articles = $conn->prepare($sql_articles);
-        $stmt_articles->bind_param("s", $category['name_key']);
+        $stmt_articles->bind_param("i", $category['id']);
         $stmt_articles->execute();
         $articles_result = $stmt_articles->get_result();
         $response['articles'] = $articles_result->fetch_all(MYSQLI_ASSOC);

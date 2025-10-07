@@ -4,12 +4,47 @@ if (!isset($_SESSION['user_id'])) {
     header('Location: ../HTML/Login.html');
     exit();
 }
+require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/utils.php';
 
+$userId = (int)$_SESSION['user_id'];
 $name = $_SESSION['name'] ?? 'User';
 $email = $_SESSION['email'] ?? '';
 $initial = strtoupper(mb_substr($name, 0, 1));
+$avatar_url = '';
+
+// Fetch user avatar for header/sidebar
+$stmt_avatar = $conn->prepare("SELECT avatar_url FROM users WHERE id = ?");
+if ($stmt_avatar) {
+    $stmt_avatar->bind_param('i', $userId);
+    $stmt_avatar->execute();
+    $avatar_url = $stmt_avatar->get_result()->fetch_object()->avatar_url ?? '';
+    $stmt_avatar->close();
+}
 $currentPage = 'User-Listings';
+
+// Fetch categories for the form dropdown
+$categories = [];
+$cat_stmt = $conn->prepare("SELECT id, name FROM categories ORDER BY name");
+if ($cat_stmt) {
+    $cat_stmt->execute();
+    $categories = $cat_stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    $cat_stmt->close();
+}
+
+// Fetch user's listings
+$listings = [];
+$list_stmt = $conn->prepare(
+   "SELECT p.id, p.title, p.price, p.unit, p.status, c.name as category_name
+    FROM products p
+    JOIN categories c ON p.category_id = c.id
+    WHERE p.seller_id = ?
+    ORDER BY p.created_at DESC"
+);
+$list_stmt->bind_param('i', $userId);
+$list_stmt->execute();
+$listings = $list_stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+$list_stmt->close();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -21,6 +56,7 @@ $currentPage = 'User-Listings';
     <link rel="stylesheet" href="../Css/User-Dashboard.css">
 </head>
 <body>
+    <!-- Full-width Header -->
     <header class="main-header-bar">
         <div class="header-left">
             <button class="hamburger-menu" id="hamburger-menu" aria-label="Toggle Menu">
@@ -34,8 +70,12 @@ $currentPage = 'User-Listings';
             </div>
         </div>
         <div class="header-right">
-            <a href="User-Account.php" class="profile-link" aria-label="User Account">
-                <div class="profile-avatar" id="user-initial-avatar"><?php echo e($initial); ?></div>
+            <a href="User-Profile.php" class="profile-link" aria-label="User Profile">
+                <div class="profile-avatar">
+                    <?php if (!empty($avatar_url)): ?>
+                        <img src="../<?php echo e($avatar_url); ?>" alt="User Avatar">
+                    <?php else: echo e($initial); endif; ?>
+                </div>
             </a>
         </div>
     </header>
@@ -67,7 +107,9 @@ $currentPage = 'User-Listings';
                         <div class="form-group">
                             <label for="form-category-id">Category</label>
                             <select id="form-category-id" name="category_id" required>
-                                <!-- Options will be populated by JS -->
+                                <?php foreach ($categories as $cat): ?>
+                                    <option value="<?php echo (int)$cat['id']; ?>"><?php echo e($cat['name']); ?></option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                     </div>
@@ -89,9 +131,18 @@ $currentPage = 'User-Listings';
                             <input type="number" step="0.01" id="form-quantity" name="quantity_available" required>
                         </div>
                     </div>
+                    <div class="form-group" id="status-form-group" style="display: none;">
+                        <label for="form-status">Status</label>
+                        <select id="form-status" name="status">
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                            <option value="sold">Sold</option>
+                        </select>
+                        <p class="form-text">Set the current status of your listing.</p>
+                    </div>
                     <div class="form-group">
                         <label for="images">Product Images (first image will be primary)</label>
-                        <input type="file" id="images" name="images[]" multiple accept="image/*">
+                        <input type="file" id="images" name="images[]" multiple accept="image/*" >
                         <p class="form-text">You can select multiple images. For updates, new images will be added to the existing ones.</p>
                     </div>
                     <div class="form-actions">
@@ -113,7 +164,23 @@ $currentPage = 'User-Listings';
                         </tr>
                     </thead>
                     <tbody id="listings-table-body">
-                        <!-- Listing rows will be populated by JS -->
+                        <?php if (empty($listings)): ?>
+                            <tr><td colspan="5" style="text-align:center; opacity:.8;">You have no listings yet.</td></tr>
+                        <?php else: ?>
+                            <?php foreach ($listings as $item): ?>
+                                <?php $priceFormatted = number_format((float)$item['price'], 2) . ' / ' . e($item['unit']); ?>
+                                <tr data-id="<?php echo (int)$item['id']; ?>">
+                                    <td><?php echo e($item['title']); ?></td>
+                                    <td><?php echo e($item['category_name']); ?></td>
+                                    <td><?php echo $priceFormatted; ?></td>
+                                    <td><span class="status status-<?php echo e(strtolower($item['status'])); ?>"><?php echo e(ucfirst($item['status'])); ?></span></td>
+                                    <td class="action-buttons">
+                                        <button class="edit-btn" title="Edit Listing"><i class="fa-solid fa-pen"></i></button>
+                                        <button class="delete-btn" title="Delete Listing"><i class="fa-solid fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>

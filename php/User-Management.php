@@ -60,4 +60,4 @@ if ($stmt) {
     $stmt->close();
 }
 
-include '../HTML/User-Management.html';
+include __DIR__ . '/../HTML/User-Management.html';

@@ -13,45 +13,103 @@ $email = $_SESSION['email'] ?? '';
 $initial = !empty($name) ? strtoupper($name[0]) : 'A';
 
 // Handle form submission for adding/editing news
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['action'])) {
     $title = trim($_POST['title'] ?? '');
     $content = trim($_POST['content'] ?? '');
-    $category = trim($_POST['category'] ?? '');
-    $newsId = (int)($_POST['news_id'] ?? 0);
+    $category_id = (int)($_POST['category_id'] ?? 0); // Assuming category is handled by ID
+    $articleId = (int)($_POST['news_id'] ?? 0); // This is the article ID
+    $imageUrl = $_POST['existing_image_url'] ?? ''; // Keep existing image if no new one is uploaded
 
-    if (!empty($title) && !empty($content)) {
-        if ($newsId > 0) {
+    // Handle file upload
+    if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+        $uploadDir = '../uploads/news_images/';
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0777, true);
+        }
+        $fileName = uniqid() . '-' . basename($_FILES['image']['name']);
+        $targetPath = $uploadDir . $fileName;
+
+        if (move_uploaded_file($_FILES['image']['tmp_name'], $targetPath)) {
+            // If there was an old image for an existing article, delete it
+            if ($articleId > 0 && !empty($imageUrl) && file_exists('..' . $imageUrl)) {
+                unlink('..' . $imageUrl);
+            }
+            $imageUrl = '/uploads/news_images/' . $fileName; // Store relative path for web access
+        }
+    }
+
+    if (!empty($title) && !empty($content) && $category_id > 0) {
+        if ($articleId > 0) {
             // Update
-            $stmt = $conn->prepare("UPDATE news SET title = ?, content = ?, category = ? WHERE id = ?");
-            $stmt->bind_param('sssi', $title, $content, $category, $newsId);
+            $stmt = $conn->prepare("UPDATE articles SET title = ?, content = ?, category_id = ?, image_url = ? WHERE id = ?");
+            $stmt->bind_param('ssisi', $title, $content, $category_id, $imageUrl, $articleId);
         } else {
             // Insert
-            $stmt = $conn->prepare("INSERT INTO news (title, content, category, created_at) VALUES (?, ?, ?, NOW())");
-            $stmt->bind_param('sss', $title, $content, $category);
+            $stmt = $conn->prepare("INSERT INTO articles (title, content, category_id, author_id, image_url, status) VALUES (?, ?, ?, ?, ?, 'published')");
+            $stmt->bind_param('ssiis', $title, $content, $category_id, $_SESSION['user_id'], $imageUrl);
         }
-        $stmt->execute();
-        $stmt->close();
-        header("Location: " . $_SERVER['PHP_SELF']);
-        exit();
+
+        if ($stmt->execute()) {
+            $stmt->close();
+            header("Location: " . $_SERVER['PHP_SELF'] . "?success=saved");
+            exit();
+        } else {
+            // Handle error
+            $error = "Database error: " . $stmt->error;
+        }
     }
 }
 
 // Handle delete
-if (isset($_GET['delete'])) {
-    $newsId = (int)$_GET['delete'];
-    $stmt = $conn->prepare("DELETE FROM news WHERE id = ?");
-    $stmt->bind_param('i', $newsId);
-    $stmt->execute();
-    $stmt->close();
-    header("Location: " . $_SERVER['PHP_SELF']);
-    exit();
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'delete') {
+    $articleId = (int)$_POST['article_id'];
+    $stmt = $conn->prepare("DELETE FROM articles WHERE id = ?");
+    // First, get the image_url to delete the file
+    $img_stmt = $conn->prepare("SELECT image_url FROM articles WHERE id = ?");
+    $img_stmt->bind_param('i', $articleId);
+    $img_stmt->execute();
+    $result = $img_stmt->get_result()->fetch_assoc();
+    $img_stmt->close();
+
+    if ($result && !empty($result['image_url']) && file_exists('..' . $result['image_url'])) {
+        unlink('..' . $result['image_url']);
+    }
+
+    if ($stmt) {
+        $stmt->bind_param('i', $articleId);
+        $stmt->execute();
+        $stmt->close();
+        // Using AJAX now, so we echo a response instead of redirecting.
+    }
 }
 
-// Fetch news
-$stmt = $conn->prepare("SELECT id, title, category, created_at FROM news ORDER BY created_at DESC");
+// Fetch news categories for the form dropdown
+$cat_stmt = $conn->prepare("SELECT id, name_key FROM content_categories WHERE type = 'news' ORDER BY name_key");
+$cat_stmt->execute();
+$categories = $cat_stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+$cat_stmt->close();
+
+// Fetch all articles to display in the grid
+$stmt = $conn->prepare("
+    SELECT a.id, a.title, a.content, a.status, a.category_id, a.image_url, cc.name_key as category_name, a.created_at
+    FROM articles a
+    LEFT JOIN content_categories cc ON a.category_id = cc.id 
+    ORDER BY a.created_at DESC
+");
 $stmt->execute();
 $newsList = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 $stmt->close();
+?>
+<?php
+function get_summary($html, $word_limit = 20) {
+    $text = strip_tags($html);
+    $words = preg_split("/[\n\r\t ]+/", $text, $word_limit + 1, PREG_SPLIT_NO_EMPTY);
+    if (count($words) > $word_limit) {
+        array_pop($words);
+        return implode(' ', $words) . '...';
+    }
+    return implode(' ', $words);
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -61,6 +119,7 @@ $stmt->close();
     <title>AgriHub - Admin News Management</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../Css/Admin-Dashboard.css">
+    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 </head>
 <body>
 
@@ -102,14 +161,24 @@ $stmt->close();
                 </div>
 
                 <div class="form-container">
-                    <form method="POST" class="form-group">
-                        <input type="hidden" name="news_id" value="">
+                    <form method="POST" class="form-group" enctype="multipart/form-data">
+                        <input type="hidden" name="news_id" id="news_id" value="">
+                        <input type="hidden" name="existing_image_url" id="existing_image_url" value="">
                         <label for="title">Title</label>
                         <input type="text" id="title" name="title" required>
-                        <label for="category">Category</label>
-                        <input type="text" id="category" name="category">
+                        <label for="image">Feature Image</label>
+                        <input type="file" id="image" name="image" accept="image/*">
+                        <label for="category_id">Category</label>
+                        <select id="category_id" name="category_id" required>
+                            <option value="">-- Select a Category --</option>
+                            <?php foreach ($categories as $cat): ?>
+                                <option value="<?php echo (int)$cat['id']; ?>">
+                                    <?php echo htmlspecialchars(ucfirst(str_replace('_', ' ', $cat['name_key']))); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
                         <label for="content">Content</label>
-                        <textarea id="content" name="content" rows="10" required></textarea>
+                        <textarea id="content" name="content" rows="6" required></textarea>
                         <button type="submit" class="btn btn-primary">Add News</button>
                     </form>
                 </div>
@@ -118,7 +187,7 @@ $stmt->close();
                     <?php foreach ($newsList as $news): ?>
                     <div class="news-card">
                         <div class="card-content">
-                            <div class="card-category"><?php echo htmlspecialchars($news['category']); ?></div>
+                            <div class="card-category"><?php echo htmlspecialchars($news['category_name'] ?? 'Uncategorized'); ?></div>
                             <h3><?php echo htmlspecialchars($news['title']); ?></h3>
                             <div class="card-meta">Published: <?php echo htmlspecialchars(date('Y-m-d', strtotime($news['created_at']))); ?></div>
                             <div class="card-admin-overlay">
@@ -135,13 +204,4 @@ $stmt->close();
 
     <script src="../Js/dashboard.js" type="module"></script>
     <script>
-        function editNews(id) {
-            // Implement edit functionality, perhaps fetch data and populate form
-            alert('Edit functionality not implemented yet.');
-        }
-    </script>
-</body>
-</html>
-<?php
-$conn->close();
-?>
+     

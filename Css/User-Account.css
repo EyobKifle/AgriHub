@@ -1,0 +1,396 @@
+/*
+ * Consolidated styles for the User Account page (User-Account.php)
+ * Includes base dashboard styles and page-specific styles.
+ */
+
+/* ==============================
+   1. Root Variables & Base Styles
+   ============================== */
+:root {
+  /* Color Palette */
+  --primary-green: #1e4620;
+  --light-green: rgb(42, 119, 42);
+  --accent-orange: #d97706;
+  --red: #e76f51;
+
+  /* Light Mode */
+  --bg-light: #fbf9f4;
+  --surface-light: #ffffff;
+  --text-primary-light: #1c1c1c;
+  --text-secondary-light: #555;
+  --border-light: #e5e7eb;
+
+  /* Dark Mode (for theme consistency) */
+  --dark-bg: #18230f;
+  --dark-green:#013a1a;
+  --dark-surface: #27391c;
+  --dark-border: #4a5d3a;
+  --dark-text-primary: #e0e0e0;
+  --dark-text-secondary: #a7b3a9;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  background-color: var(--bg-light);
+  color: var(--text-primary-light);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* ==============================
+   2. Main Layout & Header
+   ============================== */
+.dashboard-container {
+  display: flex;
+  min-height: 100vh;
+  padding-top: 70px;
+}
+
+.main-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  height: 70px;
+  background-color: var(--surface-light);
+  border-bottom: 1px solid var(--border-light);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 900;
+}
+
+.header-left .hamburger-menu {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--text-secondary-light);
+}
+
+.header-center .logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-green);
+}
+
+.header-right .profile-link {
+  display: block;
+  text-decoration: none;
+}
+
+.profile-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: var(--primary-green);
+  color: var(--surface-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+.profile-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+/* ==============================
+   3. Sidebar (_sidebar.php)
+   ============================== */
+.sidebar {
+  width: 240px;
+  min-width: 240px;
+  background-color: var(--surface-light);
+  border-right: 1px solid var(--border-light);
+  display: flex;
+  flex-direction: column;
+  transition: margin-left 0.3s ease-in-out;
+  position: fixed;
+  top: 70px;
+  left: 0;
+  height: calc(100vh - 70px);
+  z-index: 1000;
+}
+
+.dashboard-container.sidebar-collapsed .sidebar {
+  margin-left: -240px;
+}
+
+.sidebar-nav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex-grow: 1;
+}
+
+.sidebar-nav li a {
+  display: flex;
+  align-items: center;
+  padding: 0.9rem 1.5rem;
+  text-decoration: none;
+  color: var(--text-secondary-light);
+  font-weight: 500;
+  border-left: 4px solid transparent;
+  transition: all 0.3s;
+}
+
+.sidebar-nav li a i {
+  width: 20px;
+  margin-right: 15px;
+  text-align: center;
+}
+
+.sidebar-nav li a:hover {
+  background-color: var(--bg-light);
+  color: var(--primary-green);
+}
+
+.sidebar-nav li a.active {
+  background-color: #e0f3f1;
+  color: var(--primary-green);
+  border-left-color: var(--primary-green);
+  font-weight: 700;
+}
+
+/* ==============================
+   3.5. Sidebar Footer
+   ============================== */
+.sidebar-footer {
+  padding: 1.5rem;
+  border-top: 1px solid var(--border-light);
+}
+
+.profile-dropdown {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.profile-name {
+  font-weight: 600;
+}
+
+.profile-email {
+  font-size: 0.8rem;
+  color: var(--text-secondary-light);
+}
+/* ==============================
+   4. Main Content Area
+   ============================== */
+.main-content {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+  margin-left: 240px;
+  transition: margin-left 0.3s ease-in-out;
+}
+
+.dashboard-container.sidebar-collapsed .main-content {
+  margin-left: 0;
+}
+
+.main-header {
+  margin-bottom: 2rem;
+}
+
+.main-header h1 {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.main-header p {
+  color: var(--text-secondary-light);
+  margin-top: 5px;
+}
+
+/* ==============================
+   5. Page-Specific: Profile Layout
+   ============================== */
+.profile-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+.profile-picture-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.profile-picture-preview {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 0 auto 1.5rem auto;
+  border: 4px solid var(--surface-light);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background-color: var(--bg-light);
+}
+
+.profile-picture-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (min-width: 992px) {
+  .profile-layout {
+    grid-template-columns: 300px 1fr;
+    align-items: start;
+  }
+}
+
+/* ==============================
+   6. Cards & Forms
+   ============================== */
+.card {
+  background-color: var(--surface-light);
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid var(--border-light);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.card-title {
+  font-weight: 600;
+  color: var(--text-secondary-light);
+  margin-bottom: 1.5rem;
+}
+
+.settings-form .form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .settings-form .form-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.settings-form .form-group {
+  margin-bottom: 1.5rem;
+}
+
+.settings-form label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.settings-form input,
+.settings-form textarea,
+.settings-form select {
+  width: 100%;
+  padding: 0.75rem 0.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-light);
+  background-color: var(--bg-light);
+  font-size: 0.95rem;
+}
+
+.settings-form input:disabled {
+  background-color: #e9ecef;
+  cursor: not-allowed;
+}
+
+.form-text {
+  font-size: 0.85rem;
+  color: var(--text-secondary-light);
+  margin-top: 1rem;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 1rem;
+}
+
+/* Toggle Switch */
+.form-group-toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 26px;
+}
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 26px;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+input:checked + .slider {
+  background-color: var(--primary-green);
+}
+input:checked + .slider:before {
+  transform: translateX(24px);
+}
+
+/* Buttons */
+.btn {
+  padding: 0.75rem 0.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-primary {
+  background-color: var(--primary-green);
+  color: white;
+}
+.btn-primary:hover {
+  background-color: var(--dark-green);
+}
+.btn-secondary {
+  background-color: var(--bg-light);
+  color: var(--text-primary-light);
+  border: 1px solid var(--border-light);
+}
+.btn.full-width {
+  width: 100%;
+  display: block;
+  text-align: center;
+}

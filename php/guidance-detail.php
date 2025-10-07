@@ -56,15 +56,15 @@ if (!$articleId) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $guide ? htmlspecialchars($guide['title']) : 'Guidance Detail'; ?> - AgriHub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="Css/main.css">
-    <link rel="stylesheet" href="Css/guidance.css">
+    <link rel="stylesheet" href="/AgriHub/Css/main.css">
+    <link rel="stylesheet" href="/AgriHub/Css/guidance.css">
 </head>
 <body>
     <?php require_once __DIR__ . '/partials/header.php'; ?>
 
     <main class="page-container">
         <div class="content-wrapper">
-            <a href="Farming-Guidance.php" class="back-link">&larr; Back to Guidance Map</a>
+            <a href="/AgriHub/php/User-Farming-Guidance.php" class="back-link">&larr; Back to Guidance Map</a>
 
             <?php if ($error): ?>
                 <div class="error-message">
@@ -88,7 +88,7 @@ if (!$articleId) {
                         <ul>
                             <?php foreach ($related_topics as $related): ?>
                                 <li>
-                                    <a href="guidance-detail.php?id=<?php echo $related['id']; ?>">
+                                    <a href="/AgriHub/guidance-detail.php?id=<?php echo $related['id']; ?>">
                                         <?php echo htmlspecialchars($related['title']); ?>
                                     </a>
                                 </li>
@@ -103,6 +103,6 @@ if (!$articleId) {
 
     <?php require_once __DIR__ . '/partials/footer.php'; ?>
 
-    <script src="Js/site.js" type="module"></script>
+    <script src="/AgriHub/Js/site.js" type="module"></script>
 </body>
 </html>
