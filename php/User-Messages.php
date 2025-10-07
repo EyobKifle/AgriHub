@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['user_id'])) {
-    header('Location: ../HTML/Login.html');
+    header('Location: /AgriHub/HTML/Login.html');
     exit();
 }
 require_once __DIR__ . '/config.php';
@@ -33,7 +33,7 @@ $newConversationUserId = filter_input(INPUT_GET, 'user_id', FILTER_VALIDATE_INT)
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Messages - AgriHub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../Css/User-Dashboard.css">
+    <link rel="stylesheet" href="/AgriHub/Css/User-Dashboard.css">
 </head>
 <body>
     <header class="main-header-bar">
@@ -49,10 +49,10 @@ $newConversationUserId = filter_input(INPUT_GET, 'user_id', FILTER_VALIDATE_INT)
             </div>
         </div>
         <div class="header-right">
-            <a href="User-Account.php" class="profile-link" aria-label="User Profile">
+            <a href="/AgriHub/php/User-Account.php" class="profile-link" aria-label="User Profile">
                 <div class="profile-avatar">
                     <?php if (!empty($avatar_url)): ?>
-                        <img src="../<?php echo e($avatar_url); ?>" alt="User Avatar">
+                        <img src="/AgriHub/<?php echo e($avatar_url); ?>" alt="User Avatar">
                     <?php else: echo e($initial); endif; ?>
                 </div>
             </a>
@@ -107,7 +107,7 @@ $newConversationUserId = filter_input(INPUT_GET, 'user_id', FILTER_VALIDATE_INT)
         </main>
     </div>
 
-    <script type="module" src="../Js/dashboard.js"></script>
-    <script type="module" src="../Js/User-Messages.js"></script>
+    <script type="module" src="/AgriHub/Js/dashboard.js"></script>
+    <script type="module" src="/AgriHub/Js/User-Messages.js"></script>
 </body>
 </html>
