@@ -1,61 +1,47 @@
-/*
- * AgriHub Community Forum - Consolidated Styles (CSS Grid Edition)
- * Uses CSS Grid for the main layout, header, and footer structure.
- */
-
-/* ======================================= */
-/* 1. Global Variables & Base Styles */
-/* ======================================= */
 :root {
-    --primary-green: #1e4620;
-    /* Dark Green */
-    --light-green: rgb(42, 119, 42);
-    /* Medium/Accent Green */
-    --light-bg: #fbf9f4;
-    /* Light Background */
-    --text-dark: #1c1c1c;
-    /* Primary Text (Light Mode) */
-    --text-light: #555;
-    /* Secondary Text (Light Mode) */
-    --border-color: #e5e7eb;
-    /* Border/Separator */
-    --white: #ffffff;
-    --hover-green: rgb(63, 146, 63);
-    /* Primary Button Hover */
+  --primary-green: #1e4620;
+  --light-green: rgb(42, 119, 42);
+  --light-bg: #fbf9f4;
+  --text-dark: #1c1c1c;
+  --text-light: #555;
+  --border-color: #e5e7eb;
+  --white: #ffffff;
+  --hover-green: rgb(63, 146, 63);
 
-    /* Dark Mode Variables */
-    --dark-bg: #18230f;
-    --dark-surface: #27391c;
-    --dark-border: #4a5d3a;
-    --dark-accent: #37a05e;
-    --dark-text-primary: #e0e0e0;
-    --dark-text-secondary: #a7b3a9;
+
+  /* Dark Mode Variables */
+  --dark-bg: #18230f;
+  --dark-surface: #27391c;
+  --dark-border: #4a5d3a;
+  --dark-accent: #37a05e;
+  --dark-text-primary: #e0e0e0;
+  --dark-text-secondary: #a7b3a9;
 }
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-    font-family: "Inter", sans-serif;
-    background-color: var(--light-bg);
-    color: var(--text-dark);
-    line-height: 1.6;
-    transition: background-color 0.3s, color 0.3s;
+  font-family: "Inter", sans-serif;
+  background-color: var(--light-bg);
+  color: var(--text-dark);
+  line-height: 1.6;
+  transition: background-color 0.3s, color 0.3s;
 }
 
 a {
-    text-decoration: none;
-    color: inherit;
-    transition: color 0.2s;
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.2s;
 }
 
 .page-container {
-    max-width: 1200px;
-    margin: auto 1rem;
-    padding: auto 10px;
+  max-width: 1400px;
+  margin: 0 5rem 1rem 5rem;
+  padding: auto 10px;
 }
 
 /* ======================================= */
@@ -63,339 +49,306 @@ a {
 /* ======================================= */
 
 .header {
-    background-color: var(--light-bg);
-    padding: 1rem 0;
-    border-bottom: 1px solid var(--border-color);
+  background-color: var(--light-bg);
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .header-container {
-    max-width: 1240px;
-    padding: 0 20px;
-    margin: 0 auto;
-    /* Use Grid for Header Layout */
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    /* Logo | Nav Links | Actions */
-    align-items: center;
-    gap: 2rem;
+  max-width: 1240px;
+  padding: 0 20px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
 }
 
 .logo {
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--light-green);
-    display: flex;
-    align-items: center;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--light-green);
+  display: flex;
+  align-items: center;
 }
 
 .logo .logo-icon {
-    background-color: var(--light-green);
-    color: var(--white);
-    padding: 6px 8px;
-    border-radius: 6px;
-    margin-right: 1px;
-    font-style: normal;
+  background-color: var(--light-green);
+  color: var(--white);
+  padding: 6px 8px;
+  border-radius: 6px;
+  margin-right: 1px;
+  font-style: normal;
 }
 
 .nav-links {
-    display: flex;
-    /* Flex is still best for simple horizontal menu */
-    justify-content: center;
-    align-items: center;
-    gap: 2rem;
+  display: flex;
+  /* Flex is still best for simple horizontal menu */
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
 }
 
 .nav-links a {
-    color: var(--text-light);
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 6px;
+  color: var(--text-light);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .nav-links a:hover,
 .nav-links a.active {
-    color: var(--text-dark);
+  color: var(--text-dark);
 }
 
 .header-actions {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
 }
 
 /* Buttons */
 .btn {
-    padding: 10px 20px;
-    border: 1px solid transparent;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    text-align: center;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    white-space: nowrap;
-    transition: background-color 0.2s;
+  padding: 10px 20px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  transition: background-color 0.2s;
 }
 
 .btn-primary {
-    background-color: var(--light-green);
-    color: var(--white);
+  background-color: var(--light-green);
+  color: var(--white);
 }
 
 .btn-primary:hover {
-    background-color: var(--hover-green);
+  background-color: var(--hover-green);
 }
 
 .btn-secondary {
-    background-color: var(--white);
-    color: var(--text-dark);
-    border: 1px solid var(--border-color);
+  background-color: var(--white);
+  color: var(--text-dark);
+  border: 1px solid var(--border-color);
 }
 
 .btn-secondary:hover {
-    background-color: #e8f5e9;
-    /* Lightest green hover */
+  background-color: #e8f5e9;
+  /* Lightest green hover */
 }
 
 /* Dark Mode Toggle */
 .dark-mode-toggle {
-    background: none;
-    border: none;
-    color: var(--text-light);
-    cursor: pointer;
-    font-size: 1.2rem;
-    padding: 5px;
+  background: none;
+  border: none;
+  color: var(--text-light);
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 5px;
 }
 
 .dark-mode-toggle:hover {
-    color: var(--text-dark);
+  color: var(--text-dark);
 }
 
 .dark-mode-toggle .fa-moon {
-    display: none;
+  display: none;
 }
 
 .page-header {
-    padding: 20px 0 10px;
+  padding: 20px 0 10px;
 }
 
 .page-header h1 {
-    color: var(--light-green);
-    font-size: 2.5rem;
-    margin-bottom: 5px;
+  color: var(--light-green);
+  font-size: 2.5rem;
+  margin-bottom: 5px;
 }
 
 .page-header p {
-    font-size: 1.1rem;
-    color: var(--text-light);
+  font-size: 1.1rem;
+  color: var(--text-light);
 }
 
 .content-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-    padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  padding-top: 20px;
 }
 
 .community-layout {
-    display: flex;
-    gap: 20px;
+  display: flex;
+  gap: 20px;
 }
 
 .community-sidebar {
-    flex: 1;
-    padding-top: 20px;
+  flex: 1;
+  padding-top: 20px;
 }
 
 .main-content {
-    flex: 2;
+  flex: 2;
 }
 
 .sidebar-section {
-    margin-bottom: 30px;
-    background-color: var(--white);
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  margin-bottom: 30px;
+  background-color: var(--white);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .sidebar-section h3 {
-    color: var(--light-green);
-    font-size: 1.25rem;
-    margin-bottom: 15px;
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 10px;
+  color: var(--light-green);
+  font-size: 1.25rem;
+  margin-bottom: 15px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 10px;
 }
 
 #category-list,
 .stats-list {
-    list-style: none;
-    padding: 0;
+  list-style: none;
+  padding: 0;
 }
 
 #category-list li a {
-    display: flex;
-    justify-content: space-between;
-    padding: 8px 0;
-    font-size: 1rem;
-    color: var(--text-light);
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  font-size: 1rem;
+  color: var(--text-light);
 }
 
 #category-list li a:hover {
-    color: var(--text-dark);
+  color: var(--text-dark);
 }
 
 #category-list li a.active {
-    color: var(--light-green);
-    font-weight: 600;
+  color: var(--light-green);
+  font-weight: 600;
 }
 
 #category-list li a span {
-    color: var(--text-light);
-    font-weight: normal;
-    font-size: 0.95rem;
+  color: var(--text-light);
+  font-weight: normal;
+  font-size: 0.95rem;
 }
 
 #category-list li a.active span {
-    color: var(--light-green);
+  color: var(--light-green);
 }
 
 .stats-list li {
-    padding: 8px 0;
-    font-size: 1rem;
-    color: var(--text-dark);
+  padding: 8px 0;
+  font-size: 1rem;
+  color: var(--text-dark);
 }
 
 /* Discussion Cards */
 .new-discussion-box {
-    background-color: var(--white);
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    margin-bottom: 30px;
+  background-color: var(--white);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  margin-bottom: 30px;
 }
 
 .discussion-card {
-    background-color: var(--white);
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    margin-bottom: 20px;
-    position: relative;
-    border-left: 5px solid var(--light-green);
-    transition: transform 0.2s, box-shadow 0.2s;
+  background-color: var(--white);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  margin-bottom: 20px;
+  position: relative;
+  border-left: 5px solid var(--light-green);
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .discussion-card:hover {
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
 }
 
 .discussion-card h3 a {
-    font-size: 1.35rem;
-    color: var(--text-dark);
-    margin: 5px 0 10px;
-    display: block;
+  font-size: 1.35rem;
+  color: var(--text-dark);
+  margin: 5px 0 10px;
+  display: block;
 }
 
 .discussion-card h3 a:hover {
-    color: var(--light-green);
-}
-
-/* ======================================= */
-/* 4. Footer Styles */
-/* ======================================= */
-
-.footer {
-    background-color: var(--primary-green);
-    color: var(--dark-text-primary);
-    padding: 40px 20px;
-    margin-top: 40px;
-}
-
-.footer-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    /* Grid for Footer Sections */
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
-    gap: 40px;
+  color: var(--light-green);
 }
 
 .footer-section h4 {
-    color: var(--white);
-    font-size: 1.2rem;
-    margin-bottom: 15px;
+  color: var(--white);
+  font-size: 1.2rem;
+  margin-bottom: 15px;
 }
 
 .footer-bottom {
-    text-align: center;
-    margin-top: 40px;
-    padding-top: 20px;
-    border-top: 1px solid var(--dark-border);
-    font-size: 0.85rem;
-    color: var(--dark-text-secondary);
+  text-align: center;
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid var(--dark-border);
+  font-size: 0.85rem;
+  color: var(--dark-text-secondary);
 }
 
-/* ======================================= */
-/* 6. Dark Mode Overrides */
-/* ======================================= */
-
 body.dark-mode {
-    background-color: var(--dark-bg);
-    color: var(--dark-text-primary);
+  background-color: var(--dark-bg);
+  color: var(--dark-text-primary);
 }
 
 body.dark-mode .header {
-    background-color: var(--dark-surface);
-    border-bottom-color: var(--dark-border);
+  background-color: var(--dark-surface);
+  border-bottom-color: var(--dark-border);
 }
 
 body.dark-mode .btn-secondary {
-    background-color: var(--dark-surface);
-    color: var(--dark-text-primary);
-    border-color: var(--dark-border);
+  background-color: var(--dark-surface);
+  color: var(--dark-text-primary);
+  border-color: var(--dark-border);
 }
 
 body.dark-mode .btn-secondary:hover {
-    background-color: var(--dark-border);
+  background-color: var(--dark-border);
 }
 
 body.dark-mode .nav-links a,
 body.dark-mode #category-list li a,
 body.dark-mode .discussion-card p {
-    color: var(--dark-text-secondary);
+  color: var(--dark-text-secondary);
 }
 
 body.dark-mode .sidebar-section,
 body.dark-mode .new-discussion-box,
 body.dark-mode .discussion-card {
-    background-color: var(--dark-surface);
-    box-shadow: 0 1px 3px rgba(255, 255, 255, 0.05);
+  background-color: var(--dark-surface);
+  box-shadow: 0 1px 3px rgba(255, 255, 255, 0.05);
 }
 
 body.dark-mode .discussion-card h3 a,
 body.dark-mode .stats-list li,
 body.dark-mode .discussion-card .author {
-    color: var(--dark-text-primary);
+  color: var(--dark-text-primary);
 }
 
 body.dark-mode .discussion-card h3 a:hover,
 body.dark-mode .btn-primary:hover,
 body.dark-mode #category-list li a.active {
-    color: var(--dark-accent);
+  color: var(--dark-accent);
 }
 
 body.dark-mode .discussion-card .category,
 body.dark-mode .discussion-card .interaction span i {
-    background-color: var(--dark-accent);
-    color: var(--white);
-}
-
-/* Footer in Dark Mode */
-body.dark-mode .footer {
-    background-color: var(--primary-green);
-    /* Keep footer dark green */
+  background-color: var(--dark-accent);
+  color: var(--white);
 }

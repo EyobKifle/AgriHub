@@ -17,11 +17,3 @@ if ($conn->connect_error) {
     // If connection fails, stop the script and show the error
     die("Connection failed: " . $conn->connect_error);
 }
-
-// If you see this message, your connection is successful!
-// echo "Connected successfully to the '$dbname' database!";
-
-// You can now include this file in other PHP scripts like this:
-// require_once 'db_connect.php';
-// And use the $conn variable to run queries.
-?>

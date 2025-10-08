@@ -24,6 +24,44 @@ $activeListings = $activeListingsResult->fetch_assoc()['count'] ?? 0;
 $pendingReportsResult = $conn->query("SELECT COUNT(*) as count FROM reports WHERE status = 'open'");
 $pendingReports = $pendingReportsResult->fetch_assoc()['count'] ?? 0;
 
+// --- Fetch Chart Data ---
+
+// 1. User Growth Data (Last 6 Months)
+$userGrowthLabels = [];
+$userGrowthData = [];
+$sixMonthsAgo = new DateTime('-5 months'); // Go back 5 months to get a total of 6
+$sixMonthsAgo->modify('first day of this month');
+for ($i = 0; $i < 6; $i++) {
+    $userGrowthLabels[] = $sixMonthsAgo->format('M Y');
+    $userGrowthData[$sixMonthsAgo->format('Y-m')] = 0;
+    $sixMonthsAgo->modify('+1 month');
+}
+
+$userGrowthQuery = "
+    SELECT DATE_FORMAT(created_at, '%Y-%m') as month, COUNT(id) as count
+    FROM users
+    WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH)
+    GROUP BY month
+    ORDER BY month ASC
+";
+$userGrowthResult = $conn->query($userGrowthQuery);
+while ($row = $userGrowthResult->fetch_assoc()) {
+    $userGrowthData[$row['month']] = (int)$row['count'];
+}
+$userGrowthData = array_values($userGrowthData); // Convert associative array to indexed for JS
+
+// 2. Listing Categories Data (Doughnut Chart)
+$categoryDataQuery = "
+    SELECT c.name as category_name, COUNT(p.id) as product_count
+    FROM products p
+    JOIN categories c ON p.category_id = c.id
+    WHERE p.status = 'active'
+    GROUP BY c.name
+    ORDER BY product_count DESC
+";
+$categoryResult = $conn->query($categoryDataQuery);
+$listingCategories = $categoryResult->fetch_all(MYSQLI_ASSOC);
+
 // --- Fetch Recent Items ---
 
 $recentUsersStmt = $conn->prepare("SELECT id, name, created_at FROM users ORDER BY created_at DESC LIMIT 4");
@@ -59,6 +97,7 @@ $recentReportsStmt->close();
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AgriHub - Admin Dashboard</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <link rel="stylesheet" href="../Css/Admin-Dashboard.css">
 </head>
 <body>
@@ -103,11 +142,11 @@ $recentReportsStmt->close();
             <div class="cards-grid chart-grid">
                 <div class="card">
                     <h3 class="card-title">User Growth (Last 6 Months)</h3>
-                    <div class="chart-container">[Chart.js: User Growth]</div>
+                    <div class="chart-container"><canvas id="userGrowthChart"></canvas></div>
                 </div>
                 <div class="card">
                     <h3 class="card-title">Listing Categories</h3>
-                    <div class="chart-container">[Chart.js: Doughnut Chart]</div>
+                    <div class="chart-container"><canvas id="listingCategoriesChart"></canvas></div>
                 </div>
             </div>
 
@@ -172,6 +211,14 @@ $recentReportsStmt->close();
         </div>
     </main>
 </div>
+
+<!-- Pass data from PHP to JavaScript -->
+<script id="dashboard-data" type="application/json">
+    <?php echo json_encode([
+        'userGrowth' => ['labels' => $userGrowthLabels, 'data' => $userGrowthData],
+        'listingCategories' => $listingCategories
+    ]); ?>
+</script>
 
 <script src="../Js/dashboard.js" type="module"></script>
 </body>

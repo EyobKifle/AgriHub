@@ -1,5 +1,0 @@
-[07-Oct-2025 09:08:55 Europe/Berlin] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'agrihub.discussion_messages' doesn't exist in C:\xampp\htdocs\AgriHub\php\discussion.php:70
-Stack trace:
-#0 C:\xampp\htdocs\AgriHub\php\discussion.php(70): mysqli->prepare('\r\n             ...')
-#1 {main}
-  thrown in C:\xampp\htdocs\AgriHub\php\discussion.php on line 70

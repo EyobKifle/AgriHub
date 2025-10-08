@@ -1,27 +1,103 @@
-import { initializeDashboardCommon } from './dashboard-common.js';
-import { initializeI18n, applyTranslationsToPage, updateLangSwitcher } from './i18n.js';
-import { initializeUserNewsPage } from '../php/User-News.js';
+/**
+ * Initializes the admin and user dashboard scripts.
+ * Handles mobile menu toggling and page-specific initializations.
+ */
 
 /**
- * This is the main entry point for the site's dashboard JavaScript.
- * It runs on all authenticated user and admin pages.
+ * Toggles the visibility of the sidebar for mobile view.
  */
-const initializeDashboard = async () => {
-  // 1. Initialize i18n first so static labels render correctly.
-  await initializeI18n();
-  applyTranslationsToPage();
-  updateLangSwitcher();
+function initializeSidebarToggle() {
+    const hamburger = document.getElementById('hamburger-menu');
+    const sidebar = document.getElementById('sidebar');
 
-  // 2. Initialize common scripts for all dashboard pages (e.g., hamburger menu).
-  initializeDashboardCommon();
+    if (hamburger && sidebar) {
+        hamburger.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+        });
+    }
+}
 
-  // 3. Run page-specific scripts.
-  const currentPage = window.location.pathname.split('/').pop();
-  switch (currentPage) {
-    case 'User-News.php':
-      initializeUserNewsPage();
-      break;
-  }
-};
+/**
+ * Reads chart data from the DOM and initializes the admin dashboard charts.
+ */
+function initializeAdminCharts() {
+    const dataElement = document.getElementById('dashboard-data');
+    if (!dataElement) return;
 
-document.addEventListener('DOMContentLoaded', initializeDashboard);
+    const chartData = JSON.parse(dataElement.textContent);
+
+    // 1. User Growth Chart (Line)
+    const userGrowthCtx = document.getElementById('userGrowthChart');
+    if (userGrowthCtx && chartData.userGrowth) {
+        new Chart(userGrowthCtx, {
+            type: 'line',
+            data: {
+                labels: chartData.userGrowth.labels,
+                datasets: [{
+                    label: 'New Users',
+                    data: chartData.userGrowth.data,
+                    fill: true,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
+    // 2. Listing Categories Chart (Doughnut)
+    const listingCategoriesCtx = document.getElementById('listingCategoriesChart');
+    if (listingCategoriesCtx && chartData.listingCategories) {
+        const labels = chartData.listingCategories.map(c => c.category_name);
+        const data = chartData.listingCategories.map(c => c.product_count);
+
+        new Chart(listingCategoriesCtx, {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Listings',
+                    data: data,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.7)',
+                        'rgba(54, 162, 235, 0.7)',
+                        'rgba(255, 206, 86, 0.7)',
+                        'rgba(75, 192, 192, 0.7)',
+                        'rgba(153, 102, 255, 0.7)',
+                        'rgba(255, 159, 64, 0.7)'
+                    ],
+                    borderColor: '#fff',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+            }
+        });
+    }
+}
+
+/**
+ * Main initialization function.
+ */
+function init() {
+    initializeSidebarToggle();
+
+    // Check if we are on the admin dashboard page
+    if (document.getElementById('userGrowthChart')) {
+        initializeAdminCharts();
+    }
+}
+
+// Run initialization once the DOM is fully loaded.
+document.addEventListener('DOMContentLoaded', init);

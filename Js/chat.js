@@ -1,6 +1,6 @@
 /**
  * This file is the main controller for the community chat feature.
- * It orchestrates the UI, data, and event handling for the chat.
+ * It orchestrates the UI, data, and event handling for the chat, and now includes polling.
  */
 
 import { getMessages, addMessage, updateMessage, deleteMessage } from './chat-api.js';
@@ -39,10 +39,13 @@ async function initializeChat() {
   const discussionId = getDiscussionId();
   const currentUser = getCurrentUser();
 
-  if (!discussionId || discussionId === '0') {
+  if (!discussionId || discussionId === '0' || !els.messages) {
     els.messages.innerHTML = '<div class="error-state">Invalid or missing discussion ID. Cannot load chat.</div>';
-    els.form.style.display = 'none';
+    if (els.form) els.form.style.display = 'none';
     return;
+  }
+  if (!currentUser.id && els.form) {
+      els.form.style.display = 'none';
   }
 
   await refreshMessages(discussionId, currentUser);
@@ -53,9 +56,12 @@ async function initializeChat() {
  * Groups all event listener attachments in one place.
  */
 function initializeEventListeners(discussionId, currentUser) {
-  els.form.addEventListener('submit', (e) => handleFormSubmit(e, discussionId, currentUser));
+  // Only add form listeners if the form exists (i.e., user is logged in)
+  if (els.form) {
+    els.form.addEventListener('submit', (e) => handleFormSubmit(e, discussionId, currentUser));
+    els.file.addEventListener('change', handleFileSelection);
+  }
   els.messages.addEventListener('click', handleMessageActions);
-  els.file.addEventListener('change', handleFileSelection);
 }
 
 /**
@@ -66,58 +72,33 @@ function initializeEventListeners(discussionId, currentUser) {
 async function handleFormSubmit(e, discussionId, currentUser) {
   e.preventDefault();
   const mode = els.form.dataset.mode;
-
-  if (mode === 'edit') {
-    await handleEditMessageSubmit(discussionId, currentUser);
-  } else {
-    await handleNewMessageSubmit(discussionId, currentUser);
-  }
-}
-
-/**
- * Handles the logic for submitting a new message.
- */
-async function handleNewMessageSubmit(discussionId, currentUser) {
   const text = els.input.value.trim();
-  // Note: File attachments are not yet handled by the backend.
   if (!text) return;
 
-  const msg = {
-    // The backend will use the session user, but we send text and discussionId.
-    text,
-    discussionId: discussionId,
-  };
-
-  try {
-    await addMessage(msg);
-    els.input.value = '';
-    els.file.value = '';
-    els.previews.innerHTML = '';
-    
-    // Refresh the chat to show the new message
-    await refreshMessages(discussionId, currentUser);
-  } catch (err) {
-    console.error("Failed to send message:", err);
-    alert("Could not send message. Please try again.");
-  }
-}
-
-/**
- * Handles the logic for submitting an edited message.
- */
-async function handleEditMessageSubmit(discussionId, currentUser) {
-  const messageId = els.form.dataset.editingId;
-  const text = els.input.value.trim();
-  if (!text || !messageId) return;
-
-  try {
-    await updateMessage(messageId, text);
-    // Refresh the chat to show the edited message
-    await refreshMessages(discussionId, currentUser);
-    toggleEditState(null); // Exit edit mode
-  } catch (err) {
-    console.error("Failed to update message:", err);
-    alert("Could not update message. Please try again.");
+  if (mode === 'edit') {
+    const messageId = els.form.dataset.editingId;
+    if (!messageId) return;
+    try {
+      await updateMessage(messageId, text);
+      // Refresh the chat to show the edited message
+      await refreshMessages(discussionId, currentUser);
+      toggleEditState(null); // Exit edit mode
+    } catch (err) {
+      console.error("Failed to update message:", err);
+      alert("Could not update message. Please try again.");
+    }
+  } else {
+    const msg = { text, discussionId };
+    try {
+      await addMessage(msg);
+      els.input.value = '';
+      els.file.value = '';
+      els.previews.innerHTML = '';
+      await refreshMessages(discussionId, currentUser); // Refresh to get the new message with its ID
+    } catch (err) {
+      console.error("Failed to send message:", err);
+      alert("Could not send message. Please try again.");
+    }
   }
 }
 

@@ -3,7 +3,8 @@ session_start();
 require_once __DIR__ . '/config.php';
 
 
-function redirect($path) {
+function redirect($path)
+{
     header("Location: /AgriHub$path");
     exit();
 }
@@ -14,7 +15,8 @@ function redirect($path) {
  * @param string $page The HTML page to redirect to (e.g., '/HTML/Signup.html').
  * @param string $error_code The error code to append to the URL.
  */
-function redirect_with_error($page, $error_code) {
+function redirect_with_error($page, $error_code)
+{
     redirect("$page?error=$error_code");
 }
 
@@ -107,8 +109,11 @@ if ($action === 'login') {
             $_SESSION['role'] = $row['role'];
 
             // Update last login timestamp
-            $uid = (int)$row['id'];
-            $conn->query("UPDATE users SET last_login = NOW() WHERE id = $uid");
+            if ($update_stmt = $conn->prepare("UPDATE users SET last_login = NOW() WHERE id = ?")) {
+                $update_stmt->bind_param('i', $row['id']);
+                $update_stmt->execute();
+                $update_stmt->close();
+            }
 
             $stmt->close();
             // Redirect based on user role

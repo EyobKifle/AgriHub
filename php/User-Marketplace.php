@@ -47,6 +47,7 @@ $conn->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Marketplace - AgriHub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/AgriHub/Css/User-Dashboard.css" /> <!-- Add this for consistent dashboard styling -->
     <link rel="stylesheet" href="../Css/User-Marketplace.css" />
 </head>
 

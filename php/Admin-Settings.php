@@ -36,14 +36,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Update password
     if (!empty($currentPassword) && !empty($newPassword)) {
         // Verify current password
-        $stmt = $conn->prepare("SELECT password FROM users WHERE id = ?");
+        $stmt = $conn->prepare("SELECT password_hash FROM users WHERE id = ?");
         $stmt->bind_param('i', $userId);
         $stmt->execute();
         $result = $stmt->get_result();
         if ($row = $result->fetch_assoc()) {
-            if (password_verify($currentPassword, $row['password'])) {
+            if (password_verify($currentPassword, $row['password_hash'])) {
                 $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
-                $stmt = $conn->prepare("UPDATE users SET password = ? WHERE id = ?");
+                $stmt = $conn->prepare("UPDATE users SET password_hash = ? WHERE id = ?");
                 $stmt->bind_param('si', $hashedPassword, $userId);
                 $stmt->execute();
                 $stmt->close();
@@ -125,11 +125,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <form method="POST" class="settings-form">
                             <div class="form-group">
                                 <label for="current_password">Current Password</label>
-                                <input type="password" id="current_password" name="current_password" required>
+                                <input type="password" id="current_password" name="current_password" autocomplete="current-password" required>
                             </div>
                             <div class="form-group">
                                 <label for="new_password">New Password</label>
-                                <input type="password" id="new_password" name="new_password" required>
+                                <input type="password" id="new_password" name="new_password" autocomplete="new-password" required>
                             </div>
                             <button type="submit" class="btn btn-primary">Change Password</button>
                         </form>

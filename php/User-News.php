@@ -131,6 +131,11 @@ $conn->close();
 
                 <div class="news-layout">
                     <aside class="news-sidebar">
+                        <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+                        <div class="sidebar-section">
+                            <a href="Admin-News-Management.php" class="btn btn-primary full-width"><i class="fa-solid fa-plus"></i> Create New Article</a>
+                        </div>
+                        <?php endif; ?>
                         <div class="sidebar-section">
                             <h3 data-i18n-key="news.sidebar.categories">Categories</h3>
                             <ul class="category-list">

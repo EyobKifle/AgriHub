@@ -1,9 +1,8 @@
 :root {
-  /* New Color Palette */
   --primary-green: #1E4620;
   --light-green: rgb(42, 119, 42);
   --accent-orange: #D97706;
-  --red: #e76f51; /* Kept for danger/error states */
+  --red: #e76f51;
 
   /* Light Mode */
   --bg-light: #FBF9F4;

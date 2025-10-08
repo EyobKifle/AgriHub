@@ -26,13 +26,13 @@
 
             <div class="form-field">
               <label for="email" data-i18n-key="login.emailLabel">Email Address</label>
-              <input type="email" id="email" name="email" data-i18n-placeholder-key="login.emailPlaceholder" placeholder="you@example.com" required />
+              <input type="email" id="email" name="email" autocomplete="email" data-i18n-placeholder-key="login.emailPlaceholder" placeholder="you@example.com" required />
             </div>
 
             <div class="form-field">
               <label for="password" data-i18n-key="login.passwordLabel">Password</label>
               <div class="password-wrapper">
-                <input type="password" id="password" name="password" data-i18n-placeholder-key="login.passwordPlaceholder" placeholder="••••••••" required />
+                <input type="password" id="password" name="password" autocomplete="current-password" data-i18n-placeholder-key="login.passwordPlaceholder" placeholder="••••••••" required />
                 <button type="button" class="password-toggle" aria-label="Show password">
                   <i class="fa-solid fa-eye"></i>
                 </button>
