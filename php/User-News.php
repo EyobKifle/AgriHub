@@ -160,21 +160,24 @@ $conn->close();
                                 </div>
                             <?php else: ?>
                                 <?php foreach ($articles as $article): ?>
-                                <div class="news-card">
-                                    <a href="User-Article.php?id=<?php echo (int)$article['id']; ?>" class="news-card-image-link">
-                                        <img src="/AgriHub/<?php echo e(empty($article['image_url']) ? 'https://placehold.co/400x250?text=No+Image' : $article['image_url']); ?>" alt="<?php echo e($article['title']); ?>" class="news-card-image">
-                                    </a>
-                                    <div class="news-card-content">
-                                        <div class="news-card-category"><?php echo e(ucfirst(str_replace('_', ' ', $article['category_name_key']))); ?></div>
-                                        <h3 class="news-card-title">
-                                            <a href="User-Article.php?id=<?php echo (int)$article['id']; ?>"><?php echo e($article['title']); ?></a>
-                                        </h3>
-                                        <p class="news-card-excerpt"><?php echo e($article['excerpt']); ?></p>
-                                        <div class="news-card-meta">
-                                            <span>By <?php echo e($article['author_name']); ?></span> &bull; <span><?php echo time_ago($article['created_at']); ?></span>
+                                <a href="User-Article.php?id=<?php echo (int)$article['id']; ?>" class="news-card-link">
+                                    <div class="news-card">
+                                        <div class="news-card-image-link">
+                                            <img src="/AgriHub/<?php echo e(empty($article['image_url']) ? 'https://placehold.co/400x250?text=No+Image' : $article['image_url']); ?>" alt="<?php echo e($article['title']); ?>" class="news-card-image">
+                                        </div>
+                                        <div class="news-card-content">
+                                            <div class="news-card-category"><?php echo e(ucfirst(str_replace('_', ' ', $article['category_name_key']))); ?></div>
+                                            <h3 class="news-card-title">
+                                                <?php echo e($article['title']); ?>
+
+                                            </h3>
+                                            <p class="news-card-excerpt"><?php echo e($article['excerpt']); ?></p>
+                                            <div class="news-card-meta">
+                                                <span>By <?php echo e($article['author_name']); ?></span> &bull; <span><?php echo time_ago($article['created_at']); ?></span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                </a>
                                 <?php endforeach; ?>
                             <?php endif; ?>
                         </div>

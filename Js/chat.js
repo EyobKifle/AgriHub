@@ -129,6 +129,68 @@ async function handleMessageActions(e) {
   }
 }
 
+        console.error('Failed to initialize chat:', error);
+
+
+/**
+ * Initializes the report modal functionality.
+ */
+function initializeReportModal() {
+    const openBtn = document.getElementById('report-discussion-btn');
+    const closeBtn = document.getElementById('close-report-modal');
+    const modal = document.getElementById('report-modal');
+    const form = document.getElementById('report-form');
+    const discussionId = document.body.dataset.discussionId;
+
+    if (!openBtn || !modal || !form || !discussionId) {
+        return;
+    }
+
+    const toggleModal = (show) => {
+        modal.style.display = show ? 'flex' : 'none';
+    };
+
+    openBtn.addEventListener('click', () => toggleModal(true));
+    closeBtn.addEventListener('click', () => toggleModal(false));
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            toggleModal(false);
+        }
+    });
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(form);
+        const data = {
+            action: 'report_discussion',
+            discussion_id: discussionId,
+            reason: formData.get('reason'),
+            details: formData.get('details')
+        };
+
+        try {
+            const response = await fetch('discussion.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            const result = await response.json();
+
+            if (result.success) {
+                alert(result.message || 'Report submitted successfully!');
+                toggleModal(false);
+                form.reset();
+            } else {
+                alert('Error: ' + (result.message || 'Could not submit report.'));
+            }
+        } catch (error) {
+            console.error('Report submission failed:', error);
+            alert('A network error occurred. Please try again.');
+        }
+    });
+}
+
+
 function handleFileSelection() {
   els.previews.innerHTML = '';
   const onRemove = (fileToRemove) => {
@@ -143,4 +205,7 @@ function handleFileSelection() {
   });
 }
 
+
+// Initialize all functionalities
 initializeChat();
+initializeReportModal();

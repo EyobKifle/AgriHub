@@ -11,6 +11,7 @@ require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/utils.php';
 
 $name = $_SESSION['name'] ?? 'User';
+$email = $_SESSION['email'] ?? '';
 $initial = !empty($name) ? strtoupper(mb_substr($name, 0, 1)) : 'U';
 $article = null;
 $related_articles = [];

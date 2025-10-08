@@ -259,6 +259,9 @@ if ($isPageRequest) {
                         <header class="discussion-post-header">
                             <h1><?php echo htmlspecialchars($discussion['title']); ?></h1>
                             <div class="discussion-post-meta">
+                                <?php if ($isLoggedIn): ?>
+                                <button class="btn-icon report-btn" id="report-discussion-btn" title="Report this discussion"><i class="fa-solid fa-flag"></i> Report</button>
+                                <?php endif; ?>
                                 By <span class="author-name"><?php echo htmlspecialchars($discussion['author_name']); ?></span> &bull; <?php echo time_ago($discussion['created_at']); ?>
                                 <span class="category-badge"><?php echo htmlspecialchars($discussion['category_name']); ?></span>
                             </div>
@@ -302,6 +305,32 @@ if ($isPageRequest) {
             </div>
         </main>
 
+        <!-- Report Modal -->
+        <div id="report-modal" class="modal-overlay" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Report Discussion</h2>
+                    <button id="close-report-modal" class="close-btn">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="report-form">
+                        <p>Please select a reason for reporting this discussion:</p>
+                        <div class="form-group">
+                            <label><input type="radio" name="reason" value="spam" required> It's spam or advertising</label>
+                            <label><input type="radio" name="reason" value="hate_speech"> It's hate speech or harassment</label>
+                            <label><input type="radio" name="reason" value="misinformation"> It contains false information</label>
+                            <label><input type="radio" name="reason" value="inappropriate"> It's inappropriate or offensive</label>
+                            <label><input type="radio" name="reason" value="other"> Other</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="report-details">Additional Details (optional):</label>
+                            <textarea id="report-details" name="details" rows="3" placeholder="Provide more information..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit Report</button>
+                    </form>
+                </div>
+            </div>
+        </div>
         <div id="footer-placeholder"></div>
 
         <!-- Pass current user data to JS -->

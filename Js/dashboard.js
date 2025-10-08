@@ -4,15 +4,15 @@
  */
 
 /**
- * Toggles the visibility of the sidebar for mobile view.
+ * Toggles the visibility of the sidebar.
  */
 function initializeSidebarToggle() {
     const hamburger = document.getElementById('hamburger-menu');
-    const sidebar = document.getElementById('sidebar');
+    const container = document.querySelector('.dashboard-container');
 
-    if (hamburger && sidebar) {
+    if (hamburger && container) {
         hamburger.addEventListener('click', () => {
-            sidebar.classList.toggle('open');
+            container.classList.toggle('sidebar-collapsed');
         });
     }
 }

@@ -139,7 +139,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="logout-section">
                     <h3>Logout</h3>
                     <p>Sign out of your admin account.</p>
-                    <a href="logout.php" class="btn btn-danger">Logout</a>
+                    <a href="auth.php?action=logout" class="btn btn-danger">Logout</a>
                 </div>
             </div>
         </main>

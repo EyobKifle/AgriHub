@@ -1,0 +1,9 @@
+.news-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+.news-card-link:hover .news-card {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  transform: translateY(-5px);
+}

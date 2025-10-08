@@ -89,6 +89,21 @@ $cat_stmt->execute();
 $categories = $cat_stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 $cat_stmt->close();
 
+// Handle editing: Fetch article data if 'edit_id' is in the URL
+$articleToEdit = null;
+if (isset($_GET['edit_id'])) {
+    $editId = (int)$_GET['edit_id'];
+    $edit_stmt = $conn->prepare("
+        SELECT id, title, content, category_id, image_url 
+        FROM articles 
+        WHERE id = ?
+    ");
+    $edit_stmt->bind_param('i', $editId);
+    $edit_stmt->execute();
+    $articleToEdit = $edit_stmt->get_result()->fetch_assoc();
+    $edit_stmt->close();
+}
+
 // Fetch all articles to display in the grid
 $stmt = $conn->prepare("
     SELECT a.id, a.title, a.content, a.status, a.category_id, a.image_url, cc.name_key as category_name, a.created_at
@@ -99,6 +114,7 @@ $stmt = $conn->prepare("
 $stmt->execute();
 $newsList = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 $stmt->close();
+$conn->close();
 ?>
 <?php
 function get_summary($html, $word_limit = 20) {
@@ -118,7 +134,12 @@ function get_summary($html, $word_limit = 20) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AgriHub - Admin News Management</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../Css/Admin-Dashboard.css">
+    <link rel="stylesheet" href="../Css/Admin-Dashboard.css">    <style>
+        .news-card-link { text-decoration: none; color: inherit; display: block; }
+        .news-card-link:hover .news-card { box-shadow: 0 8px 25px rgba(0,0,0,0.15); transform: translateY(-5px); }
+        .current-image-preview { max-width: 150px; max-height: 100px; margin-top: 10px; border-radius: 8px; border: 1px solid var(--border-light); }
+    </style>
+    <link rel="stylesheet" href="../Css/Admin-News-Management.css">
     <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 </head>
 <body>
@@ -160,42 +181,53 @@ function get_summary($html, $word_limit = 20) {
                     <p>Manage news articles on the platform.</p>
                 </div>
 
-                <div class="form-container">
+                <div class="form-container" id="form-container">
                     <form method="POST" class="form-group" enctype="multipart/form-data">
-                        <input type="hidden" name="news_id" id="news_id" value="">
-                        <input type="hidden" name="existing_image_url" id="existing_image_url" value="">
+                        <input type="hidden" name="news_id" id="news_id" value="<?php echo $articleToEdit['id'] ?? ''; ?>">
+                        <input type="hidden" name="existing_image_url" id="existing_image_url" value="<?php echo $articleToEdit['image_url'] ?? ''; ?>">
                         <label for="title">Title</label>
-                        <input type="text" id="title" name="title" required>
+                        <input type="text" id="title" name="title" value="<?php echo htmlspecialchars($articleToEdit['title'] ?? ''); ?>" required>
                         <label for="image">Feature Image</label>
                         <input type="file" id="image" name="image" accept="image/*">
+                        <?php if (!empty($articleToEdit['image_url'])): ?>
+                            <div class="current-image-container">
+                                <p>Current Image:</p>
+                                <img src="../<?php echo htmlspecialchars($articleToEdit['image_url']); ?>" alt="Current Image" class="current-image-preview">
+                            </div>
+                        <?php endif; ?>
                         <label for="category_id">Category</label>
                         <select id="category_id" name="category_id" required>
                             <option value="">-- Select a Category --</option>
                             <?php foreach ($categories as $cat): ?>
-                                <option value="<?php echo (int)$cat['id']; ?>">
+                                <option value="<?php echo (int)$cat['id']; ?>" <?php echo (isset($articleToEdit['category_id']) && $articleToEdit['category_id'] == $cat['id']) ? 'selected' : ''; ?>>
                                     <?php echo htmlspecialchars(ucfirst(str_replace('_', ' ', $cat['name_key']))); ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
                         <label for="content">Content</label>
-                        <textarea id="content" name="content" rows="6" required></textarea>
-                        <button type="submit" class="btn btn-primary">Add News</button>
+                        <textarea id="content" name="content" rows="6" required><?php echo htmlspecialchars($articleToEdit['content'] ?? ''); ?></textarea>
+                        <button type="submit" class="btn btn-primary"><?php echo $articleToEdit ? 'Update News' : 'Add News'; ?></button>
                     </form>
                 </div>
 
                 <div class="admin-news-grid">
                     <?php foreach ($newsList as $news): ?>
-                    <div class="news-card">
-                        <div class="card-content">
-                            <div class="card-category"><?php echo htmlspecialchars($news['category_name'] ?? 'Uncategorized'); ?></div>
-                            <h3><?php echo htmlspecialchars($news['title']); ?></h3>
-                            <div class="card-meta">Published: <?php echo htmlspecialchars(date('Y-m-d', strtotime($news['created_at']))); ?></div>
-                            <div class="card-admin-overlay">
-                                <button class="btn btn-sm btn-primary" onclick="editNews(<?php echo $news['id']; ?>)">Edit</button>
-                                <a href="?delete=<?php echo $news['id']; ?>" class="btn btn-sm btn-danger" onclick="return confirm('Delete this news?')">Delete</a>
+                        <a href="Admin-Article.php?id=<?php echo $news['id']; ?>" class="news-card-link">
+                            <div class="news-card">
+                                <div class="card-image">
+                                    <img src="<?php echo !empty($news['image_url']) ? '..' . htmlspecialchars($news['image_url']) : 'https://placehold.co/400x250?text=No+Image'; ?>" alt="<?php echo htmlspecialchars($news['title']); ?>">
+                                </div>
+                                <div class="card-content">
+                                    <div class="card-meta-top">
+                                        <span class="card-category"><?php echo htmlspecialchars($news['category_name'] ?? 'Uncategorized'); ?></span>
+                                        <span class="status status-<?php echo htmlspecialchars(strtolower($news['status'])); ?>"><?php echo htmlspecialchars($news['status']); ?></span>
+                                    </div>
+                                    <h3><?php echo htmlspecialchars($news['title']); ?></h3>
+                                    <p class="card-summary"><?php echo htmlspecialchars(get_summary($news['content'])); ?></p>
+                                    <div class="card-meta">Published: <?php echo htmlspecialchars(date('M d, Y', strtotime($news['created_at']))); ?></div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
+                        </a>
                     <?php endforeach; ?>
                 </div>
             </div>

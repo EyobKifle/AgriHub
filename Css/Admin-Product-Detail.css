@@ -213,38 +213,41 @@ body {
     border-radius: var(--radius-default);
     box-shadow: var(--shadow-subtle);
 }
-
 .product-images .main-image {
     width: 100%;
     aspect-ratio: 16/10;
     object-fit: cover;
-    border-radius: var(--radius-default);
-    margin-bottom: 1.5rem; /* Increased margin */
-    border: 1px solid var(--border-light);
-    transition: transform 0.3s ease-out; /* Added transition */
+    border-radius: 0.75rem;
+    margin-bottom: var(--space-sm);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
-
-/* .product-images .main-image:hover {
-    transform: scale(1.01); 
-} */
 
 .product-thumbnails {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(20px, 1fr)); /* Larger thumbnails */
-    gap: 0.75rem;
+    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+    gap: var(--space-xs);
 }
 
 .product-thumbnails img {
-    width: 100%;
+    width: 25%;
     aspect-ratio: 1/1;
     object-fit: cover;
-    border-radius: var(--radius-small);
+    border-radius: 0.5rem;
     cursor: pointer;
-    border: 3px solid transparent; /* Transparent border for active state */
-    transition: border-color 0.2s, opacity 0.2s;
-    opacity: 0.8;
+    border: 2px solid var(--border-color);
+    transition: border-color 0.2s, transform 0.1s;
 }
 
+.product-thumbnails img:hover {
+    border-color: var(--primary-green-dark);
+    transform: scale(1.02);
+}
+
+.product-thumbnails img.active {
+    border-color: var(--primary-green);
+    border-width: 3px;
+    box-shadow: 0 0 5px rgba(56, 161, 105, 0.5);
+}
 
 
 
