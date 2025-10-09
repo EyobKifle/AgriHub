@@ -72,8 +72,8 @@ $conn->close();
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>News - AgriHub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title data-i18n-key="news.page.titleTag">News - AgriHub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="/AgriHub/Css/header.css"> 
     <link rel="stylesheet" href="/AgriHub/Css/News.css">
@@ -122,11 +122,11 @@ $conn->close();
                                     <div class="news-card-content">
                                         <div class="news-card-category"><?php echo e(ucfirst(str_replace('_', ' ', $article['category_name_key']))); ?></div>
                                         <h3 class="news-card-title">
-                                            <?php echo e($article['title']); ?>
+                                            <?php echo e($article['title']); ?> 
                                         </h3>
                                         <p class="news-card-excerpt"><?php echo e($article['excerpt']); ?></p>
                                         <div class="news-card-meta">
-                                            <span>By <?php echo e($article['author_name']); ?></span> &bull; <span><?php echo time_ago($article['created_at']); ?></span>
+                                            <span><span data-i18n-key="common.by">By</span> <?php echo e($article['author_name']); ?></span> &bull; <span><?php echo time_ago($article['created_at']); ?></span>
                                         </div>
                                     </div>
                                 </div>

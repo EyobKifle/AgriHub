@@ -99,11 +99,19 @@ function handlePost($conn, $userId) {
         case 'delete_listing':
             deleteListing($conn, $userId);
             break;
+        case 'mark_as_sold':
+            markAsSold($conn, $userId);
+            break;
         default:
             http_response_code(400);
             echo json_encode(['error' => 'Invalid action specified.']);
             break;
     }
+}
+
+function sendJson($data) {
+    // A small helper to ensure content type is set.
+    echo json_encode($data);
 }
 
 /**
@@ -161,6 +169,62 @@ function saveListing($conn, $userId) {
         echo json_encode(['error' => 'Database error: Could not save the listing.']);
     }
     $stmt->close();
+}
+
+/**
+ * Marks a listing as sold, logs the sale, and updates the product status.
+ */
+function markAsSold($conn, $userId) {
+    $productId = isset($_POST['product_id']) ? (int)$_POST['product_id'] : 0;
+
+    if ($productId <= 0) {
+        http_response_code(400);
+        sendJson(['error' => 'Invalid Product ID.']);
+        return;
+    }
+
+    $conn->begin_transaction();
+
+    try {
+        // 1. Get product details and verify ownership
+        $stmt = $conn->prepare("SELECT title, price FROM products WHERE id = ? AND seller_id = ?");
+        $stmt->bind_param('ii', $productId, $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $product = $result->fetch_assoc();
+        $stmt->close();
+
+        if (!$product) {
+            throw new Exception('Product not found or you do not have permission.', 404);
+        }
+
+        // 2. Insert into completed_sales
+        $stmt = $conn->prepare("INSERT INTO completed_sales (seller_id, product_id, product_title, amount) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param('iisd', $userId, $productId, $product['title'], $product['price']);
+        if (!$stmt->execute()) {
+            throw new Exception('Failed to record the sale.');
+        }
+        $stmt->close();
+
+        // 3. Update product status to 'sold_out'
+        $stmt = $conn->prepare("UPDATE products SET status = 'sold_out' WHERE id = ?");
+        $stmt->bind_param('i', $productId);
+        if (!$stmt->execute()) {
+            throw new Exception('Failed to update product status.');
+        }
+        $stmt->close();
+
+        // If all queries succeeded, commit the transaction
+        $conn->commit();
+        sendJson(['success' => true, 'message' => 'Sale recorded and listing marked as sold!']);
+
+    } catch (Exception $e) {
+        $conn->rollback(); // Rollback on any error
+        $code = $e->getCode() ?: 500;
+        http_response_code($code);
+        error_log("markAsSold Error: " . $e->getMessage());
+        sendJson(['error' => $e->getMessage()]);
+    }
 }
 
 /**

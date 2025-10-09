@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AgriHub - Admin Settings</title>
+    <title data-i18n-key="admin.settings.pageTitle">AgriHub - Admin Settings</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../Css/Admin-Dashboard.css">
 </head>
@@ -76,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="header-center">
             <div class="logo">
                 <i class="fa-solid fa-leaf"></i>
-                <span>AgriHub</span>
+                <span data-i18n-key="brand.name">AgriHub</span>
             </div>
         </div>
         <div class="header-right">
@@ -100,46 +100,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <main class="main-content">
             <div class="content-wrapper">
                 <div class="main-header">
-                    <h1>Settings</h1>
-                    <p>Manage your admin account settings.</p>
+                    <h1 data-i18n-key="admin.settings.title">Settings</h1>
+                    <p data-i18n-key="admin.settings.subtitle">Manage your admin account settings.</p>
                 </div>
 
                 <div class="settings-grid">
                     <div class="card">
-                        <h3>Profile Information</h3>
+                        <h3 data-i18n-key="admin.settings.profile.title">Profile Information</h3>
                         <form method="POST" class="settings-form">
                             <div class="form-group">
-                                <label for="name">Name</label>
+                                <label for="name" data-i18n-key="admin.settings.profile.name">Name</label>
                                 <input type="text" id="name" name="name" value="<?php echo htmlspecialchars($name); ?>" required>
                             </div>
                             <div class="form-group">
-                                <label for="email">Email</label>
+                                <label for="email" data-i18n-key="admin.settings.profile.email">Email</label>
                                 <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($email); ?>" required>
                             </div>
-                            <button type="submit" class="btn btn-primary">Update Profile</button>
+                            <button type="submit" class="btn btn-primary" data-i18n-key="admin.settings.profile.save">Update Profile</button>
                         </form>
                     </div>
 
                     <div class="card">
-                        <h3>Change Password</h3>
+                        <h3 data-i18n-key="admin.settings.security.title">Change Password</h3>
                         <form method="POST" class="settings-form">
                             <div class="form-group">
-                                <label for="current_password">Current Password</label>
+                                <label for="current_password" data-i18n-key="admin.settings.security.currentPassword">Current Password</label>
                                 <input type="password" id="current_password" name="current_password" autocomplete="current-password" required>
                             </div>
                             <div class="form-group">
-                                <label for="new_password">New Password</label>
+                                <label for="new_password" data-i18n-key="admin.settings.security.newPassword">New Password</label>
                                 <input type="password" id="new_password" name="new_password" autocomplete="new-password" required>
                             </div>
-                            <button type="submit" class="btn btn-primary">Change Password</button>
+                            <button type="submit" class="btn btn-primary" data-i18n-key="admin.settings.security.updatePassword">Change Password</button>
                         </form>
                     </div>
                 </div>
 
                 <div class="logout-section">
-                    <h3>Logout</h3>
-                    <p>Sign out of your admin account.</p>
-                    <a href="auth.php?action=logout" class="btn btn-danger">Logout</a>
+                    <h3 data-i18n-key="admin.settings.logout.title">Logout</h3>
+                    <p data-i18n-key="admin.settings.logout.text">Sign out of your admin account.</p>
+                    <a href="auth.php?action=logout" class="btn btn-danger" data-i18n-key="admin.settings.logout.button">Logout</a>
                 </div>
             </div>
         </main>

@@ -80,7 +80,7 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Listings Management - AgriHub Admin</title>
+    <title data-i18n-key="admin.listingManagement.pageTitle">Listings Management - AgriHub Admin</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../Css/Admin-Dashboard.css">
 </head>
@@ -94,7 +94,7 @@ $conn->close();
         <div class="header-center">
             <div class="logo">
                 <i class="fa-solid fa-leaf"></i>
-                <span>AgriHub</span>
+                <span data-i18n-key="brand.name">AgriHub</span>
             </div>
         </div>
         <div class="header-right">
@@ -107,27 +107,27 @@ $conn->close();
     <div class="dashboard-container">
         <aside class="sidebar" id="sidebar">
             <ul class="sidebar-nav">
-                <li><a href="Admin-Dashboard.php"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
-                <li><a href="Admin-User-Management.php"><i class="fa-solid fa-users"></i> User Management</a></li>
-                <li><a href="Admin-Listings-Management.php" class="active"><i class="fa-solid fa-store"></i> Listing Management</a></li>
-                <li><a href="Admin-News-Management.php"><i class="fa-solid fa-newspaper"></i> News Management</a></li>
-                <li><a href="Admin-Reports-Management.php"><i class="fa-solid fa-flag"></i> Reports</a></li>
+                <li><a href="Admin-Dashboard.php" data-i18n-key="admin.nav.dashboard"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
+                <li><a href="Admin-User-Management.php" data-i18n-key="admin.nav.userManagement"><i class="fa-solid fa-users"></i> User Management</a></li>
+                <li><a href="Admin-Listings-Management.php" class="active" data-i18n-key="admin.nav.listingManagement"><i class="fa-solid fa-store"></i> Listing Management</a></li>
+                <li><a href="Admin-News-Management.php" data-i18n-key="admin.nav.newsManagement"><i class="fa-solid fa-newspaper"></i> News Management</a></li>
+                <li><a href="Admin-Reports-Management.php" data-i18n-key="admin.nav.reports"><i class="fa-solid fa-flag"></i> Reports</a></li>
             </ul>
         </aside>
 
         <main class="main-content">
             <div class="content-wrapper">
                 <div class="main-header">
-                    <h1>Listings Management</h1>
-                    <p>Review and manage all product listings on the platform.</p>
+                    <h1 data-i18n-key="admin.listingManagement.title">Listings Management</h1>
+                    <p data-i18n-key="admin.listingManagement.subtitle">Review and manage all product listings on the platform.</p>
                 </div>
 
                 <div class="page-controls">
                     <div class="search-filter-group">
                         <form method="GET" action="">
-                            <input type="text" name="q" class="search-input" placeholder="Search by title..." value="<?php echo e($q); ?>">
+                            <input type="text" name="q" class="search-input" data-i18n-placeholder-key="admin.listingManagement.searchPlaceholder" placeholder="Search by title..." value="<?php echo e($q); ?>">
                             <select name="category" class="filter-select">
-                                <option value="">All Categories</option>
+                                <option value="" data-i18n-key="admin.listingManagement.filter.allCategories">All Categories</option>
                                 <?php foreach ($categories as $cat): ?>
                                     <option value="<?php echo (int)$cat['id']; ?>" <?php echo $categoryFilter === (int)$cat['id'] ? 'selected' : ''; ?>>
                                         <?php echo e($cat['name']); ?>
@@ -135,13 +135,13 @@ $conn->close();
                                 <?php endforeach; ?>
                             </select>
                             <select name="status" class="filter-select">
-                                <option value="">All Statuses</option>
-                                <option value="active" <?php echo $statusFilter === 'active' ? 'selected' : ''; ?>>Active</option>
-                                <option value="inactive" <?php echo $statusFilter === 'inactive' ? 'selected' : ''; ?>>Inactive</option>
-                                <option value="pending" <?php echo $statusFilter === 'pending' ? 'selected' : ''; ?>>Pending</option>
-                                <option value="sold" <?php echo $statusFilter === 'sold' ? 'selected' : ''; ?>>Sold</option>
+                                <option value="" data-i18n-key="admin.userManagement.filter.allStatuses">All Statuses</option>
+                                <option value="active" <?php echo $statusFilter === 'active' ? 'selected' : ''; ?> data-i18n-key="user.listings.status.active">Active</option>
+                                <option value="inactive" <?php echo $statusFilter === 'inactive' ? 'selected' : ''; ?> data-i18n-key="user.listings.status.inactive">Inactive</option>
+                                <option value="pending" <?php echo $statusFilter === 'pending' ? 'selected' : ''; ?> data-i18n-key="user.listings.status.pending">Pending</option>
+                                <option value="sold" <?php echo $statusFilter === 'sold' ? 'selected' : ''; ?> data-i18n-key="user.listings.status.sold">Sold</option>
                             </select>
-                            <button type="submit" class="btn btn-primary">Search</button>
+                            <button type="submit" class="btn btn-primary" data-i18n-key="admin.userManagement.searchButton">Search</button>
                         </form>
                     </div>
                 </div>
@@ -150,19 +150,19 @@ $conn->close();
                     <table class="data-table">
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Product</th>
-                                <th>Seller</th>
-                                <th>Category</th>
-                                <th>Price</th>
-                                <th>Status</th>
-                                <th>Listed On</th>
-                                <th>Actions</th>
+                                <th data-i18n-key="admin.listingManagement.table.id">ID</th>
+                                <th data-i18n-key="admin.listingManagement.table.product">Product</th>
+                                <th data-i18n-key="admin.listingManagement.table.seller">Seller</th>
+                                <th data-i18n-key="admin.listingManagement.table.category">Category</th>
+                                <th data-i18n-key="admin.listingManagement.table.price">Price</th>
+                                <th data-i18n-key="admin.listingManagement.table.status">Status</th>
+                                <th data-i18n-key="admin.listingManagement.table.listedOn">Listed On</th>
+                                <th data-i18n-key="admin.listingManagement.table.actions">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php if (empty($listings)): ?>
-                                <tr><td colspan="8" style="text-align: center;">No listings found matching your criteria.</td></tr>
+                                <tr><td colspan="8" style="text-align: center;" data-i18n-key="admin.listingManagement.emptyState">No listings found matching your criteria.</td></tr>
                             <?php else: ?>
                                 <?php foreach ($listings as $listing): ?>
                                 <tr>
@@ -175,10 +175,10 @@ $conn->close();
                                     <td><?php echo e($listing['seller_name']); ?></td>
                                     <td><?php echo e($listing['category_name']); ?></td>
                                     <td>ETB <?php echo number_format((float)$listing['price'], 2); ?> / <?php echo e($listing['unit']); ?></td>
-                                    <td><span class="status status-<?php echo e($listing['status']); ?>"><?php echo e($listing['status']); ?></span></td>
+                                    <td><span class="status status-<?php echo e($listing['status']); ?>" data-i18n-key="user.listings.status.<?php echo e($listing['status']); ?>"><?php echo e($listing['status']); ?></span></td>
                                     <td><?php echo date('Y-m-d', strtotime($listing['created_at'])); ?></td>
                                     <td class="action-buttons">
-                                        <a href="Admin-product-details.php?id=<?php echo (int)$listing['id']; ?>" title="View & Edit Details" class="btn-icon">
+                                        <a href="Admin-product-details.php?id=<?php echo (int)$listing['id']; ?>" data-i18n-title-key="admin.listingManagement.actions.view" title="View & Edit Details" class="btn-icon">
                                             <i class="fa-solid fa-eye"></i>
                                         </a>
                                     </td>

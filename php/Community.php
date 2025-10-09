@@ -84,8 +84,8 @@ if ($stmt) {
 <html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Community - AgriHub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title data-i18n-key="community.page.title">Community - AgriHub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link rel="stylesheet" href="../Css/header.css">
 <link rel="stylesheet" href="../Css/community.css">
@@ -98,26 +98,26 @@ if ($stmt) {
     <main class="page-container">
         <div class="content-wrapper">
             <header class="page-header">
-                <h1>Community Forum</h1>
-                <p>Connect with fellow farmers, share knowledge, and get answers to your questions</p>
+                <h1 data-i18n-key="community.page.title">Community Forum</h1>
+                <p data-i18n-key="community.page.subtitle">Connect with fellow farmers, share knowledge, and get answers to your questions</p>
             </header>
 
             <div class="community-layout">
                 <aside class="community-sidebar">
                     <div class="sidebar-section">
-                        <h3>Categories</h3>
+                        <h3 data-i18n-key="community.sidebar.categories">Categories</h3>
                         <ul id="category-list">
-                            <li><a href="Community.php" class="<?php echo $selectedCategoryId === 0 ? 'active' : ''; ?>">All Discussions <span>(<?php echo $totalDiscussions; ?>)</span></a></li>
+                            <li><a href="Community.php" class="<?php echo $selectedCategoryId === 0 ? 'active' : ''; ?>" data-i18n-key="community.cat.all">All Discussions</a> <span>(<?php echo $totalDiscussions; ?>)</span></li>
                             <?php foreach ($categories as $cat): ?>
                                 <li><a href="Community.php?category=<?php echo (int)$cat['id']; ?>" class="<?php echo $selectedCategoryId === (int)$cat['id'] ? 'active' : ''; ?>"><?php echo htmlspecialchars($cat['name']); ?> <span>(<?php echo (int)$cat['count']; ?>)</span></a></li>
                             <?php endforeach; ?>
                         </ul>
                     </div>
                     <div class="sidebar-section">
-                        <h3>Community Stats</h3>
+                        <h3 data-i18n-key="community.stats.title">Community Stats</h3>
                         <ul class="stats-list">
-                            <li><i class="fa-solid fa-users"></i> Active Members: <strong><?php echo number_format($activeMembers); ?></strong></li>
-                            <li><i class="fa-solid fa-comments"></i> Discussions: <strong><?php echo number_format($totalDiscussions); ?></strong></li>
+                            <li><i class="fa-solid fa-users"></i> <span data-i18n-key="community.stats.members">Active Members</span>: <strong><?php echo number_format($activeMembers); ?></strong></li>
+                            <li><i class="fa-solid fa-comments"></i> <span data-i18n-key="community.stats.discussions">Discussions</span>: <strong><?php echo number_format($totalDiscussions); ?></strong></li>
                         </ul>
                     </div>
                 </aside>
@@ -125,15 +125,15 @@ if ($stmt) {
                 <section class="main-content">
                     <div class="new-discussion-box">
                         <?php if ($userId): ?>
-                            <a href="/AgriHub/php/User-Discussions.php" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Start a New Discussion</a>
+                            <a href="/AgriHub/php/User-Discussions.php" class="btn btn-primary" data-i18n-key="community.new.title"><i class="fa-solid fa-plus"></i> Start a New Discussion</a>
                         <?php else: ?>
-                            <p id="login-message">Please <a href="../HTML/Login.html">login</a> or <a href="../HTML/Signup.html">create an account</a> to post.</p>
+                            <p id="login-message" data-i18n-key="community.loginPromptShort">Please <a href="../HTML/Login.html" data-i18n-key="discussion.loginLink">login</a> or <a href="../HTML/Signup.html" data-i18n-key="discussion.signupLink">create an account</a> to post.</p>
                         <?php endif; ?>
                     </div>
 
                     <div class="discussions" id="discussion-cards">
                         <?php if (empty($discussions)): ?>
-                            <p>No discussions found.</p>
+                            <p data-i18n-key="community.emptyState">No discussions found.</p>
                         <?php else: ?>
                             <?php foreach ($discussions as $d): ?>
                                 <div class="discussion-card">
@@ -141,7 +141,7 @@ if ($stmt) {
                                     <span class="time"><?php echo time_ago($d['updated_at']); ?></span>
                                     <h3><a href="discussion.php?id=<?php echo (int)$d['id']; ?>"><?php echo htmlspecialchars($d['title']); ?></a></h3>
                                     <p><?php echo htmlspecialchars(mb_strimwidth($d['content'], 0, 150, "...")); ?></p>
-                                    <p class="author">by <?php echo htmlspecialchars($d['author_name']); ?></p>
+                                    <p class="author"><span data-i18n-key="common.by">by</span> <?php echo htmlspecialchars($d['author_name']); ?></p>
                                     <div class="interaction">
                                         <span><i class="fa-regular fa-thumbs-up"></i> <?php echo (int)$d['like_count']; ?></span>
                                         <span><i class="fa-regular fa-comment"></i> <?php echo (int)$d['comment_count']; ?></span>

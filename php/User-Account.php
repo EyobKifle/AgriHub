@@ -101,8 +101,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Account - AgriHub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title data-i18n-key="user.account.pageTitle">My Account - AgriHub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> <!-- FontAwesome for icons -->
     <link rel="stylesheet" href="/AgriHub/Css/User-Account.css">
 </head>
@@ -116,7 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="header-center">
             <div class="logo">
                 <i class="fa-solid fa-leaf"></i>
-                <span>AgriHub</span>
+                <span data-i18n-key="brand.name">AgriHub</span>
             </div>
         </div>
         <div class="header-right">
@@ -138,7 +138,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <p data-i18n-key="user.account.subtitle">Manage your personal information, farm details, and account settings.</p>
                  <?php if (isset($_GET['saved'])): ?>
                     <div class="alert alert-success" style="background-color: #d4edda; color: #155724; padding: 1rem; border-radius: 8px; margin-top: 1.5rem;">
-                        Your settings have been saved successfully.
+                        <span data-i18n-key="user.account.savedSuccess">Your settings have been saved successfully.</span>
                     </div>
                 <?php endif; ?>
             </div>
@@ -150,7 +150,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="profile-picture-preview">
                         <img src="<?php echo !empty($data['avatar_url']) ? '/AgriHub/' . e($data['avatar_url']) : 'https://placehold.co/150x150/cccccc/FFF?text=' . e($initial); ?>" alt="Current profile picture" id="profile-image-preview">
                     </div>
-                    <label for="avatar-upload" class="btn btn-secondary full-width" data-i18n-key="user.profile.picture.upload">Upload New Picture</label>
+                    <label for="avatar-upload" class="btn btn-secondary fullwidth" data-i18n-key="user.profile.picture.upload">Upload New Picture</label>
                     <input type="file" id="avatar-upload" name="avatar" accept="image/*" style="display:none;" data-base-url="/AgriHub/">
                     <p class="form-text" data-i18n-key="user.profile.picture.help">For best results, use an image at least 200x200px in .jpg or .png format.</p>
                 </div>
@@ -180,19 +180,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                         </div>
                         <hr style="margin: 2rem 0;">
-                        <h3 class="card-title">Farm & Business Information</h3>
+                        <h3 class="card-title" data-i18n-key="user.profile.farmInfo.title">Farm & Business Information</h3>
                         <div class="form-grid">
-                             <div class="form-group">
-                                <label for="farm-size">Farm Size (Hectares)</label>
+                            <div class="form-group">
+                                <label for="farm-size" data-i18n-key="user.profile.details.farmSize">Farm Size (Hectares)</label>
                                 <input type="number" step="0.1" id="farm-size" name="farm_size_hectares" value="<?php echo e($data['farm_size_hectares'] ?? ''); ?>" placeholder="e.g., 5.5">
                             </div>
                             <div class="form-group">
-                                <label for="experience">Years of Experience</label>
+                                <label for="experience" data-i18n-key="user.profile.details.experience">Years of Experience</label>
                                 <input type="number" id="experience" name="experience_years" value="<?php echo e($data['experience_years'] ?? ''); ?>" placeholder="e.g., 10">
                             </div>
                         </div>
                          <div class="form-group">
-                            <label for="specialization">Specialization</label>
+                            <label for="specialization" data-i18n-key="user.profile.details.specialization">Specialization</label>
                             <input type="text" id="specialization" name="specialization" value="<?php echo e($data['specialization'] ?? ''); ?>" placeholder="e.g., Grains, Dairy, Coffee">
                         </div>
                         <div class="form-group">
@@ -200,37 +200,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <textarea id="bio" name="bio" rows="4" placeholder="Describe your farm, the crops you grow, or your farming practices..."><?php echo e($data['bio'] ?? ''); ?></textarea>
                         </div>
                         <div class="form-group">
-                            <label for="business-name">Business Name (Optional)</label>
+                            <label for="business-name" data-i18n-key="user.profile.details.businessName">Business Name (Optional)</label>
                             <input type="text" id="business-name" name="business_name" value="<?php echo e($data['business_name'] ?? ''); ?>">
                         </div>
                         <div class="form-group">
-                            <label for="business-address">Business Address (Optional)</label>
+                            <label for="business-address" data-i18n-key="user.profile.details.businessAddress">Business Address (Optional)</label>
                             <textarea id="business-address" name="business_address" rows="2"><?php echo e($data['business_address'] ?? ''); ?></textarea>
                         </div>
 
                         <hr style="margin: 2rem 0;">
-                        <h3 class="card-title">Preferences</h3>
+                        <h3 class="card-title" data-i18n-key="user.profile.preferences.title">Preferences</h3>
                         <div class="form-group form-group-toggle">
-                            <label for="email-notifications">Email Notifications</label>
+                            <label for="email-notifications" data-i18n-key="user.settings.notifications.email">Email Notifications</label>
                             <label class="switch">
                                 <input type="checkbox" id="email-notifications" name="email_notifications" <?php echo $prefEmailNotif ? 'checked' : ''; ?>>
                                 <span class="slider"></span>
                             </label>
                         </div>
                         <div class="form-group form-group-toggle">
-                            <label for="dark-mode-toggle">Dark Mode</label>
+                            <label for="dark-mode-toggle" data-i18n-key="user.settings.appearance.darkMode">Dark Mode</label>
                             <label class="switch">
                                 <input type="checkbox" id="dark-mode-toggle" name="dark_mode" <?php echo $prefDarkMode ? 'checked' : ''; ?>>
                                 <span class="slider"></span>
                             </label>
                         </div>
                         <div class="form-group">
-                            <label for="language-select">Preferred Language</label>
+                            <label for="language-select" data-i18n-key="user.settings.language.preferred">Preferred Language</label>
                             <select id="language-select" name="language">
-                                <option value="en" <?php echo $currentLang==='en'?'selected':''; ?>>English</option>
-                                <option value="am" <?php echo $currentLang==='am'?'selected':''; ?>>Amharic</option>
-                                <option value="om" <?php echo $currentLang==='om'?'selected':''; ?>>Oromo</option>
-                                <option value="ti" <?php echo $currentLang==='ti'?'selected':''; ?>>Tigrinya</option>
+                                <option value="en" <?php echo $currentLang==='en'?'selected':''; ?> data-i18n-key="lang.en">English</option>
+                                <option value="am" <?php echo $currentLang==='am'?'selected':''; ?> data-i18n-key="lang.am">Amharic</option>
+                                <option value="om" <?php echo $currentLang==='om'?'selected':''; ?> data-i18n-key="lang.om">Oromo</option>
+                                <option value="ti" <?php echo $currentLang==='ti'?'selected':''; ?> data-i18n-key="lang.ti">Tigrinya</option>
                             </select>
                         </div>
 

@@ -65,7 +65,7 @@ if ($stmt) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AgriHub - Admin User Management</title>
+    <title data-i18n-key="admin.userManagement.pageTitle">AgriHub - Admin User Management</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../Css/Admin-Dashboard.css">
 </head>
@@ -80,7 +80,7 @@ if ($stmt) {
         <div class="header-center">
             <div class="logo">
                 <i class="fa-solid fa-leaf"></i>
-                <span>AgriHub</span>
+                <span data-i18n-key="brand.name">AgriHub</span>
             </div>
         </div>
         <div class="header-right">
@@ -104,25 +104,25 @@ if ($stmt) {
         <main class="main-content">
             <div class="content-wrapper">
                 <div class="main-header">
-                    <h1>User Management</h1>
-                    <p>Manage users on the platform.</p>
+                    <h1 data-i18n-key="admin.userManagement.title">User Management</h1>
+                    <p data-i18n-key="admin.userManagement.subtitle">Manage users on the platform.</p>
                 </div>
 
                 <div class="page-controls">
                     <div class="search-filter-group">
                         <form method="GET" action="">
-                            <input type="text" name="q" class="search-input" placeholder="Search users..." value="<?php echo htmlspecialchars($q); ?>">
+                            <input type="text" name="q" class="search-input" data-i18n-placeholder-key="admin.userManagement.searchPlaceholder" placeholder="Search users..." value="<?php echo htmlspecialchars($q); ?>">
                             <select name="role" class="filter-select">
-                                <option value="">All Roles</option>
-                                <option value="admin" <?php echo $roleFilter === 'admin' ? 'selected' : ''; ?>>Admin</option>
-                                <option value="user" <?php echo $roleFilter === 'user' ? 'selected' : ''; ?>>User</option>
+                                <option value="" data-i18n-key="admin.userManagement.filter.allRoles">All Roles</option>
+                                <option value="admin" <?php echo $roleFilter === 'admin' ? 'selected' : ''; ?> data-i18n-key="admin.userManagement.role.admin">Admin</option>
+                                <option value="user" <?php echo $roleFilter === 'user' ? 'selected' : ''; ?> data-i18n-key="admin.userManagement.role.user">User</option>
                             </select>
                             <select name="status" class="filter-select">
-                                <option value="">All Statuses</option>
-                                <option value="active" <?php echo $statusFilter === 'active' ? 'selected' : ''; ?>>Active</option>
-                                <option value="banned" <?php echo $statusFilter === 'banned' ? 'selected' : ''; ?>>Banned</option>
+                                <option value="" data-i18n-key="admin.userManagement.filter.allStatuses">All Statuses</option>
+                                <option value="active" <?php echo $statusFilter === 'active' ? 'selected' : ''; ?> data-i18n-key="admin.userManagement.status.active">Active</option>
+                                <option value="banned" <?php echo $statusFilter === 'banned' ? 'selected' : ''; ?> data-i18n-key="admin.userManagement.status.banned">Banned</option>
                             </select>
-                            <button type="submit" class="btn btn-primary">Search</button>
+                            <button type="submit" class="btn btn-primary" data-i18n-key="admin.userManagement.searchButton">Search</button>
                         </form>
                     </div>
                 </div>
@@ -131,13 +131,13 @@ if ($stmt) {
                     <table class="data-table">
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>User</th>
-                                <th>Email</th>
-                                <th>Role</th>
-                                <th>Status</th>
-                                <th>Joined</th>
-                                <th>Actions</th>
+                                <th data-i18n-key="admin.userManagement.table.id">ID</th>
+                                <th data-i18n-key="admin.userManagement.table.user">User</th>
+                                <th data-i18n-key="admin.userManagement.table.email">Email</th>
+                                <th data-i18n-key="admin.userManagement.table.role">Role</th>
+                                <th data-i18n-key="admin.userManagement.table.status">Status</th>
+                                <th data-i18n-key="admin.userManagement.table.joined">Joined</th>
+                                <th data-i18n-key="admin.userManagement.table.actions">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -151,16 +151,16 @@ if ($stmt) {
                                     </div>
                                 </td>
                                 <td><?php echo htmlspecialchars($user['email']); ?></td>
-                                <td><?php echo htmlspecialchars($user['role']); ?></td>
-                                <td><span class="status status-<?php echo htmlspecialchars($user['status']); ?>"><?php echo htmlspecialchars($user['status']); ?></span></td>
+                                <td data-i18n-key="admin.userManagement.role.<?php echo htmlspecialchars($user['role']); ?>"><?php echo htmlspecialchars(ucfirst($user['role'])); ?></td>
+                                <td><span class="status status-<?php echo htmlspecialchars($user['status']); ?>" data-i18n-key="admin.userManagement.status.<?php echo htmlspecialchars($user['status']); ?>"><?php echo htmlspecialchars(ucfirst($user['status'])); ?></span></td>
                                 <td><?php echo htmlspecialchars(date('Y-m-d', strtotime($user['created_at']))); ?></td>
                                 <td class="action-buttons">
                                     <?php if ($user['status'] === 'active'): ?>
-                                    <button title="Ban User"><i class="fa-solid fa-ban"></i></button>
+                                    <button data-i18n-title-key="admin.userManagement.actions.ban" title="Ban User"><i class="fa-solid fa-ban"></i></button>
                                     <?php else: ?>
-                                    <button title="Unban User"><i class="fa-solid fa-check"></i></button>
+                                    <button data-i18n-title-key="admin.userManagement.actions.unban" title="Unban User"><i class="fa-solid fa-check"></i></button>
                                     <?php endif; ?>
-                                    <button title="Edit User"><i class="fa-solid fa-edit"></i></button>
+                                    <button data-i18n-title-key="admin.userManagement.actions.edit" title="Edit User"><i class="fa-solid fa-edit"></i></button>
                                 </td>
                             </tr>
                             <?php endforeach; ?>

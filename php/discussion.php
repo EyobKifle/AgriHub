@@ -33,8 +33,9 @@ if ($isApiRequest) {
     // require_once has been moved to the top of the file.
 
     function send_json_error($message, $statusCode = 400) {
+        // The message is now an i18n key
         http_response_code($statusCode);
-        echo json_encode(['success' => false, 'message' => $message]);
+        echo json_encode(['success' => false, 'error' => ['code' => $message]]);
         exit;
     }
 
@@ -49,7 +50,7 @@ if ($isApiRequest) {
 
     $current_user_id = (int)($_SESSION['user_id'] ?? 0);
     if ($current_user_id === 0 && $_SERVER['REQUEST_METHOD'] !== 'GET') {
-        send_json_error('You must be logged in to post messages.', 401);
+        send_json_error('error.unauthorized', 401);
     }
 
     $request_method = $_SERVER['REQUEST_METHOD'];
@@ -64,7 +65,7 @@ if ($isApiRequest) {
     }
 
     if (empty($action)) {
-        send_json_error('No action specified.');
+        send_json_error('error.api.noAction');
     }
 
     try {
@@ -72,7 +73,7 @@ if ($isApiRequest) {
             case 'get_messages':
                 $discussion_id = (int)($_GET['discussion_id'] ?? 0);
                 if ($discussion_id <= 0) {
-                    send_json_error('Invalid discussion ID.');
+                    send_json_error('error.discussion.invalidId');
                 }
     
                 $stmt = $conn->prepare("
@@ -110,7 +111,7 @@ if ($isApiRequest) {
                 $text = trim($input['message']['text'] ?? '');
     
                 if ($discussionId <= 0 || empty($text)) {
-                    send_json_error('Message data is missing or invalid.');
+                    send_json_error('error.discussion.missingData');
                 }
     
                 $conn->begin_transaction();
@@ -136,16 +137,16 @@ if ($isApiRequest) {
                 $messageId = (int)($input['message_id'] ?? 0);
                 $text = trim($input['text'] ?? '');
                 if ($messageId <= 0 || empty($text)) {
-                    send_json_error('Message ID and text are required for update.');
+                    send_json_error('error.discussion.updateMissingParams');
                 }
                 // Check ownership before updating
                 $stmt = $conn->prepare("UPDATE discussion_comments SET content = ? WHERE id = ? AND author_id = ?");
                 $stmt->bind_param('sii', $text, $messageId, $current_user_id);
                 $stmt->execute();
                 if ($stmt->affected_rows > 0) {
-                    send_json_success(['message' => 'Message updated successfully.']);
+                    send_json_success();
                 } else {
-                    send_json_error('Message not found or you do not have permission to edit it.', 404);
+                    send_json_error('error.discussion.notFoundOrNoPermission', 404);
                 }
                 $stmt->close();
                 break;
@@ -153,7 +154,7 @@ if ($isApiRequest) {
             case 'delete_message':
                 $messageId = (int)($input['message_id'] ?? 0);
                 if ($messageId <= 0) {
-                    send_json_error('Message ID is required for deletion.');
+                    send_json_error('error.discussion.deleteMissingId');
                 }
     
                 $conn->begin_transaction();
@@ -167,7 +168,8 @@ if ($isApiRequest) {
                 $stmt_select->close();
     
                 if (!$message) {
-                    throw new Exception('Message not found or you do not have permission to delete it.', 404);
+                    $conn->rollback();
+                    send_json_error('error.discussion.notFoundOrNoPermission', 404);
                 }
                 $discussionId = $message['discussion_id'];
     
@@ -184,15 +186,15 @@ if ($isApiRequest) {
                 $stmt_update->close();
     
                 $conn->commit();
-                send_json_success(['message' => 'Message deleted successfully.']);
+                send_json_success();
                 break;
     
             default:
-                send_json_error('Invalid action specified.');
+                send_json_error('error.api.invalidAction');
                 break;
         }
     } catch (Exception $e) {
-        $echo("exception error");
+  $echo("error");
         $conn->rollback();
     }
 }
@@ -252,17 +254,17 @@ if ($isPageRequest) {
         
         <main class="page-container">
             <div class="content-wrapper">
-                <a href="Community.php" class="back-link" data-i18n-key="discussion.backButton">&larr; Back to Community</a>
+                <a href="Community.php" class="back-link" data-i18n-key="discussion.backButton">&larr; Back to Community Forum</a>
 
                 <?php if ($discussion): ?>
                     <div class="discussion-post">
                         <header class="discussion-post-header">
                             <h1><?php echo htmlspecialchars($discussion['title']); ?></h1>
                             <div class="discussion-post-meta">
-                                <?php if ($isLoggedIn): ?>
-                                <button class="btn-icon report-btn" id="report-discussion-btn" title="Report this discussion"><i class="fa-solid fa-flag"></i> Report</button>
+                                <span data-i18n-key="common.by">By</span> <span class="author-name"><?php echo htmlspecialchars($discussion['author_name']); ?></span> &bull; <?php echo time_ago($discussion['created_at']); ?>
+                                 <?php if ($isLoggedIn): ?>
+                                <button class="btn-icon report-btn" id="report-discussion-btn" data-i18n-title-key="discussion.reportButton.title" title="Report this discussion"><i class="fa-solid fa-flag"></i> <span data-i18n-key="discussion.reportButton">Report</span></button>
                                 <?php endif; ?>
-                                By <span class="author-name"><?php echo htmlspecialchars($discussion['author_name']); ?></span> &bull; <?php echo time_ago($discussion['created_at']); ?>
                                 <span class="category-badge"><?php echo htmlspecialchars($discussion['category_name']); ?></span>
                             </div>
                         </header>
@@ -293,12 +295,12 @@ if ($isPageRequest) {
                             </button>
                         </div>
                         <div class="edit-mode-indicator" id="edit-indicator" style="display: none;">
-                            Editing message... <button type="button" id="cancel-edit-btn">Cancel</button>
+                            <span data-i18n-key="discussion.editing">Editing message...</span> <button type="button" id="cancel-edit-btn" data-i18n-key="common.cancel">Cancel</button>
                         </div>
                     </form>
                     <?php else: ?>
                         <div class="login-prompt">
-                            <p>Please <a href="../HTML/Login.html">log in</a> or <a href="../HTML/Signup.html">sign up</a> to join the conversation.</p>
+                            <p data-i18n-key="discussion.loginPrompt">Please <a href="../HTML/Login.html" data-i18n-key="discussion.loginLink">log in</a> or <a href="../HTML/Signup.html" data-i18n-key="discussion.signupLink">sign up</a> to join the conversation.</p>
                         </div>
                     <?php endif; ?>
                 </div>
@@ -309,24 +311,24 @@ if ($isPageRequest) {
         <div id="report-modal" class="modal-overlay" style="display: none;">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h2>Report Discussion</h2>
-                    <button id="close-report-modal" class="close-btn">&times;</button>
+                    <h2 data-i18n-key="discussion.reportModal.title">Report Discussion</h2>
+                    <button id="close-report-modal" class="close-btn" data-i18n-key="common.close">&times;</button>
                 </div>
                 <div class="modal-body">
                     <form id="report-form">
-                        <p>Please select a reason for reporting this discussion:</p>
+                        <p data-i18n-key="discussion.reportModal.reasonPrompt">Please select a reason for reporting this discussion:</p>
                         <div class="form-group">
-                            <label><input type="radio" name="reason" value="spam" required> It's spam or advertising</label>
-                            <label><input type="radio" name="reason" value="hate_speech"> It's hate speech or harassment</label>
-                            <label><input type="radio" name="reason" value="misinformation"> It contains false information</label>
-                            <label><input type="radio" name="reason" value="inappropriate"> It's inappropriate or offensive</label>
-                            <label><input type="radio" name="reason" value="other"> Other</label>
+                            <label><input type="radio" name="reason" value="spam" required> <span data-i18n-key="discussion.reportModal.reason.spam">It's spam or advertising</span></label>
+                            <label><input type="radio" name="reason" value="hate_speech"> <span data-i18n-key="discussion.reportModal.reason.hate">It's hate speech or harassment</span></label>
+                            <label><input type="radio" name="reason" value="misinformation"> <span data-i18n-key="discussion.reportModal.reason.misinfo">It contains false information</span></label>
+                            <label><input type="radio" name="reason" value="inappropriate"> <span data-i18n-key="discussion.reportModal.reason.inappropriate">It's inappropriate or offensive</span></label>
+                            <label><input type="radio" name="reason" value="other"> <span data-i18n-key="discussion.reportModal.reason.other">Other</span></label>
                         </div>
                         <div class="form-group">
-                            <label for="report-details">Additional Details (optional):</label>
-                            <textarea id="report-details" name="details" rows="3" placeholder="Provide more information..."></textarea>
+                            <label for="report-details" data-i18n-key="discussion.reportModal.detailsLabel">Additional Details (optional):</label>
+                            <textarea id="report-details" name="details" rows="3" data-i18n-placeholder-key="discussion.reportModal.detailsPlaceholder" placeholder="Provide more information..."></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary">Submit Report</button>
+                        <button type="submit" class="btn btn-primary" data-i18n-key="discussion.reportModal.submit">Submit Report</button>
                     </form>
                 </div>
             </div>

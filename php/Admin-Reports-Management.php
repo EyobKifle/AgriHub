@@ -43,7 +43,7 @@ $stmt->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AgriHub - Admin Reports Management</title>
+    <title data-i18n-key="admin.reportsManagement.pageTitle">AgriHub - Admin Reports Management</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../Css/Admin-Dashboard.css">
 </head>
@@ -58,7 +58,7 @@ $stmt->close();
         <div class="header-center">
             <div class="logo">
                 <i class="fa-solid fa-leaf"></i>
-                <span>AgriHub</span>
+                <span data-i18n-key="brand.name">AgriHub</span>
             </div>
         </div>
         <div class="header-right">
@@ -82,20 +82,20 @@ $stmt->close();
         <main class="main-content">
             <div class="content-wrapper">
                 <div class="main-header">
-                    <h1>Reports Management</h1>
-                    <p>Manage user reports on the platform.</p>
+                    <h1 data-i18n-key="admin.reportsManagement.title">Reports Management</h1>
+                    <p data-i18n-key="admin.reportsManagement.subtitle">Manage user reports on the platform.</p>
                 </div>
 
                 <div class="table-container">
                     <table class="data-table">
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Reason</th>
-                                <th>Reporter</th>
-                                <th>Status</th>
-                                <th>Reported At</th>
-                                <th>Actions</th>
+                                <th data-i18n-key="admin.reportsManagement.table.id">ID</th>
+                                <th data-i18n-key="admin.reportsManagement.table.reason">Reason</th>
+                                <th data-i18n-key="admin.reportsManagement.table.reporter">Reporter</th>
+                                <th data-i18n-key="admin.reportsManagement.table.status">Status</th>
+                                <th data-i18n-key="admin.reportsManagement.table.reportedAt">Reported At</th>
+                                <th data-i18n-key="admin.reportsManagement.table.actions">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -104,20 +104,20 @@ $stmt->close();
                                 <td><?php echo htmlspecialchars($report['id']); ?></td>
                                 <td><?php echo htmlspecialchars($report['reason']); ?></td>
                                 <td><?php echo htmlspecialchars($report['reporter_name']); ?></td>
-                                <td><span class="status status-<?php echo htmlspecialchars($report['status']); ?>"><?php echo htmlspecialchars($report['status']); ?></span></td>
+                                <td><span class="status status-<?php echo htmlspecialchars($report['status']); ?>" data-i18n-key="admin.reportsManagement.status.<?php echo htmlspecialchars($report['status']); ?>"><?php echo htmlspecialchars($report['status']); ?></span></td>
                                 <td><?php echo htmlspecialchars(date('Y-m-d H:i', strtotime($report['created_at']))); ?></td>
                                 <td class="action-buttons">
                                     <?php if ($report['status'] !== 'resolved'): ?>
                                     <form method="POST" style="display:inline;">
                                         <input type="hidden" name="report_id" value="<?php echo $report['id']; ?>">
                                         <input type="hidden" name="action" value="resolve">
-                                        <button type="submit" title="Resolve"><i class="fa-solid fa-check"></i></button>
+                                        <button type="submit" data-i18n-title-key="admin.reportsManagement.actions.resolve" title="Resolve"><i class="fa-solid fa-check"></i></button>
                                     </form>
                                     <?php endif; ?>
                                     <form method="POST" style="display:inline;">
                                         <input type="hidden" name="report_id" value="<?php echo $report['id']; ?>">
                                         <input type="hidden" name="action" value="delete">
-                                        <button type="submit" class="btn-danger" title="Delete"><i class="fa-solid fa-trash"></i></button>
+                                        <button type="submit" class="btn-danger" data-i18n-title-key="admin.reportsManagement.actions.delete" title="Delete"><i class="fa-solid fa-trash"></i></button>
                                     </form>
                                 </td>
                             </tr>

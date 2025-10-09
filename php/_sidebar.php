@@ -31,13 +31,13 @@ $siteLinks = [
         <div class="profile-dropdown">
             <div class="profile-avatar">
                 <?php if (!empty($avatar_url)): ?>
-                    <img src="/AgriHub/<?php echo e($avatar_url); ?>" alt="User Avatar">
+                    <img src="/AgriHub/<?php echo e($avatar_url); ?>" alt="User Avatar" data-i18n-alt-key="user.sidebar.avatarAlt">
                 <?php else: echo e($initial); endif; ?>
             </div>
             <div>
                 <div class="profile-name"><?php echo e($name); ?></div>
                 <div class="profile-email" style="opacity:.8; font-size:12px;"><?php echo e($email); ?></div>
-                <small><a href="/AgriHub/php/auth.php?action=logout" style="color:inherit; text-decoration:none;" data-i18n-key="user.nav.logout">Logout</a></small>
+                <small><a href="/AgriHub/php/auth.php?action=logout" style="color:inherit; text-decoration:none;"><span data-i18n-key="user.nav.logout">Logout</span></a></small>
             </div>
         </div>
     </div>

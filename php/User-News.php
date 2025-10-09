@@ -96,7 +96,7 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>News - AgriHub Dashboard</title>
+    <title data-i18n-key="user.news.pageTitle">News - AgriHub Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/AgriHub/Css/User-Dashboard.css"> <!-- Main dashboard styles -->
     <link rel="stylesheet" href="/AgriHub/Css/User-News.css">      <!-- Page-specific styles -->
@@ -133,7 +133,7 @@ $conn->close();
                     <aside class="news-sidebar">
                         <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
                         <div class="sidebar-section">
-                            <a href="Admin-News-Management.php" class="btn btn-primary full-width"><i class="fa-solid fa-plus"></i> Create New Article</a>
+                            <a href="Admin-News-Management.php" class="btn btn-primary full-width" data-i18n-key="news.create.button"><i class="fa-solid fa-plus"></i> Create New Article</a>
                         </div>
                         <?php endif; ?>
                         <div class="sidebar-section">
@@ -142,7 +142,7 @@ $conn->close();
                                 <li><a href="User-News.php" class="<?php echo !$selected_category_slug ? 'active' : ''; ?>" data-i18n-key="news.sidebar.all">All Articles</a></li>
                                 <?php foreach ($categories as $category): ?>
                                     <li>
-                                        <a href="User-News.php?category=<?php echo e($category['slug']); ?>" class="<?php echo $selected_category_slug === $category['slug'] ? 'active' : ''; ?>">
+                                        <a href="User-News.php?category=<?php echo e($category['slug']); ?>" class="<?php echo $selected_category_slug === $category['slug'] ? 'active' : ''; ?>" data-i18n-key="<?php echo e($category['name_key']); ?>">
                                             <?php echo e(ucfirst(str_replace('_', ' ', $category['name_key']))); ?>
                                             <span><?php echo (int)$category['article_count']; ?></span>
                                         </a>
@@ -166,14 +166,14 @@ $conn->close();
                                             <img src="/AgriHub/<?php echo e(empty($article['image_url']) ? 'https://placehold.co/400x250?text=No+Image' : $article['image_url']); ?>" alt="<?php echo e($article['title']); ?>" class="news-card-image">
                                         </div>
                                         <div class="news-card-content">
-                                            <div class="news-card-category"><?php echo e(ucfirst(str_replace('_', ' ', $article['category_name_key']))); ?></div>
+                                            <div class="news-card-category" data-i18n-key="<?php echo e($article['category_name_key']); ?>"><?php echo e(ucfirst(str_replace('_', ' ', $article['category_name_key']))); ?></div>
                                             <h3 class="news-card-title">
                                                 <?php echo e($article['title']); ?>
 
                                             </h3>
                                             <p class="news-card-excerpt"><?php echo e($article['excerpt']); ?></p>
                                             <div class="news-card-meta">
-                                                <span>By <?php echo e($article['author_name']); ?></span> &bull; <span><?php echo time_ago($article['created_at']); ?></span>
+                                                <span><span data-i18n-key="common.by">By</span> <?php echo e($article['author_name']); ?></span> &bull; <span><?php echo time_ago($article['created_at']); ?></span>
                                             </div>
                                         </div>
                                     </div>

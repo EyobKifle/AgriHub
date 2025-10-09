@@ -71,8 +71,8 @@ $conn->close();
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Marketplace - AgriHub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title data-i18n-key="marketplace.pageTitleTag">Marketplace - AgriHub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="/AgriHub/Css/header.css">
     <link rel="stylesheet" href="/AgriHub/Css/footer.css">
@@ -93,7 +93,7 @@ $conn->close();
                     <div class="sidebar-section">
                         <h3 data-i18n-key="marketplace.categories">Categories</h3>
                         <ul class="category-list">
-                            <li><a href="marketplace.php" class="<?php echo !$selected_category_slug ? 'active' : ''; ?>">All Products</a></li>
+                            <li><a href="marketplace.php" class="<?php echo !$selected_category_slug ? 'active' : ''; ?>" data-i18n-key="marketplace.allProducts">All Products</a></li>
                             <?php foreach ($categories as $category): ?>
                                 <li>
                                     <a href="marketplace.php?category=<?php echo e($category['slug']); ?>" class="<?php echo $selected_category_slug === $category['slug'] ? 'active' : ''; ?>">
@@ -110,7 +110,7 @@ $conn->close();
                     <div class="product-grid">
                         <?php if (empty($products)): ?>
                             <div class="empty-state">
-                                <p>No products found in this category.</p>
+                                <p data-i18n-key="marketplace.emptyState">No products found in this category.</p>
                             </div>
                         <?php else: ?>
                             <?php foreach ($products as $product): ?>

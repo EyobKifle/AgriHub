@@ -47,7 +47,7 @@ function renderPage(user) {
     }
     // The page is now rendered by PHP. We just need to fetch the data for the edit form.
     fetch('../php/listings.php').then(res => res.json()).then(data => {
-        allListings = data.listings || [];
+        allListings = data.products || [];
     }).catch(err => console.error("Could not fetch listings for editing.", err));
 }
 
@@ -102,23 +102,52 @@ async function handleFormSubmit(e) {
 }
 
 async function handleDelete(listingId) {
+    // Find the full listing object to get its title for the confirmation message.
     const listing = allListings.find(l => l.id == listingId);
-    if (!listing || !confirm(`Are you sure you want to delete "${listing.title}"?`)) return;
+    const listingTitle = listing ? listing.title : 'this listing';
 
-    const formData = new FormData();
-    formData.append('action', 'delete_listing');
-    formData.append('product_id', listingId);
-    showStatus('Deleting...', '#555');
+    // Ask the user if the item was sold.
+    const wasSold = confirm(`Did you successfully sell "${listingTitle}"? \n\n- Click 'OK' if you made a sale. \n- Click 'Cancel' to just remove the listing.`);
 
-    try {
-        const response = await fetch('../php/listings.php', { method: 'POST', body: formData });
-        const result = await response.json();
-        if (!response.ok) throw new Error(result.error || 'An unknown error occurred.');
+    if (wasSold) {
+        // User confirmed a sale was made. Call the 'mark_as_sold' action.
+        const formData = new FormData();
+        formData.append('action', 'mark_as_sold');
+        formData.append('product_id', listingId);
+        showStatus('Recording sale...', '#555');
 
-        showStatus(result.message, '#090');
-        window.location.reload(); // Easiest way to refresh the list
-    } catch (error) {
-        showStatus(`Error: ${error.message}`, '#900');
+        try {
+            const response = await fetch('../php/listings.php', {
+                method: 'POST',
+                body: formData
+            });
+            const result = await response.json();
+            if (!response.ok || result.error) throw new Error(result.error || 'An unknown error occurred.');
+
+            showStatus(result.message, '#090');
+            window.location.reload();
+        } catch (error) {
+            showStatus(`Error: ${error.message}`, '#900');
+        }
+    } else {
+        // User wants to just delete the listing. Confirm this action.
+        if (!confirm(`This will permanently delete the listing "${listingTitle}" without recording a sale. Are you sure?`)) {
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('action', 'delete_listing');
+        formData.append('product_id', listingId);
+        showStatus('Deleting...', '#555');
+        try {
+            const response = await fetch('../php/listings.php', { method: 'POST', body: formData });
+            const result = await response.json();
+            if (!response.ok || result.error) throw new Error(result.error || 'An unknown error occurred.');
+            showStatus(result.message, '#090');
+            window.location.reload();
+        } catch (error) {
+            showStatus(`Error: ${error.message}`, '#900');
+        }
     }
 }
 
@@ -160,7 +189,7 @@ function init() {
     if (!els.tableBody) return; // Make sure we are on the correct page
 
     initializeEventListeners();
-    renderPage(); // This will now just fetch data for the edit form
+    renderPage(); // This fetches data for the edit form
 }
 
 document.addEventListener('DOMContentLoaded', init);

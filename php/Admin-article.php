@@ -80,7 +80,7 @@ $conn->close();
     <title>Admin: <?php echo $article ? e($article['title']) : 'Article Detail'; ?> - AgriHub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../Css/Admin-Dashboard.css">
-    <link rel="stylesheet" href="../Css/article.css">
+    <link rel="stylesheet" href="../Css/Admin-article.css">
 </head>
 
 <body>

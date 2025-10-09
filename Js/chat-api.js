@@ -19,12 +19,12 @@ async function apiRequest(url, options = {}) {
         if (!response.ok) {
             // Try to get a more specific error from the API response body
             const errorBody = await response.json().catch(() => null);
-            const errorMessage = errorBody?.message || `HTTP error! status: ${response.status}`;
+            const errorMessage = errorBody?.error?.code || `HTTP error! status: ${response.status}`;
             throw new Error(errorMessage);
         }
         const data = await response.json();
         if (!data.success) {
-            throw new Error(data.message || 'An unknown API error occurred.');
+            throw new Error(data.error?.code || 'error.api.unknown');
         }
         return data;
     } catch (error) {

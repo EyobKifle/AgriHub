@@ -310,6 +310,21 @@ CREATE TABLE `translations` (
     UNIQUE `uq_translation` (`table_name`,`field_name`,`record_id`,`language_code`)
 );
 
+CREATE TABLE `completed_sales` (
+    `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    `seller_id` INT UNSIGNED NOT NULL,
+    `product_id` INT UNSIGNED NOT NULL,
+    `product_title` VARCHAR(200) NOT NULL,
+    `amount` DECIMAL(12,2) NOT NULL,
+    `completed_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT `fk_completed_sales_seller_id` FOREIGN KEY (`seller_id`) REFERENCES `users`(`id`) ON DELETE CASCADE,
+    -- Use ON DELETE RESTRICT to prevent product deletion if a sale is logged, or SET NULL if you want to keep the log even if the product is deleted. RESTRICT is safer.
+    CONSTRAINT `fk_completed_sales_product_id` FOREIGN KEY (`product_id`) REFERENCES `products`(`id`) ON DELETE RESTRICT,
+    INDEX `idx_completed_sales_seller_id` (`seller_id`),
+    INDEX `idx_completed_sales_product_id` (`product_id`)
+);
+
+
 DELIMITER //
 
 CREATE TRIGGER after_product_insert

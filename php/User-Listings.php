@@ -51,7 +51,7 @@ $list_stmt->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Listings - AgriHub</title>
+    <title data-i18n-key="user.listings.pageTitle">My Listings - AgriHub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../Css/User-Dashboard.css">
 </head>
@@ -66,7 +66,7 @@ $list_stmt->close();
         <div class="header-center">
             <div class="logo">
                 <i class="fa-solid fa-leaf"></i>
-                <span>AgriHub</span>
+                <span data-i18n-key="brand.name">AgriHub</span>
             </div>
         </div>
         <div class="header-right">
@@ -95,17 +95,17 @@ $list_stmt->close();
             </div>
 
             <div class="card" id="create-listing-card" style="display: none;">
-                <h3 class="card-title" id="form-title">New Listing</h3>
+                <h3 class="card-title" id="form-title" data-i18n-key="user.listings.modal.title">New Listing</h3>
                 <form id="listing-form" enctype="multipart/form-data">
-                    <input type="hidden" name="action" value="save_listing">
-                    <input type="hidden" name="product_id" id="product_id" value="0">
+                    <input type="hidden" name="action" value="save_listing" />
+                    <input type="hidden" name="product_id" id="product_id" value="0" />
                     <div class="form-grid">
                         <div class="form-group">
-                            <label for="form-title-input">Title</label>
-                            <input type="text" id="form-title-input" name="title" required>
+                            <label for="form-title-input" data-i18n-key="user.listings.modal.name">Title</label>
+                            <input type="text" id="form-title-input" name="title" required />
                         </div>
                         <div class="form-group">
-                            <label for="form-category-id">Category</label>
+                            <label for="form-category-id" data-i18n-key="user.listings.modal.category">Category</label>
                             <select id="form-category-id" name="category_id" required>
                                 <?php foreach ($categories as $cat): ?>
                                     <option value="<?php echo (int)$cat['id']; ?>"><?php echo e($cat['name']); ?></option>
@@ -114,31 +114,31 @@ $list_stmt->close();
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="form-description">Description</label>
-                        <textarea id="form-description" name="description" rows="3" placeholder="Describe your product..."></textarea>
+                        <label for="form-description" data-i18n-key="user.listings.modal.description">Description</label>
+                        <textarea id="form-description" name="description" rows="3" data-i18n-placeholder-key="user.listings.modal.descriptionPlaceholder" placeholder="Describe your product..."></textarea>
                     </div>
                     <div class="form-grid">
                         <div class="form-group">
-                            <label for="form-price">Price</label>
-                            <input type="number" step="0.01" id="form-price" name="price" required>
+                            <label for="form-price" data-i18n-key="user.listings.modal.price">Price</label>
+                            <input type="number" step="0.01" id="form-price" name="price" required />
                         </div>
                         <div class="form-group">
-                            <label for="form-unit">Unit</label>
-                            <input type="text" id="form-unit" name="unit" placeholder="e.g., kg, quintal, bag" required>
+                            <label for="form-unit" data-i18n-key="user.listings.modal.unit">Unit</label>
+                            <input type="text" id="form-unit" name="unit" data-i18n-placeholder-key="user.listings.modal.unitPlaceholder" placeholder="e.g., kg, quintal, bag" required />
                         </div>
                         <div class="form-group">
-                            <label for="form-quantity">Quantity Available</label>
-                            <input type="number" step="0.01" id="form-quantity" name="quantity_available" required>
+                            <label for="form-quantity" data-i18n-key="user.listings.modal.quantity">Quantity Available</label>
+                            <input type="number" step="0.01" id="form-quantity" name="quantity_available" required />
                         </div>
                     </div>
                     <div class="form-group" id="status-form-group" style="display: none;">
-                        <label for="form-status">Status</label>
+                        <label for="form-status" data-i18n-key="user.listings.table.status">Status</label>
                         <select id="form-status" name="status">
-                            <option value="active">Active</option>
-                            <option value="inactive">Inactive</option>
-                            <option value="sold">Sold</option>
+                            <option value="active" data-i18n-key="user.listings.status.active">Active</option>
+                            <option value="inactive" data-i18n-key="user.listings.status.inactive">Inactive</option>
+                            <option value="sold" data-i18n-key="user.listings.status.sold">Sold</option>
                         </select>
-                        <p class="form-text">Set the current status of your listing.</p>
+                        <p class="form-text" data-i18n-key="user.listings.modal.statusHelp">Set the current status of your listing.</p>
                     </div>
                     <div class="form-group">
                         <label for="images">Product Images (first image will be primary)</label>
@@ -146,8 +146,8 @@ $list_stmt->close();
                         <p class="form-text">You can select multiple images. For updates, new images will be added to the existing ones.</p>
                     </div>
                     <div class="form-actions">
-                        <button type="button" class="btn btn-secondary" id="cancel-edit-btn" style="display: none;">Cancel</button>
-                        <button type="submit" class="btn btn-primary" id="form-submit-btn">Create</button>
+                        <button type="button" class="btn btn-secondary" id="cancel-edit-btn" style="display: none;" data-i18n-key="common.cancel">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="form-submit-btn" data-i18n-key="user.discussions.actions.create">Create</button>
                     </div>
                 </form>
             </div>
@@ -165,7 +165,7 @@ $list_stmt->close();
                     </thead>
                     <tbody id="listings-table-body">
                         <?php if (empty($listings)): ?>
-                            <tr><td colspan="5" style="text-align:center; opacity:.8;">You have no listings yet.</td></tr>
+                            <tr><td colspan="5" style="text-align:center; opacity:.8;" data-i18n-key="user.listings.empty">You have no listings yet.</td></tr>
                         <?php else: ?>
                             <?php foreach ($listings as $item): ?>
                                 <?php $priceFormatted = number_format((float)$item['price'], 2) . ' / ' . e($item['unit']); ?>
@@ -173,10 +173,10 @@ $list_stmt->close();
                                     <td><?php echo e($item['title']); ?></td>
                                     <td><?php echo e($item['category_name']); ?></td>
                                     <td><?php echo $priceFormatted; ?></td>
-                                    <td><span class="status status-<?php echo e(strtolower($item['status'])); ?>"><?php echo e(ucfirst($item['status'])); ?></span></td>
+                                    <td><span class="status status-<?php echo e(strtolower($item['status'])); ?>" data-i18n-key="user.listings.status.<?php echo e(strtolower($item['status'])); ?>"><?php echo e(ucfirst($item['status'])); ?></span></td>
                                     <td class="action-buttons">
-                                        <button class="edit-btn" title="Edit Listing"><i class="fa-solid fa-pen"></i></button>
-                                        <button class="delete-btn" title="Delete Listing"><i class="fa-solid fa-trash"></i></button>
+                                        <button class="edit-btn" data-i18n-title-key="user.listings.actions.edit" title="Edit Listing"><i class="fa-solid fa-pen"></i></button>
+                                        <button class="delete-btn" data-i18n-title-key="user.listings.actions.delete" title="Delete Listing"><i class="fa-solid fa-trash"></i></button>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

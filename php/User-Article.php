@@ -21,7 +21,7 @@ $articleId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 
 if (!$articleId) {
     http_response_code(400);
-    $error_message = "Invalid article ID provided.";
+    $error_message = "error.article.invalidId";
 } else {
     // --- Increment view count ---
     $stmt_view = $conn->prepare("UPDATE articles SET view_count = view_count + 1 WHERE id = ?");
@@ -51,7 +51,7 @@ if (!$articleId) {
 
     if (!$article) {
         http_response_code(404);
-        $error_message = "The article you are looking for could not be found.";
+        $error_message = "error.article.notFound";
     } else {
         // --- Fetch related articles (from the same category) ---
         $stmt_related = $conn->prepare("
@@ -77,7 +77,7 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $article ? e($article['title']) : 'Article'; ?> - AgriHub Dashboard</title>
+    <title><?php echo $article ? e($article['title']) : 'Article'; ?><span data-i18n-key="user.article.pageTitleSuffix"> - AgriHub Dashboard</span></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="/AgriHub/Css/User-Dashboard.css">
     <link rel="stylesheet" href="/AgriHub/Css/article.css">
@@ -104,21 +104,21 @@ $conn->close();
             <div class="content-wrapper article-view">
                 <?php if ($error_message): ?>
                     <div class="error-message">
-                        <h1>Error</h1>
-                        <p><?php echo e($error_message); ?></p>
-                        <a href="User-News.php" class="btn btn-primary">Back to News</a>
+                        <h1 data-i18n-key="common.error">Error</h1>
+                        <p data-i18n-key="<?php echo e($error_message); ?>"></p>
+                        <a href="User-News.php" class="btn btn-primary" data-i18n-key="article.backToNews">Back to News</a>
                     </div>
                 <?php elseif ($article): ?>
                     <article class="article-content">
                         <header class="article-header">
-                            <a href="User-News.php?category=<?php echo e($article['category_slug']); ?>" class="article-category-link"><?php echo e(ucfirst(str_replace('_', ' ', $article['category_name']))); ?></a>
+                            <a href="User-News.php?category=<?php echo e($article['category_slug']); ?>" class="article-category-link" data-i18n-key="<?php echo e($article['category_name']); ?>"><?php echo e(ucfirst(str_replace('_', ' ', $article['category_name']))); ?></a>
                             <h1 class="article-title"><?php echo e($article['title']); ?></h1>
                             <div class="article-meta">
-                                <span>By <strong><?php echo e($article['author_name']); ?></strong></span>
+                                <span><span data-i18n-key="common.by">By</span> <strong><?php echo e($article['author_name']); ?></strong></span>
                                 <span>&bull;</span>
                                 <span><?php echo date('F j, Y', strtotime($article['created_at'])); ?></span>
                                 <span>&bull;</span>
-                                <span><i class="fa-solid fa-eye"></i> <?php echo number_format($article['view_count']); ?> views</span>
+                                <span><i class="fa-solid fa-eye"></i> <?php echo number_format($article['view_count']); ?> <span data-i18n-key="common.views">views</span></span>
                             </div>
                         </header>
 
@@ -135,7 +135,7 @@ $conn->close();
 
                     <?php if (!empty($related_articles)): ?>
                         <aside class="related-articles">
-                            <h2 class="related-articles-title">Related Articles</h2>
+                            <h2 class="related-articles-title" data-i18n-key="article.related.title">Related Articles</h2>
                             <div class="related-articles-grid">
                                 <?php foreach ($related_articles as $related): ?>
                                     <a href="User-Article.php?id=<?php echo (int)$related['id']; ?>" class="related-article-card">

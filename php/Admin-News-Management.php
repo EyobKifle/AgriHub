@@ -131,8 +131,8 @@ function get_summary($html, $word_limit = 20) {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AgriHub - Admin News Management</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title data-i18n-key="admin.newsManagement.pageTitle">AgriHub - Admin News Management</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../Css/Admin-Dashboard.css">    <style>
         .news-card-link { text-decoration: none; color: inherit; display: block; }
@@ -153,7 +153,7 @@ function get_summary($html, $word_limit = 20) {
         <div class="header-center">
             <div class="logo">
                 <i class="fa-solid fa-leaf"></i>
-                <span>AgriHub</span>
+                <span data-i18n-key="brand.name">AgriHub</span>
             </div>
         </div>
         <div class="header-right">
@@ -177,36 +177,36 @@ function get_summary($html, $word_limit = 20) {
         <main class="main-content">
             <div class="content-wrapper">
                 <div class="main-header">
-                    <h1>News Management</h1>
-                    <p>Manage news articles on the platform.</p>
+                    <h1 data-i18n-key="admin.newsManagement.title">News Management</h1>
+                    <p data-i18n-key="admin.newsManagement.subtitle">Manage news articles on the platform.</p>
                 </div>
 
                 <div class="form-container" id="form-container">
                     <form method="POST" class="form-group" enctype="multipart/form-data">
                         <input type="hidden" name="news_id" id="news_id" value="<?php echo $articleToEdit['id'] ?? ''; ?>">
                         <input type="hidden" name="existing_image_url" id="existing_image_url" value="<?php echo $articleToEdit['image_url'] ?? ''; ?>">
-                        <label for="title">Title</label>
+                        <label for="title" data-i18n-key="admin.newsManagement.form.title">Title</label>
                         <input type="text" id="title" name="title" value="<?php echo htmlspecialchars($articleToEdit['title'] ?? ''); ?>" required>
-                        <label for="image">Feature Image</label>
+                        <label for="image" data-i18n-key="admin.newsManagement.form.image">Feature Image</label>
                         <input type="file" id="image" name="image" accept="image/*">
                         <?php if (!empty($articleToEdit['image_url'])): ?>
                             <div class="current-image-container">
-                                <p>Current Image:</p>
+                                <p data-i18n-key="admin.newsManagement.form.currentImage">Current Image:</p>
                                 <img src="../<?php echo htmlspecialchars($articleToEdit['image_url']); ?>" alt="Current Image" class="current-image-preview">
                             </div>
                         <?php endif; ?>
-                        <label for="category_id">Category</label>
+                        <label for="category_id" data-i18n-key="admin.newsManagement.form.category">Category</label>
                         <select id="category_id" name="category_id" required>
-                            <option value="">-- Select a Category --</option>
+                            <option value="" data-i18n-key="admin.newsManagement.form.selectCategory">-- Select a Category --</option>
                             <?php foreach ($categories as $cat): ?>
                                 <option value="<?php echo (int)$cat['id']; ?>" <?php echo (isset($articleToEdit['category_id']) && $articleToEdit['category_id'] == $cat['id']) ? 'selected' : ''; ?>>
                                     <?php echo htmlspecialchars(ucfirst(str_replace('_', ' ', $cat['name_key']))); ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
-                        <label for="content">Content</label>
+                        <label for="content" data-i18n-key="admin.newsManagement.form.content">Content</label>
                         <textarea id="content" name="content" rows="6" required><?php echo htmlspecialchars($articleToEdit['content'] ?? ''); ?></textarea>
-                        <button type="submit" class="btn btn-primary"><?php echo $articleToEdit ? 'Update News' : 'Add News'; ?></button>
+                        <button type="submit" class="btn btn-primary" data-i18n-key="<?php echo $articleToEdit ? 'admin.newsManagement.form.updateButton' : 'admin.newsManagement.form.addButton'; ?>"><?php echo $articleToEdit ? 'Update News' : 'Add News'; ?></button>
                     </form>
                 </div>
 
@@ -219,12 +219,12 @@ function get_summary($html, $word_limit = 20) {
                                 </div>
                                 <div class="card-content">
                                     <div class="card-meta-top">
-                                        <span class="card-category"><?php echo htmlspecialchars($news['category_name'] ?? 'Uncategorized'); ?></span>
-                                        <span class="status status-<?php echo htmlspecialchars(strtolower($news['status'])); ?>"><?php echo htmlspecialchars($news['status']); ?></span>
+                                        <span class="card-category" data-i18n-key="<?php echo htmlspecialchars($news['category_name'] ?? 'admin.newsManagement.card.uncategorized'); ?>"><?php echo htmlspecialchars($news['category_name'] ?? 'Uncategorized'); ?></span>
+                                        <span class="status status-<?php echo htmlspecialchars(strtolower($news['status'])); ?>" data-i18n-key="admin.newsManagement.status.<?php echo htmlspecialchars(strtolower($news['status'])); ?>"><?php echo htmlspecialchars($news['status']); ?></span>
                                     </div>
                                     <h3><?php echo htmlspecialchars($news['title']); ?></h3>
                                     <p class="card-summary"><?php echo htmlspecialchars(get_summary($news['content'])); ?></p>
-                                    <div class="card-meta">Published: <?php echo htmlspecialchars(date('M d, Y', strtotime($news['created_at']))); ?></div>
+                                    <div class="card-meta"><span data-i18n-key="admin.newsManagement.card.published">Published:</span> <?php echo htmlspecialchars(date('M d, Y', strtotime($news['created_at']))); ?></div>
                                 </div>
                             </div>
                         </a>
