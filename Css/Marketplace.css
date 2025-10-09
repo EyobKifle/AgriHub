@@ -216,6 +216,39 @@
     color: var(--text-light);
 }
 
+/* --- Pagination --- */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.pagination-link {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-light);
+    text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.pagination-link:hover {
+    background-color: #e8f5e9;
+    color: var(--primary-green);
+    border-color: #e8f5e9;
+}
+
+.pagination-link.active {
+    background-color: var(--primary-green);
+    color: var(--white);
+    border-color: var(--primary-green);
+    font-weight: 600;
+}
 /* --- 4. Responsive Design --- */
 
 @media (max-width: 992px) {

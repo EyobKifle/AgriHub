@@ -102,7 +102,8 @@ $conn->close();
 
         <main class="main-content">
             <div class="main-header">
-                <h1 data-i18n-key="user.dashboard.welcome" data-i18n-name="<?php echo e($name); ?>">Welcome back, <?php echo e($name); ?>!</h1>
+<h1 data-i18n-key="user.dashboard.welcome">Welcome back</h1>
+
                 <p data-i18n-key="user.dashboard.subtitle">Here's what's new on AgriHub today.</p>
             </div>
 

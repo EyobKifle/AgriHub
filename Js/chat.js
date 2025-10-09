@@ -44,9 +44,6 @@ async function initializeChat() {
     if (els.form) els.form.style.display = 'none';
     return;
   }
-  if (!currentUser.id && els.form) {
-      els.form.style.display = 'none';
-  }
 
   await refreshMessages(discussionId, currentUser);
   initializeEventListeners(discussionId, currentUser);
@@ -178,7 +175,7 @@ function initializeReportModal() {
         };
 
         try {
-            const response = await fetch('discussion.php', {
+            const response = await fetch('../php/api/discussions.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

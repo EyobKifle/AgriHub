@@ -59,6 +59,7 @@ CREATE TABLE `products` (
     `price` DECIMAL(12,2) NOT NULL CHECK (`price`>0),
     `unit` VARCHAR(50) NOT NULL DEFAULT 'unit',
     `quantity_available` DECIMAL(10,2) NOT NULL DEFAULT 0 CHECK (`quantity_available`>=0),
+    `phone_number` VARCHAR(25) DEFAULT NULL,
     `status` ENUM('active','inactive','sold_out','pending_approval') NOT NULL DEFAULT 'active',
     `is_featured` BOOLEAN NOT NULL DEFAULT FALSE,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -79,47 +80,6 @@ CREATE TABLE `product_images` (
     CONSTRAINT `fk_product_images_product_id` FOREIGN KEY (`product_id`) REFERENCES `products`(`id`) ON DELETE CASCADE
 );
 
-CREATE TABLE `orders` (
-    `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    `buyer_id` INT UNSIGNED NOT NULL,
-    `order_code` VARCHAR(20) NOT NULL UNIQUE,
-    `total_amount` DECIMAL(14,2) NOT NULL,
-    `status` ENUM('pending','processing','shipped','delivered','cancelled') NOT NULL DEFAULT 'pending',
-    `delivery_address` TEXT,
-    `notes` TEXT,
-    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    CONSTRAINT `fk_orders_buyer_id` FOREIGN KEY (`buyer_id`) REFERENCES `users`(`id`) ON DELETE RESTRICT,
-    INDEX `idx_orders_buyer_id` (`buyer_id`),
-    INDEX `idx_orders_status` (`status`)
-);
-
-CREATE TABLE `order_items` (
-    `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    `order_id` INT UNSIGNED NOT NULL,
-    `product_id` INT UNSIGNED NOT NULL,
-    `seller_id` INT UNSIGNED NOT NULL,
-    `quantity` DECIMAL(10,2) NOT NULL CHECK (`quantity`>0),
-    `unit_price` DECIMAL(12,2) NOT NULL CHECK (`unit_price`>0),
-    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT `fk_order_items_order_id` FOREIGN KEY (`order_id`) REFERENCES `orders`(`id`) ON DELETE CASCADE,
-    CONSTRAINT `fk_order_items_product_id` FOREIGN KEY (`product_id`) REFERENCES `products`(`id`) ON DELETE RESTRICT,
-    CONSTRAINT `fk_order_items_seller_id` FOREIGN KEY (`seller_id`) REFERENCES `users`(`id`) ON DELETE RESTRICT
-);
-
-CREATE TABLE `reviews` (
-    `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    `product_id` INT UNSIGNED NOT NULL,
-    `reviewer_id` INT UNSIGNED NOT NULL,
-    `order_item_id` INT UNSIGNED DEFAULT NULL,
-    `rating` TINYINT UNSIGNED NOT NULL CHECK (`rating` BETWEEN 1 AND 5),
-    `comment` TEXT,
-    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT `fk_reviews_product_id` FOREIGN KEY (`product_id`) REFERENCES `products`(`id`) ON DELETE CASCADE,
-    CONSTRAINT `fk_reviews_reviewer_id` FOREIGN KEY (`reviewer_id`) REFERENCES `users`(`id`) ON DELETE RESTRICT,
-    CONSTRAINT `fk_reviews_order_item_id` FOREIGN KEY (`order_item_id`) REFERENCES `order_items`(`id`) ON DELETE SET NULL,
-    UNIQUE `uq_review_per_order_item` (`order_item_id`)
-);
 
 CREATE TABLE `discussion_categories` (
     `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -262,6 +222,7 @@ CREATE TABLE `reports` (
     `reported_item_type` ENUM('product','discussion','comment','user','other') NOT NULL,
     `reported_item_id` INT UNSIGNED NOT NULL,
     `reason` TEXT NOT NULL,
+    `details` TEXT DEFAULT NULL,
     `status` ENUM('open','in_review','resolved','dismissed') NOT NULL DEFAULT 'open',
     `resolved_by` INT UNSIGNED DEFAULT NULL,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -271,14 +232,6 @@ CREATE TABLE `reports` (
     INDEX `idx_reports_status` (`status`)
 );
 
-CREATE TABLE `user_favorites` (
-    `user_id` INT UNSIGNED NOT NULL,
-    `product_id` INT UNSIGNED NOT NULL,
-    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`user_id`,`product_id`),
-    CONSTRAINT `fk_favorites_user_id` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE,
-    CONSTRAINT `fk_favorites_product_id` FOREIGN KEY (`product_id`) REFERENCES `products`(`id`) ON DELETE CASCADE
-);
 
 CREATE TABLE `user_activity_log` (
     `id` BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,

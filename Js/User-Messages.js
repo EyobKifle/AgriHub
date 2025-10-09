@@ -23,7 +23,7 @@ let state = {
     conversations: [],
 };
 
-const API_URL = '/AgriHub/php/ChatApi.php';
+const API_URL = '/AgriHub/php/api/messages.php';
 
 /**
  * Fetches all conversations for the current user.

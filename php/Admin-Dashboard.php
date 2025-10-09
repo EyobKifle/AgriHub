@@ -136,7 +136,7 @@ $recentReportsStmt->close();
         <div class="content-wrapper">
             <div class="main-header">
                 <h1 data-i18n-key="admin.dashboard.title">Dashboard</h1>
-                <p data-i18n-key="admin.dashboard.subtitle" data-i18n-name="<?php echo htmlspecialchars($name); ?>">Welcome back, <?php echo htmlspecialchars($name); ?>! Here's an overview of your platform.</p>
+                <p data-i18n-key="admin.dashboard.subtitle">Welcome back Here's an overview of your platform.</p>
             </div>
 
             <div class="cards-grid chart-grid">

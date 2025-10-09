@@ -213,7 +213,11 @@ function initializeHeaderMenuToggle() {
 /**
  * Main initialization function.
  */
-function init() {
+async function init() {
+    // Initialize i18n and apply translations to the static content on the page.
+    await initializeI18n();
+    applyTranslationsToPage();
+
     initializeSidebarToggle();
     initializeTheme(); // Apply theme on all dashboard pages
     

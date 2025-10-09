@@ -9,7 +9,7 @@ function createCategoryCard(category) {
   // Use a placeholder image if the category image is missing
   const imageUrl = category.image_url || 'https://via.placeholder.com/300x200.png?text=AgriHub';
   // The link can point to a future page for that category, e.g., /guidance/crops/teff
-  const categoryLink = `guidance-category.html?slug=${category.slug}`;
+  const categoryLink = `Farming-Guidance-Category.php?slug=${category.slug}`;
 
   return `
     <a href="${categoryLink}" class="category-card">
@@ -117,7 +117,7 @@ export function initializeGuidancePage() {
  */
 function createArticleCard(article) {
   const imageUrl = article.image_url || 'https://via.placeholder.com/400x300.png?text=Article';
-  const articleLink = `article.html?id=${article.id}`; 
+  const articleLink = `Farming-Guidance-Article.php?id=${article.id}`; 
   const excerpt = article.excerpt || 'No summary available.';
   const author = article.author_name || 'AgriHub Staff';
   const postDate = new Date(article.created_at).toLocaleDateString('en-US', {
@@ -211,7 +211,7 @@ export function initializeGuidanceCategoryPage() {
  */
 function createRelatedArticleCard(article) {
   const imageUrl = article.image_url || 'https://via.placeholder.com/300x200.png?text=AgriHub';
-  const articleLink = `article.html?id=${article.id}`;
+  const articleLink = `Farming-Guidance-Article.php?id=${article.id}`;
 
   return `
     <a href="${articleLink}" class="related-article-card">
@@ -265,7 +265,7 @@ async function renderArticlePage() {
     // and has been sanitized on the server before being saved to the database.
     placeholder.innerHTML = `
       <header class="article-header">
-        <a href="guidance-category.html?slug=${article.category_slug}" class="article-category-link">${article.category_name}</a>
+        <a href="Farming-Guidance-Category.php?slug=${article.category_slug}" class="article-category-link">${article.category_name}</a>
         <h1 class="article-title">${article.title}</h1>
         <div class="article-meta">
           <span>By <strong>${article.author_name}</strong></span>

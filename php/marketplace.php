@@ -32,6 +32,33 @@ if ($selected_category_slug) {
     }
 }
 
+// --- Pagination Setup ---
+$page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+$products_per_page = 12; // Number of products to show per page
+$offset = ($page - 1) * $products_per_page;
+
+// --- Count Total Products for Pagination ---
+$sql_count = "SELECT COUNT(p.id) FROM products p WHERE p.status = 'active'";
+$count_params = [];
+$count_types = '';
+if ($selected_category_id) {
+    $sql_count .= " AND p.category_id = ?";
+    $count_params[] = $selected_category_id;
+    $count_types .= 'i';
+}
+$total_products = 0;
+$stmt_count = $conn->prepare($sql_count);
+if ($stmt_count) {
+    if (!empty($count_params)) {
+        $stmt_count->bind_param($count_types, ...$count_params);
+    }
+    $stmt_count->execute();
+    $stmt_count->bind_result($total_products);
+    $stmt_count->fetch();
+    $stmt_count->close();
+}
+$total_pages = ceil($total_products / $products_per_page);
+
 // --- Fetch Products ---
 $products = [];
 $sql_products = "
@@ -53,7 +80,10 @@ if ($selected_category_id) {
     $types .= 'i';
 }
 
-$sql_products .= " ORDER BY p.created_at DESC LIMIT 30";
+$sql_products .= " ORDER BY p.created_at DESC LIMIT ? OFFSET ?";
+$params[] = $products_per_page;
+$params[] = $offset;
+$types .= 'ii';
 
 $stmt_products = $conn->prepare($sql_products);
 if ($stmt_products) {
@@ -131,6 +161,31 @@ $conn->close();
                             <?php endforeach; ?>
                         <?php endif; ?>
                     </div>
+
+                    <!-- Pagination Controls -->
+                    <?php if ($total_pages > 1): ?>
+                    <div class="pagination">
+                        <?php
+                        // Preserve category filter in pagination links
+                        $query_params = [];
+                        if ($selected_category_slug) {
+                            $query_params['category'] = $selected_category_slug;
+                        }
+                        ?>
+
+                        <?php if ($page > 1): ?>
+                            <a href="?<?php echo http_build_query(array_merge($query_params, ['page' => $page - 1])); ?>" class="pagination-link">&laquo; Prev</a>
+                        <?php endif; ?>
+
+                        <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                            <a href="?<?php echo http_build_query(array_merge($query_params, ['page' => $i])); ?>" class="pagination-link <?php echo $i === $page ? 'active' : ''; ?>"><?php echo $i; ?></a>
+                        <?php endfor; ?>
+
+                        <?php if ($page < $total_pages): ?>
+                            <a href="?<?php echo http_build_query(array_merge($query_params, ['page' => $page + 1])); ?>" class="pagination-link">Next &raquo;</a>
+                        <?php endif; ?>
+                    </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

@@ -4,7 +4,7 @@
  * It abstracts away the fetch calls, so the UI code doesn't need to know about URLs or HTTP methods.
  */
 
-const API_URL = '../php/discussion.php';
+const API_URL = '../php/api/discussions.php';
 
 /**
  * A helper function to handle API requests and parse the JSON response.
