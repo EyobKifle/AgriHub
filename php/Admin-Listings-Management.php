@@ -99,7 +99,7 @@ $conn->close();
         </div>
         <div class="header-right">
             <a href="Admin-Settings.php" class="profile-link" aria-label="User Settings">
-                <div class="profile-avatar"><?php echo e($initial); ?></div>
+                <div class="profile-avatar"><?php echo htmlspecialchars($initial); ?></div>
             </a>
         </div>
     </header>
@@ -193,5 +193,6 @@ $conn->close();
     </div>
 
     <script type="module" src="../Js/dashboard.js"></script>
+    <script type="module" src="../Js/site.js"></script>
 </body>
 </html>

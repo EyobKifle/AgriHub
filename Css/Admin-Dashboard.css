@@ -652,6 +652,14 @@ input:checked + .slider:before { transform: translateX(24px); }
 .news-card .card-category { font-size: 0.8rem; font-weight: 700; color: var(--primary-green); margin-bottom: 0.5rem; }
 .news-card h3 { font-size: 1.1rem; margin: 0 0 0.5rem 0; }
 .news-card .card-meta { font-size: 0.85rem; color: var(--text-secondary-light); }
+.news-card h3 a {
+  text-decoration: none;
+  color: var(--text-primary-light);
+  transition: color 0.2s;
+}
+.news-card h3 a:hover {
+  color: var(--primary-green);
+}
 
 /* Responsive Design */
 @media (max-width: 1200px) {

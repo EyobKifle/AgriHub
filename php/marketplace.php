@@ -88,8 +88,8 @@ $conn->close();
                 <p data-i18n-key="marketplace.subtitle">Browse fresh produce, seeds, and equipment from sellers across the nation.</p>
             </div>
 
-            <div class="news-layout">
-                <aside class="news-sidebar">
+            <div class="market-layout">
+                <aside class="market-sidebar">
                     <div class="sidebar-section">
                         <h3 data-i18n-key="marketplace.categories">Categories</h3>
                         <ul class="category-list">
@@ -106,7 +106,7 @@ $conn->close();
                     </div>
                 </aside>
 
-                <div class="main-news-content">
+                <div class="main-market-content">
                     <div class="product-grid">
                         <?php if (empty($products)): ?>
                             <div class="empty-state">

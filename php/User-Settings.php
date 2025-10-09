@@ -45,36 +45,46 @@ $prefDarkMode = ($prefs['pref_theme'] === 'dark');
 
 // Handle settings POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Checkboxes: if missing from POST, treat as off
+    $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
+
     $newPrefEmailNotif = isset($_POST['email_notifications']);
     $newPrefTheme = isset($_POST['dark_mode']) ? 'dark' : 'light';
-
-    // Language preference persists to DB
     $newLang = $_POST['language'] ?? $currentLang;
     if (!in_array($newLang, ['en', 'am', 'om', 'ti'], true)) {
         $newLang = 'en';
     }
     
-    // Upsert into user_profiles
+    $success = false;
     if ($stmt = $conn->prepare('INSERT INTO user_profiles (user_id, language_preference, pref_email_notifications, pref_theme) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE language_preference = VALUES(language_preference), pref_email_notifications = VALUES(pref_email_notifications), pref_theme = VALUES(pref_theme)')) {
         $stmt->bind_param('isis', $userId, $newLang, $newPrefEmailNotif, $newPrefTheme);
-        $stmt->execute();
+        if ($stmt->execute()) {
+            $success = true;
+        }
         $stmt->close();
     }
 
-    // After saving, we can just let the page render with the new values.
-    // Let's re-fetch the new values to be sure.
-    $currentLang = $newLang;
-    $prefEmailNotif = $newPrefEmailNotif;
-    $prefDarkMode = ($newPrefTheme === 'dark');
-    
-    // We can show a success message without a full page reload.
-    $savedMessage = "Your settings have been saved successfully.";
+    if ($isAjax) {
+        header('Content-Type: application/json');
+        if ($success) {
+            echo json_encode(['success' => true, 'message' => 'Your settings have been saved successfully.']);
+        } else {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'Failed to save settings. Please try again.']);
+        }
+        exit();
+    } else { // Fallback for non-JS form submission
+        if ($success) {
+            $currentLang = $newLang;
+            $prefEmailNotif = $newPrefEmailNotif;
+            $prefDarkMode = ($newPrefTheme === 'dark');
+            $savedMessage = "Your settings have been saved successfully.";
+        }
+    }
 }
 
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?php echo e($currentLang); ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -82,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/AgriHub/Css/User-Dashboard.css">
 </head>
-<body>
+<body data-theme="<?php echo e($prefs['pref_theme']); ?>">
     <!-- Full-width Header -->
     <header class="main-header-bar">
         <div class="header-left">
@@ -116,14 +126,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="main-header">
                 <h1 data-i18n-key="user.settings.title">Settings</h1>
                 <p data-i18n-key="user.settings.subtitle">Manage your account preferences and site settings.</p>
-                <?php if (isset($savedMessage)): ?>
-                    <div class="alert alert-success" style="background-color: #d4edda; color: #155724; padding: 1rem; border-radius: 8px; margin-top: 1.5rem;">
-                        <?php echo e($savedMessage); ?>
-                    </div>
-                <?php endif; ?>
+                <div id="settings-status-message" class="alert" style="display: none; margin-top: 1.5rem;"></div>
             </div>
 
-            <form class="settings-grid" method="post">
+            <form id="settings-form" class="settings-grid" method="post">
                 <!-- Notification Settings -->
                 <div class="card">
                     <h3 class="card-title" data-i18n-key="user.settings.notifications.title">Notifications</h3>
@@ -180,5 +186,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <script type="module" src="/AgriHub/Js/dashboard.js"></script>
+      <script type="module" src="/AgriHub/Js/site.js"></script>
 </body>
 </html>

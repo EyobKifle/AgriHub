@@ -14,6 +14,35 @@ if ($role !== 'admin') {
     exit();
 }
 
+// Handle ban/unban actions
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'], $_POST['user_id'])) {
+    $userIdToUpdate = (int)$_POST['user_id'];
+    $action = $_POST['action'];
+
+    // Prevent an admin from banning themselves
+    if ($userIdToUpdate === (int)$_SESSION['user_id']) {
+        // Redirect with an error or just do nothing
+        header("Location: " . $_SERVER['PHP_SELF'] . "?error=self_action");
+        exit();
+    }
+
+    $newStatus = '';
+    if ($action === 'ban_user') {
+        $newStatus = 'banned';
+    } elseif ($action === 'unban_user') {
+        $newStatus = 'active';
+    }
+
+    if (!empty($newStatus)) {
+        $stmt = $conn->prepare("UPDATE users SET status = ? WHERE id = ?");
+        $stmt->bind_param('si', $newStatus, $userIdToUpdate);
+        $stmt->execute();
+        $stmt->close();
+        header("Location: " . $_SERVER['PHP_SELF']); // Redirect to clear POST data and show updated list
+        exit();
+    }
+}
+
 $name = $_SESSION['name'] ?? 'Admin';
 $email = $_SESSION['email'] ?? '';
 $initial = strtoupper(mb_substr($name, 0, 1));
@@ -156,11 +185,19 @@ if ($stmt) {
                                 <td><?php echo htmlspecialchars(date('Y-m-d', strtotime($user['created_at']))); ?></td>
                                 <td class="action-buttons">
                                     <?php if ($user['status'] === 'active'): ?>
-                                    <button data-i18n-title-key="admin.userManagement.actions.ban" title="Ban User"><i class="fa-solid fa-ban"></i></button>
+                                        <form method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to ban the user \'<?php echo htmlspecialchars($user['name'], ENT_QUOTES); ?>\'?');">
+                                            <input type="hidden" name="user_id" value="<?php echo $user['id']; ?>">
+                                            <input type="hidden" name="action" value="ban_user">
+                                            <button type="submit" data-i18n-title-key="admin.userManagement.actions.ban" title="Ban User"><i class="fa-solid fa-ban"></i></button>
+                                        </form>
                                     <?php else: ?>
-                                    <button data-i18n-title-key="admin.userManagement.actions.unban" title="Unban User"><i class="fa-solid fa-check"></i></button>
+                                        <form method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to unban the user \'<?php echo htmlspecialchars($user['name'], ENT_QUOTES); ?>\'?');">
+                                            <input type="hidden" name="user_id" value="<?php echo $user['id']; ?>">
+                                            <input type="hidden" name="action" value="unban_user">
+                                            <button type="submit" data-i18n-title-key="admin.userManagement.actions.unban" title="Unban User"><i class="fa-solid fa-check"></i></button>
+                                        </form>
                                     <?php endif; ?>
-                                    <button data-i18n-title-key="admin.userManagement.actions.edit" title="Edit User"><i class="fa-solid fa-edit"></i></button>
+                                    <button data-i18n-title-key="admin.userManagement.actions.edit" title="Edit User" disabled><i class="fa-solid fa-edit"></i></button>
                                 </td>
                             </tr>
                             <?php endforeach; ?>
@@ -171,7 +208,8 @@ if ($stmt) {
         </main>
     </div>
 
-    <script src="../Js/dashboard.js" type="module"></script>
+    <script type="module" src="/AgriHub/Js/dashboard.js"></script>
+    <script type="module" src="/AgriHub/Js/site.js"></script>
 </body>
 </html>
 <?php

@@ -129,9 +129,6 @@ async function handleMessageActions(e) {
   }
 }
 
-        console.error('Failed to initialize chat:', error);
-
-
 /**
  * Initializes the report modal functionality.
  */
@@ -140,6 +137,7 @@ function initializeReportModal() {
     const closeBtn = document.getElementById('close-report-modal');
     const modal = document.getElementById('report-modal');
     const form = document.getElementById('report-form');
+    const statusMessageEl = document.getElementById('report-status-message');
     const discussionId = document.body.dataset.discussionId;
 
     if (!openBtn || !modal || !form || !discussionId) {
@@ -148,6 +146,11 @@ function initializeReportModal() {
 
     const toggleModal = (show) => {
         modal.style.display = show ? 'flex' : 'none';
+        // Clear any previous status messages when opening/closing
+        if (statusMessageEl) {
+            statusMessageEl.style.display = 'none';
+            statusMessageEl.textContent = '';
+        }
     };
 
     openBtn.addEventListener('click', () => toggleModal(true));
@@ -160,6 +163,12 @@ function initializeReportModal() {
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
+        const submitButton = form.querySelector('button[type="submit"]');
+        const originalButtonText = submitButton.textContent;
+
+        submitButton.disabled = true;
+        submitButton.textContent = 'Submitting...';
+
         const formData = new FormData(form);
         const data = {
             action: 'report_discussion',
@@ -171,21 +180,31 @@ function initializeReportModal() {
         try {
             const response = await fetch('discussion.php', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest' // Important for backend to identify AJAX
+                },
                 body: JSON.stringify(data)
             });
             const result = await response.json();
 
             if (result.success) {
-                alert(result.message || 'Report submitted successfully!');
-                toggleModal(false);
                 form.reset();
+                statusMessageEl.textContent = result.message || 'Report submitted successfully!';
+                statusMessageEl.className = 'modal-status-message success';
+                statusMessageEl.style.display = 'block';
+                // Close modal after a short delay
+                setTimeout(() => toggleModal(false), 2500);
             } else {
-                alert('Error: ' + (result.message || 'Could not submit report.'));
+                throw new Error(result.message || 'Could not submit report.');
             }
         } catch (error) {
-            console.error('Report submission failed:', error);
-            alert('A network error occurred. Please try again.');
+            statusMessageEl.textContent = error.message;
+            statusMessageEl.className = 'modal-status-message error';
+            statusMessageEl.style.display = 'block';
+        } finally {
+            submitButton.disabled = false;
+            submitButton.textContent = originalButtonText;
         }
     });
 }

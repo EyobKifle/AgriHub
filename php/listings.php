@@ -71,7 +71,7 @@ function handleGet($conn, $userId) {
         echo json_encode([
             'user' => ['name' => $name, 'email' => $email, 'initial' => $initial],
             'categories' => $categories,
-            'products' => $listings, // Renamed from 'listings' to 'products' to match JS
+            'products' => $listings, 
         ]);
     } else {
         // Public view: Fetch all active products

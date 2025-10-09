@@ -23,7 +23,6 @@
   "nav.guidance": "ምምሕዳር ሕርሻ",
   "nav.news": "ዜና",
   "nav.community": "ማሕበረሰብ",
-  "header.nav.marketplace": "መገዲ",
 
   "home.hero.title": "ናብ ኣግሪሁብ ብደሓን መጻእኩም",
   "home.hero.subtitle": "ናይ ኩሉ ሓደ ዘመናዊ መደርደሪ ሕርሻኻ። ምስ ዓሻውቲ ተተሓሓዝ፣ ንፍርያት ኣቕርብ፣ ምስ ማሕበረሰብ ሕርሻ ኢትዮጵያ ዕብየ።",
@@ -426,7 +425,6 @@
   "admin.userManagement.searchButton": "ድለይ",
   "admin.userManagement.table.id": "መንነት",
   "admin.userManagement.table.user": "ተጠቃሚ",
-  "admin.user-management.table.email": "ኢመይል",
   "admin.userManagement.table.email": "ኢመይል",
   "admin.userManagement.table.role": "ሞያ",
   "admin.userManagement.table.status": "ኩነታት",
@@ -551,7 +549,5 @@
   "user.discussions.form.contentPlaceholder": "ንውይይትካ ተወሳኺ ዝርዝራት፣ ናይ ዘገባ ሓበሬታ ወይም ዳራ ህብ...",
   "user.discussions.actions.createDiscussion": "ውይይት ፍጠር",
   "user.discussions.table.lastUpdate": "ዝኸውን ምዕራፍ",
-  "user.discussions.empty": "ክሳዕ ሕጂ ውይይት ኣይጀመርክን።",
-
-  "user.dashboard.unreadMessagesFooter": "መልእኽቲታት ርአ"
+  "user.discussions.empty": "ክሳዕ ሕጂ ውይይት ኣይጀመርክን።"
 }

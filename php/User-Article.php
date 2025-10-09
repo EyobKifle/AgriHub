@@ -152,5 +152,6 @@ $conn->close();
     </main>
 
     <script type="module" src="/AgriHub/Js/dashboard.js"></script>
+      <script type="module" src="/AgriHub/Js/site.js"></script>
 </body>
 </html>

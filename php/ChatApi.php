@@ -1,103 +1,156 @@
 <?php
 /**
- * AgriHub Chat API
+ * AgriHub Private Messaging API
  *
- * This script handles all backend operations for the community chat feature.
- * It processes requests to fetch, add, update, and delete messages.
+ * This script handles all backend operations for the private messaging feature.
  *
  * Actions:
- * - get_messages: Fetches all messages for a specific discussion.
- * - add_message: Adds a new message to a discussion.
- * - update_message: Edits an existing message.
- * - delete_message: Deletes a message.
+ * - get_conversations: Fetches all conversations for the current user.
+ * - get_messages: Fetches all messages for a specific conversation.
+ * - send_message: Adds a new message to a conversation. Creates a conversation if it doesn't exist.
  */
 
 session_start();
 header('Content-Type: application/json');
+require_once __DIR__ . '/config.php';
 
-// Note: In a real application, you would include your database connection file here.
-// require_once __DIR__ . '/../config/database.php';
-
-/**
- * A helper function to send a standardized JSON error response and exit.
- * @param string $message The error message.
- * @param int $statusCode The HTTP status code to send.
- */
 function send_json_error($message, $statusCode = 400) {
     http_response_code($statusCode);
     echo json_encode(['success' => false, 'message' => $message]);
     exit;
 }
 
-/**
- * A helper function to send a standardized JSON success response and exit.
- * @param array|null $data The data payload to include in the response.
- */
-function send_json_success($data = null) {
-    $response = ['success' => true];
-    if ($data !== null) {
-        $response['data'] = $data;
-    }
-    echo json_encode($response);
+function send_json_success($data = []) {
+    echo json_encode(['success' => true, 'data' => $data]);
     exit;
 }
 
-// For demonstration, we'll use a mock user ID. In a real app, this comes from the session.
-$current_user_id = $_SESSION['user_id'] ?? 1; // Fallback to 1 for guests/dev
-
-$request_method = $_SERVER['REQUEST_METHOD'];
-$action = '';
-
-if ($request_method === 'GET') {
-    $action = $_GET['action'] ?? '';
-} elseif ($request_method === 'POST') {
-    $input = json_decode(file_get_contents('php://input'), true);
-    $action = $input['action'] ?? '';
+if (!isset($_SESSION['user_id'])) {
+    send_json_error('Unauthorized', 401);
 }
 
-if (empty($action)) {
-    send_json_error('No action specified.');
+$currentUserId = (int)$_SESSION['user_id'];
+$action = $_GET['action'] ?? '';
+$input = json_decode(file_get_contents('php://input'), true) ?? [];
+
+try {
+    switch ($action) {
+        case 'get_conversations':
+            $stmt = $conn->prepare("
+                SELECT
+                    c.id AS conversation_id,
+                    other_user.id AS other_user_id,
+                    other_user.name AS other_user_name,
+                    other_user.avatar_url AS other_user_avatar,
+                    last_message.content AS last_message_content,
+                    last_message.created_at AS last_message_time,
+                    (SELECT COUNT(*) FROM messages m WHERE m.conversation_id = c.id AND m.is_read = 0 AND m.recipient_id = ?) AS unread_count
+                FROM conversations c
+                JOIN conversation_participants cp ON c.id = cp.conversation_id
+                JOIN users other_user ON cp.user_id = other_user.id
+                LEFT JOIN (
+                    SELECT conversation_id, content, created_at
+                    FROM messages
+                    WHERE id IN (SELECT MAX(id) FROM messages GROUP BY conversation_id)
+                ) AS last_message ON c.id = last_message.conversation_id
+                WHERE c.id IN (SELECT conversation_id FROM conversation_participants WHERE user_id = ?)
+                AND other_user.id != ?
+                ORDER BY last_message.created_at DESC
+            ");
+            $stmt->bind_param("iii", $currentUserId, $currentUserId, $currentUserId);
+            $stmt->execute();
+            $conversations = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+            $stmt->close();
+            send_json_success($conversations);
+            break;
+
+        case 'get_messages':
+            $conversationId = filter_input(INPUT_GET, 'conversation_id', FILTER_VALIDATE_INT);
+            if (!$conversationId) send_json_error('Invalid conversation ID.');
+
+            // Mark messages as read
+            $stmt_read = $conn->prepare("UPDATE messages SET is_read = 1 WHERE conversation_id = ? AND recipient_id = ?");
+            $stmt_read->bind_param("ii", $conversationId, $currentUserId);
+            $stmt_read->execute();
+            $stmt_read->close();
+
+            // Fetch messages
+            $stmt = $conn->prepare("
+                SELECT m.id, m.sender_id, m.content, m.created_at, u.name as sender_name, u.avatar_url as sender_avatar
+                FROM messages m
+                JOIN users u ON m.sender_id = u.id
+                WHERE m.conversation_id = ?
+                ORDER BY m.created_at ASC
+            ");
+            $stmt->bind_param("i", $conversationId);
+            $stmt->execute();
+            $messages = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+            $stmt->close();
+            send_json_success($messages);
+            break;
+
+        case 'send_message':
+            $recipientId = filter_var($input['recipient_id'] ?? 0, FILTER_VALIDATE_INT);
+            $content = trim($input['content'] ?? '');
+
+            if (!$recipientId || empty($content)) {
+                send_json_error('Recipient ID and message content are required.');
+            }
+
+            $conn->begin_transaction();
+
+            // Find existing conversation or create a new one
+            $stmt_find = $conn->prepare("
+                SELECT conversation_id FROM conversation_participants WHERE user_id = ?
+                INTERSECT
+                SELECT conversation_id FROM conversation_participants WHERE user_id = ?
+            ");
+            $stmt_find->bind_param("ii", $currentUserId, $recipientId);
+            $stmt_find->execute();
+            $conversation = $stmt_find->get_result()->fetch_assoc();
+            $stmt_find->close();
+
+            $conversationId = $conversation['conversation_id'] ?? null;
+
+            if (!$conversationId) {
+                // Create a new conversation
+                $stmt_create_conv = $conn->prepare("INSERT INTO conversations (created_at) VALUES (NOW())");
+                $stmt_create_conv->execute();
+                $conversationId = $conn->insert_id;
+                $stmt_create_conv->close();
+
+                // Add participants
+                $stmt_add_p1 = $conn->prepare("INSERT INTO conversation_participants (conversation_id, user_id) VALUES (?, ?)");
+                $stmt_add_p1->bind_param("ii", $conversationId, $currentUserId);
+                $stmt_add_p1->execute();
+                $stmt_add_p1->close();
+
+                $stmt_add_p2 = $conn->prepare("INSERT INTO conversation_participants (conversation_id, user_id) VALUES (?, ?)");
+                $stmt_add_p2->bind_param("ii", $conversationId, $recipientId);
+                $stmt_add_p2->execute();
+                $stmt_add_p2->close();
+            }
+
+            // Insert the message
+            $stmt_insert = $conn->prepare("INSERT INTO messages (conversation_id, sender_id, recipient_id, content) VALUES (?, ?, ?, ?)");
+            $stmt_insert->bind_param("iiis", $conversationId, $currentUserId, $recipientId, $content);
+            $stmt_insert->execute();
+            $newMessageId = $conn->insert_id;
+            $stmt_insert->close();
+
+            $conn->commit();
+            send_json_success(['message_id' => $newMessageId, 'conversation_id' => $conversationId]);
+            break;
+
+        default:
+            send_json_error('Invalid action specified.');
+            break;
+    }
+} catch (Exception $e) {
+    {
+        $conn->rollback();
+    }
+    send_json_error('Server Error: ' . $e->getMessage(), 500);
 }
 
-// --- MOCK DATABASE LOGIC ---
-// In a real application, this part would interact with a MySQL/PostgreSQL database.
-// We are using mock responses to illustrate the API's behavior.
-
-switch ($action) {
-    case 'get_messages':
-        $discussion_id = $_GET['discussion_id'] ?? 'general';
-        // In a real app: SELECT * FROM messages WHERE discussion_id = ? ORDER BY created_at ASC
-        // For now, return an empty array as the frontend uses localStorage.
-        send_json_success(['messages' => []]); // This will now be wrapped in 'data'
-        break;
-
-    case 'add_message':
-        if (!isset($input['message'])) {
-            send_json_error('Message data is missing.');
-        }
-        // In a real app: INSERT INTO messages (user_id, discussion_id, content) VALUES (?, ?, ?)
-        $new_message_id = rand(100, 999); // Simulate a new database ID
-        send_json_success(['id' => $new_message_id]);
-        break;
-
-    case 'update_message':
-        if (!isset($input['message_id']) || !isset($input['text'])) {
-            send_json_error('Message ID and text are required for update.');
-        }
-        // In a real app: UPDATE messages SET content = ? WHERE id = ? AND user_id = ?
-        send_json_success();
-        break;
-
-    case 'delete_message':
-        if (!isset($input['message_id'])) {
-            send_json_error('Message ID is required for deletion.');
-        }
-        // In a real app: DELETE FROM messages WHERE id = ? AND user_id = ?
-        send_json_success();
-        break;
-
-    default:
-        send_json_error('Invalid action specified.');
-        break;
-}
 ?>

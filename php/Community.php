@@ -125,7 +125,33 @@ if ($stmt) {
                 <section class="main-content">
                     <div class="new-discussion-box">
                         <?php if ($userId): ?>
-                            <a href="/AgriHub/php/User-Discussions.php" class="btn btn-primary" data-i18n-key="community.new.title"><i class="fa-solid fa-plus"></i> Start a New Discussion</a>
+                            <button id="new-discussion-btn" class="btn btn-primary"><i class="fa-solid fa-plus"></i> <span data-i18n-key="community.new.title">Start a New Discussion</span></button>
+                            <div id="new-discussion-form-container" class="new-discussion-form-container" style="display: none;">
+                                <form method="POST" action="Community.php">
+                                    <input type="hidden" name="action" value="create_discussion">
+                                    <h3 data-i18n-key="user.discussions.newDiscussionTitle">Start New Discussion</h3>
+                                    <div class="form-group">
+                                        <label for="title" data-i18n-key="user.discussions.form.title">Title</label>
+                                        <input type="text" id="title" name="title" required data-i18n-placeholder-key="user.discussions.form.titlePlaceholder" placeholder="What is your question or topic?">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="category_id" data-i18n-key="user.discussions.form.category">Category</label>
+                                        <select id="category_id" name="category_id" required>
+                                            <option value="" disabled selected data-i18n-key="user.discussions.form.selectCategory">-- Select a category --</option>
+                                            <?php foreach ($categories as $cat): ?>
+                                                <option value="<?php echo (int)$cat['id']; ?>"><?php echo htmlspecialchars($cat['name']); ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="content" data-i18n-key="user.discussions.form.content">Details</label>
+                                        <textarea id="content" name="content" rows="5" required data-i18n-placeholder-key="user.discussions.form.contentPlaceholder" placeholder="Provide more details, context, or background for your discussion..."></textarea>
+                                    </div>
+                                    <div class="form-actions">
+                                        <button type="submit" class="btn btn-primary" data-i18n-key="user.discussions.actions.createDiscussion">Create Discussion</button>
+                                    </div>
+                                </form>
+                            </div>
                         <?php else: ?>
                             <p id="login-message" data-i18n-key="community.loginPromptShort">Please <a href="../HTML/Login.html" data-i18n-key="discussion.loginLink">login</a> or <a href="../HTML/Signup.html" data-i18n-key="discussion.signupLink">create an account</a> to post.</p>
                         <?php endif; ?>
@@ -156,6 +182,19 @@ if ($stmt) {
     </main>
 
     <script type="module" src="/AgriHub/Js/site.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const newDiscussionBtn = document.getElementById('new-discussion-btn');
+            const newDiscussionForm = document.getElementById('new-discussion-form-container');
+
+            if (newDiscussionBtn && newDiscussionForm) {
+                newDiscussionBtn.addEventListener('click', function() {
+                    const isVisible = newDiscussionForm.style.display === 'block';
+                    newDiscussionForm.style.display = isVisible ? 'none' : 'block';
+                });
+            }
+        });
+    </script>
     <div id="footer-placeholder"></div>
 </body>
 </html>

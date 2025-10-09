@@ -169,6 +169,7 @@ $conn->close();
     </div>
 
     <script type="module" src="../Js/dashboard.js"></script>
+      <script type="module" src="/AgriHub/Js/site.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const createBtn = document.getElementById('create-discussion-btn');

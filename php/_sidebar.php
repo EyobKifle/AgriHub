@@ -32,7 +32,8 @@ $siteLinks = [
             <div class="profile-avatar">
                 <?php if (!empty($avatar_url)): ?>
                     <img src="/AgriHub/<?php echo e($avatar_url); ?>" alt="User Avatar" data-i18n-alt-key="user.sidebar.avatarAlt">
-                <?php else: echo e($initial); endif; ?>
+                <?php else: echo e($initial);
+                endif; ?>
             </div>
             <div>
                 <div class="profile-name"><?php echo e($name); ?></div>

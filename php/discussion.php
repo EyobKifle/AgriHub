@@ -194,8 +194,12 @@ if ($isApiRequest) {
                 break;
         }
     } catch (Exception $e) {
-  $echo("error");
-        $conn->rollback();
+         {
+            $conn->rollback();
+        }
+        // Log the detailed error for the developer and send a generic one to the user.
+        error_log("Discussion API Error: " . $e->getMessage());
+        send_json_error('error.api.serverError', 500);
     }
 }
 
@@ -316,6 +320,7 @@ if ($isPageRequest) {
                 </div>
                 <div class="modal-body">
                     <form id="report-form">
+                        <div id="report-status-message" class="modal-status-message" style="display: none;"></div>
                         <p data-i18n-key="discussion.reportModal.reasonPrompt">Please select a reason for reporting this discussion:</p>
                         <div class="form-group">
                             <label><input type="radio" name="reason" value="spam" required> <span data-i18n-key="discussion.reportModal.reason.spam">It's spam or advertising</span></label>
@@ -333,8 +338,7 @@ if ($isPageRequest) {
                 </div>
             </div>
         </div>
-        <div id="footer-placeholder"></div>
-
+        
         <!-- Pass current user data to JS -->
         <script id="user-data" type="application/json">
             <?php echo $currentUserJson; ?>

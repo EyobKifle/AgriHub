@@ -177,7 +177,9 @@ if (!$productId) {
             </div>
         <?php endif; ?>
     </main>
-
+                                
+    <script type="module" src="../Js/dashboard.js"></script>
+    <script type="module" src="../Js/site.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const mainImage = document.getElementById('main-product-image');

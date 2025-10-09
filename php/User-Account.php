@@ -244,5 +244,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <script type="module" src="/AgriHub/Js/dashboard.js"></script>
+      <script type="module" src="/AgriHub/Js/site.js"></script>
 </body>
 </html>

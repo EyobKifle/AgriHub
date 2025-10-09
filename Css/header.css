@@ -205,6 +205,8 @@ body.dark-mode .dark-mode-toggle .fa-moon {
 .mobile-menu-toggle {
   display: none;
   font-size: 1.5rem;
+  background: none;
+  border: none;
   cursor: pointer;
 }
 
@@ -338,8 +340,10 @@ body.dark-mode .dark-mode-toggle .fa-moon {
   .header.open .header-actions {
     display: flex;
     flex-direction: column;
+    align-items: center; /* Center align the items */
     position: absolute;
     top: 100%;
+    top: 71px; /* Position it just below the header */
     left: 0;
     right: 0;
     background-color: var(--light-bg);
@@ -347,6 +351,23 @@ body.dark-mode .dark-mode-toggle .fa-moon {
     border-bottom: 1px solid var(--border-color);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
     gap: 1.5rem;
+    z-index: 1000; /* Ensure it's above other content */
+  }
+
+  /* Treat all child elements as part of the list */
+  .header.open .header-actions,
+  .header.open .header-controls,
+  .header.open .header-buttons {
+    display: contents; /* Makes the container disappear, promoting its children */
+  }
+
+  /* Style individual items in the mobile menu */
+  .header.open .nav-links a,
+  .header.open .header-controls li,
+  .header.open .header-buttons .btn {
+    width: 100%;
+    text-align: auto;
+    padding: 0.5rem 1rem;
   }
 }
 

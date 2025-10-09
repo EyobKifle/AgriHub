@@ -99,7 +99,6 @@ $conn->close();
     <title data-i18n-key="user.news.pageTitle">News - AgriHub Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/AgriHub/Css/User-Dashboard.css"> <!-- Main dashboard styles -->
-    <link rel="stylesheet" href="/AgriHub/Css/User-News.css">      <!-- Page-specific styles -->
     <link rel="stylesheet" href="/AgriHub/Css/News.css">           <!-- Re-use news card and grid styles -->
 </head>
 <body>
@@ -188,5 +187,6 @@ $conn->close();
     </main>
 
     <script type="module" src="/AgriHub/Js/dashboard.js"></script>
+      <script type="module" src="/AgriHub/Js/site.js"></script>
 </body>
 </html>

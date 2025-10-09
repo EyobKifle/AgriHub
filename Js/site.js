@@ -50,6 +50,18 @@ function displayFlashMessages() {
   }
 }
 
+/**
+ * Applies the theme (light/dark) to the page by toggling a class on the root <html> element.
+ * It reads the theme preference from localStorage.
+ */
+function applyThemeFromStorage() {
+    // This function is for public pages. On dashboard pages, the theme is set via a data-attribute.
+    // We check for a dashboard container to avoid applying this logic there.
+    if (document.querySelector('.dashboard-container')) return;
+    const theme = localStorage.getItem('agrihub_theme') || 'light';
+    document.documentElement.classList.toggle('dark-mode', theme === 'dark');
+}
+
 /*
  * This is the main entry point for the site's global JavaScript.
  * It runs on every page to set up the common elements.
@@ -64,10 +76,14 @@ const initializeSite = async () => {
   await initializeI18n();
 
   // 2. Load header and footer HTML concurrently.
-  await Promise.all([
-    loadHeader(),
-    loadFooter()
-  ]);
+  const headerPlaceholder = document.getElementById('header-placeholder');
+  const footerPlaceholder = document.getElementById('footer-placeholder');
+
+  const loadPromises = [];
+  if (headerPlaceholder) loadPromises.push(loadHeader());
+  if (footerPlaceholder) loadPromises.push(loadFooter());
+
+  if (loadPromises.length > 0) await Promise.all(loadPromises);
 
   // 3. Now that the header/footer are in the DOM, apply translations to them.
   applyTranslationsToPage();
@@ -75,6 +91,9 @@ const initializeSite = async () => {
 
   // Display any flash messages from redirects (e.g., login errors)
   displayFlashMessages();
+
+  // Apply dark mode if set (for non-dashboard pages)
+  applyThemeFromStorage();
 
   // 4. Initialize all interactive scripts.
   initializeHeaderScripts();

@@ -115,6 +115,7 @@ $conn->close();
 
     <script type="module" src="../Js/User-Marketplace.js"></script>
     <script type="module" src="../Js/dashboard.js"></script>
+      <script type="module" src="/AgriHub/Js/site.js"></script>
 </body>
 
 </html>

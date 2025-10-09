@@ -1,0 +1,112 @@
+/* Admin-Reports.css */
+
+.reports-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.report-card {
+    background-color: var(--color-background-light);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.2s ease-in-out;
+}
+
+.report-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.report-card-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--color-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.report-card-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+.report-card-header h3 i {
+    margin-right: 0.5rem;
+    color: var(--color-text-secondary);
+}
+
+.report-card-header .status {
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    text-transform: uppercase;
+}
+
+.report-card-body {
+    padding: 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.report-detail {
+    font-size: 0.9rem;
+}
+
+.report-detail strong {
+    display: block;
+    color: var(--color-text-secondary);
+    margin-bottom: 0.25rem;
+    font-weight: 500;
+}
+
+.report-detail span, .report-detail a {
+    color: var(--color-text-primary);
+}
+
+.report-detail a {
+    text-decoration: none;
+    color: var(--color-primary);
+    font-weight: 500;
+}
+.report-detail a:hover {
+    text-decoration: underline;
+}
+
+.report-detail .reported-content-preview {
+    background-color: var(--color-background);
+    border: 1px solid var(--color-border);
+    padding: 0.75rem;
+    border-radius: 4px;
+    font-style: italic;
+    color: var(--color-text-secondary);
+    max-height: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.report-card-footer {
+    padding: 1rem 1.5rem;
+    background-color: var(--color-background-soft);
+    border-top: 1px solid var(--color-border);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.report-card-footer .action-buttons form {
+    margin: 0;
+}
+
+.report-card-footer .action-buttons button {
+    font-size: 0.85rem;
+}

@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once __DIR__ . '/utils.php';
 require_once __DIR__ . '/config.php';
 
 // Check if user is admin
@@ -33,10 +34,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'], $_POST['rep
 }
 
 // Fetch reports
-$stmt = $conn->prepare("SELECT r.id, r.reason, r.status, r.created_at, u.name as reporter_name FROM reports r JOIN users u ON r.reporter_id = u.id ORDER BY r.created_at DESC");
+$stmt = $conn->prepare("
+    SELECT
+        r.id,
+        r.reason,
+        r.details,
+        r.status,
+        r.created_at,
+        r.reported_item_id,
+        r.reported_item_type,
+        reporter.name AS reporter_name,
+        p.title AS product_title,
+        d.title AS discussion_title,
+        dc.content AS comment_content
+    FROM reports AS r
+    JOIN users AS reporter ON r.reporter_id = reporter.id
+    LEFT JOIN products AS p ON r.reported_item_id = p.id AND r.reported_item_type = 'product'
+    LEFT JOIN discussions AS d ON r.reported_item_id = d.id AND r.reported_item_type = 'discussion'
+    LEFT JOIN discussion_comments AS dc ON r.reported_item_id = dc.id AND r.reported_item_type = 'comment'
+    ORDER BY r.created_at DESC
+");
 $stmt->execute();
 $reports = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 $stmt->close();
+
+// Helper function to generate a link to the reported content
+function get_reported_item_link($report) {
+    $id = htmlspecialchars($report['reported_item_id']);
+    switch ($report['reported_item_type']) {
+        case 'discussion': return "../php/discussion.php?id={$id}";
+        default: return '#'; // Add links for other types like products or comments
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -45,6 +74,7 @@ $stmt->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-i18n-key="admin.reportsManagement.pageTitle">AgriHub - Admin Reports Management</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../Css/Admin-Reports.css">
     <link rel="stylesheet" href="../Css/Admin-Dashboard.css">
 </head>
 <body>
@@ -86,50 +116,67 @@ $stmt->close();
                     <p data-i18n-key="admin.reportsManagement.subtitle">Manage user reports on the platform.</p>
                 </div>
 
-                <div class="table-container">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th data-i18n-key="admin.reportsManagement.table.id">ID</th>
-                                <th data-i18n-key="admin.reportsManagement.table.reason">Reason</th>
-                                <th data-i18n-key="admin.reportsManagement.table.reporter">Reporter</th>
-                                <th data-i18n-key="admin.reportsManagement.table.status">Status</th>
-                                <th data-i18n-key="admin.reportsManagement.table.reportedAt">Reported At</th>
-                                <th data-i18n-key="admin.reportsManagement.table.actions">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($reports as $report): ?>
-                            <tr>
-                                <td><?php echo htmlspecialchars($report['id']); ?></td>
-                                <td><?php echo htmlspecialchars($report['reason']); ?></td>
-                                <td><?php echo htmlspecialchars($report['reporter_name']); ?></td>
-                                <td><span class="status status-<?php echo htmlspecialchars($report['status']); ?>" data-i18n-key="admin.reportsManagement.status.<?php echo htmlspecialchars($report['status']); ?>"><?php echo htmlspecialchars($report['status']); ?></span></td>
-                                <td><?php echo htmlspecialchars(date('Y-m-d H:i', strtotime($report['created_at']))); ?></td>
-                                <td class="action-buttons">
+                <div class="reports-container">
+                    <?php foreach ($reports as $report): ?>
+                        <div class="report-card">
+                            <div class="report-card-header">
+                                <h3>
+                                    <i class="fa-solid fa-flag"></i>
+                                    Report #<?php echo htmlspecialchars($report['id']); ?>: <?php echo htmlspecialchars(ucfirst($report['reason'])); ?>
+                                </h3>
+                                <span class="status status-<?php echo htmlspecialchars($report['status']); ?>"><?php echo htmlspecialchars($report['status']); ?></span>
+                            </div>
+                            <div class="report-card-body">
+                                <div class="report-detail">
+                                    <strong>Reported Item</strong>
+                                    <span>
+                                        <?php echo htmlspecialchars(ucfirst($report['reported_item_type'])); ?> #<?php echo htmlspecialchars($report['reported_item_id']); ?>
+                                        <a href="<?php echo get_reported_item_link($report); ?>" target="_blank" title="View Item">
+                                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                        </a>
+                                    </span>
+                                    <div class="reported-content-preview">
+                                        <?php echo htmlspecialchars($report['discussion_title'] ?? $report['product_title'] ?? $report['comment_content'] ?? 'N/A'); ?>
+                                    </div>
+                                </div>
+                                <div class="report-detail">
+                                    <strong>Reporter</strong>
+                                    <span><?php echo htmlspecialchars($report['reporter_name']); ?></span>
+                                </div>
+                                <div class="report-detail">
+                                    <strong>Date</strong>
+                                    <span><?php echo htmlspecialchars(time_ago($report['created_at'])); ?></span>
+                                </div>
+                                <div class="report-detail">
+                                    <strong>Details from Reporter</strong>
+                                    <span><?php echo !empty($report['details']) ? htmlspecialchars($report['details']) : 'No additional details provided.'; ?></span>
+                                </div>
+                            </div>
+                            <div class="report-card-footer">
+                                <div class="action-buttons">
                                     <?php if ($report['status'] !== 'resolved'): ?>
-                                    <form method="POST" style="display:inline;">
-                                        <input type="hidden" name="report_id" value="<?php echo $report['id']; ?>">
-                                        <input type="hidden" name="action" value="resolve">
-                                        <button type="submit" data-i18n-title-key="admin.reportsManagement.actions.resolve" title="Resolve"><i class="fa-solid fa-check"></i></button>
-                                    </form>
+                                        <form method="POST" style="display:inline;">
+                                            <input type="hidden" name="report_id" value="<?php echo $report['id']; ?>">
+                                            <input type="hidden" name="action" value="resolve">
+                                            <button type="submit" class="btn-success" title="Mark as Resolved"><i class="fa-solid fa-check"></i> Resolve</button>
+                                        </form>
                                     <?php endif; ?>
-                                    <form method="POST" style="display:inline;">
+                                    <form method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this report?');">
                                         <input type="hidden" name="report_id" value="<?php echo $report['id']; ?>">
                                         <input type="hidden" name="action" value="delete">
-                                        <button type="submit" class="btn-danger" data-i18n-title-key="admin.reportsManagement.actions.delete" title="Delete"><i class="fa-solid fa-trash"></i></button>
+                                        <button type="submit" class="btn-danger" title="Delete Report"><i class="fa-solid fa-trash"></i> Delete</button>
                                     </form>
-                                </td>
-                            </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
                 </div>
             </div>
         </main>
     </div>
 
-    <script src="../Js/dashboard.js" type="module"></script>
+    <script type="module" src="/AgriHub/Js/dashboard.js"></script>
+    <script type="module" src="/AgriHub/Js/site.js"></script>
 </body>
 </html>
 <?php

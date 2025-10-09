@@ -235,5 +235,6 @@ function get_summary($html, $word_limit = 20) {
     </div>
 
     <script src="../Js/dashboard.js" type="module"></script>
+    <script src="../Js/site.js" type="module"></script>
     <script>
      

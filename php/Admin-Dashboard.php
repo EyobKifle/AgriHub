@@ -221,6 +221,7 @@ $recentReportsStmt->close();
 </script>
 
 <script src="../Js/dashboard.js" type="module"></script>
+<script src="../Js/site.js" type="module"></script>
 </body>
 </html>
 <?php $conn->close(); ?>

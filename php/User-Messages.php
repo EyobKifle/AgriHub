@@ -109,5 +109,6 @@ $newConversationUserId = filter_input(INPUT_GET, 'user_id', FILTER_VALIDATE_INT)
 
     <script type="module" src="/AgriHub/Js/dashboard.js"></script>
     <script type="module" src="/AgriHub/Js/User-Messages.js"></script>
+      <script type="module" src="/AgriHub/Js/site.js"></script>
 </body>
 </html>

@@ -23,7 +23,6 @@
   "nav.guidance": "Qorannoo Qonnaa",
   "nav.news": "Oduu",
   "nav.community": "Hawaasa",
-  "header.nav.marketplace": "Gabaasa",
 
   "home.hero.title": "Baga Nagaan AgriHub kanaa Geessan",
   "home.hero.subtitle": "Platform keessan qonnaa har'aa kan hunda tokko. Bitattotaan walqabsiisaa, qabeenya argadhaa, hawaasa qonnaa Itoophiyaa wajjin guddadhaa.",
@@ -426,7 +425,6 @@
   "admin.userManagement.searchButton": "Barbaadi",
   "admin.userManagement.table.id": "ID",
   "admin.userManagement.table.user": "Fayyadamaa",
-  "admin.user-management.table.email": "Imeelii",
   "admin.userManagement.table.email": "Imeelii",
   "admin.userManagement.table.role": "Roolee",
   "admin.userManagement.table.status": "Haala",
@@ -551,7 +549,5 @@
   "user.discussions.form.contentPlaceholder": "Ibsa dabalataa, yaada, yookiin duuba marii keessanii kenni...",
   "user.discussions.actions.createDiscussion": "Marii Uumi",
   "user.discussions.table.lastUpdate": "Jijjiirama Dhihoo",
-  "user.discussions.empty": "Amma marii hin eegalle.",
-
-  "user.dashboard.unreadMessagesFooter": "Ergaa Ilaali"
+  "user.discussions.empty": "Amma marii hin eegalle."
 }
