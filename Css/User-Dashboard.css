@@ -80,13 +80,8 @@ body {
   color: var(--text-secondary-light);
   font-weight: 500;
   border-left: 4px solid transparent;
+  gap: 15px; /* Use gap for spacing between icon and text */
   transition: all 0.3s;
-}
-
-.sidebar-nav li a i {
-  width: 20px;
-  margin-right: 15px;
-  text-align: center;
 }
 
 .sidebar-nav li a:hover {

@@ -143,11 +143,14 @@ CREATE TABLE `discussion_tags` (
 CREATE TABLE `content_categories` (
     `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     `type` ENUM('news','guidance') NOT NULL,
+    `name` VARCHAR(100) NOT NULL,
     `name_key` VARCHAR(100) NOT NULL,
     `slug` VARCHAR(120) NOT NULL,
+    `description` TEXT,
     `description_key` VARCHAR(255) DEFAULT NULL,
     `article_count` INT UNSIGNED NOT NULL DEFAULT 0,
     `display_order` SMALLINT NOT NULL DEFAULT 0,
+    `image_url` VARCHAR(512) DEFAULT NULL,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     UNIQUE `uq_content_cat_slug_type` (`slug`,`type`)
 );
@@ -398,12 +401,12 @@ VALUES
 (LAST_INSERT_ID(), 'Livestock Equipment', 'livestock_equipment', 'livestock-equipment', 'desc_equipment', 'https://images.unsplash.com/photo-livestock-equipment.jpg', 1);
 
 -- Insert guidance categories into content_categories
-INSERT INTO content_categories (type, name_key, slug, description_key, display_order) VALUES
-('guidance', 'crops', 'crops', 'crops_desc', 1),
-('guidance', 'livestock', 'livestock', 'livestock_desc', 2),
-('guidance', 'soil_health', 'soil-health', 'soil_health_desc', 3),
-('guidance', 'pest_management', 'pest-management', 'pest_management_desc', 4),
-('guidance', 'water_management', 'water-management', 'water_management_desc', 5);
+INSERT INTO content_categories (type, name, name_key, slug, description, description_key, display_order, image_url) VALUES
+('guidance', 'Crops', 'crops', 'crops', 'Guidance on cultivating various crops.', 'crops_desc', 1, '/AgriHub/images/guidance/crops.jpg'),
+('guidance', 'Livestock', 'livestock', 'livestock', 'Best practices for raising healthy livestock.', 'livestock_desc', 2, '/AgriHub/images/guidance/livestock.jpg'),
+('guidance', 'Soil Health', 'soil_health', 'soil-health', 'Techniques for maintaining and improving soil quality.', 'soil_health_desc', 3, '/AgriHub/images/guidance/soil.jpg'),
+('guidance', 'Pest Management', 'pest_management', 'pest-management', 'Integrated and organic pest control methods.', 'pest_management_desc', 4, '/AgriHub/images/guidance/pest.jpg'),
+('guidance', 'Water Management', 'water_management', 'water-management', 'Efficient irrigation and water conservation strategies.', 'water_management_desc', 5, '/AgriHub/images/guidance/water.jpg');
 
 -- Insert sample articles
 INSERT INTO articles (category_id, author_id, title, content, excerpt, status) VALUES

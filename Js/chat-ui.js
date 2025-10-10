@@ -27,43 +27,6 @@ export function scrollToBottom() {
   els.messages.scrollTop = els.messages.scrollHeight;
 }
 
-/**
- * Creates a small preview element for a file that is about to be uploaded.
- */
-export function createAttachmentPreview(file, onRemove) {
-  const wrap = document.createElement('span');
-  wrap.className = 'preview';
-  const name = document.createElement('span');
-  name.className = 'name';
-  name.textContent = file.name;
-
-  const remove = document.createElement('button');
-  remove.className = 'remove';
-  remove.type = 'button';
-  remove.textContent = '✕';
-  remove.addEventListener('click', () => {
-    onRemove(file);
-    wrap.remove();
-  });
-
-  // If the file is an image, create a small thumbnail using the more performant URL.createObjectURL.
-  if (file.type.startsWith('image/')) {
-    const img = document.createElement('img');
-    img.alt = file.name;
-    img.src = URL.createObjectURL(file);
-    img.onload = () => URL.revokeObjectURL(img.src); // Revoke object URL after image loads to free memory
-    wrap.appendChild(img);
-  } else { // Otherwise, show a generic icon (e.g., for a PDF).
-    const img = document.createElement('img');
-    img.src = 'https://placehold.co/44x44/1e4620/FFF?text=PDF';
-    img.alt = 'PDF file';
-    wrap.appendChild(img);
-  }
-
-  wrap.appendChild(name);
-  wrap.appendChild(remove);
-  return wrap;
-}
 
 /**
  * Creates the complete HTML for a single chat message bubble.
@@ -116,32 +79,6 @@ function renderMessage(m, currentUser) {
     bubble.appendChild(actions);
   }
 
-  if (m.attachments && m.attachments.length) {
-    const grid = document.createElement('div');
-    grid.className = 'attachments';
-    m.attachments.forEach(att => {
-      if (att.type === 'image') {
-        const a = document.createElement('a');
-        a.href = att.url; a.target = '_blank';
-        a.className = 'attachment';
-        const img = document.createElement('img');
-        img.src = att.url; img.alt = att.name;
-        a.appendChild(img);
-        grid.appendChild(a);
-      } else if (att.type === 'pdf') {
-        const a = document.createElement('a');
-        a.href = att.url; a.target = '_blank';
-        a.className = 'attachment file';
-        a.innerHTML = `<img src="https://placehold.co/44x44/1e4620/FFF?text=PDF" alt="PDF icon" /> <span>${att.name}</span>`;
-        grid.appendChild(a);
-      }
-    });
-    bubble.appendChild(grid);
-  }
-
-  row.appendChild(avatar);
-  row.appendChild(bubble);
-  return row;
 }
 
 /**

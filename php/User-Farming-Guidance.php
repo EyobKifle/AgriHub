@@ -62,19 +62,27 @@ $conn->close();
         <?php include __DIR__ . '/_sidebar.php'; ?>
 
         <main class="main-content">
-            <!-- Original Farming-Guidance.html content starts here -->
-            <div class="main-header">
-                <h1 data-i18n-key="guidance.page.title">Farming Guidance</h1>
-                <p data-i18n-key="guidance.page.subtitle">Master content map for Ethiopian farming: crops, livestock, techniques, health & safety, business, innovation, and policy. Click any topic to open details.</p>
+            <!-- Content from Farming-Guidance.php adapted for the dashboard -->
+            <div class="page-header">
+                <h1 data-i18n-key="guidance.title">Farming Guidance</h1>
+                <p data-i18n-key="guidance.subtitle">Explore categories to find articles, tips, and discussions.</p>
             </div>
-            <div class="guidance-map-container" id="guidance-map-container">
-                <!-- Guidance map will be loaded by JS -->
+
+            <div class="search-bar-container" style="margin-bottom: 2rem;">
+                <input type="search" id="category-search-input" data-i18n-key="guidance.searchPlaceholder" placeholder="Search for categories like 'Teff', 'Cattle'...">
             </div>
-            <!-- Original Farming-Guidance.html content ends here -->
+
+            <div id="guidance-categories-placeholder">
+                <!-- Categories will be loaded here by JavaScript -->
+                <div class="loading-spinner"></div>
+            </div>
         </main>
     </div>
 
     <script type="module" src="/AgriHub/Js/dashboard.js"></script>
-    <script type="module" src="/AgriHub/Js/site.js"></script>
+    <script type="module">
+        import { initializeGuidancePage } from '/AgriHub/Js/guidance.js';
+        initializeGuidancePage();
+    </script>
 </body>
 </html>

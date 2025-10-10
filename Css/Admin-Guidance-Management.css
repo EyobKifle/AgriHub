@@ -1,0 +1,83 @@
+/* Admin-Guidance-Management.css */
+
+.main-header {
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--border-light);
+    padding-bottom: 1rem;
+}
+
+.main-header h1 {
+    font-size: 2rem;
+    color: var(--text-primary);
+}
+
+.main-header p {
+    color: var(--text-secondary);
+}
+
+.form-container {
+    background-color: var(--background-card);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 2rem;
+}
+
+.current-image-preview {
+    max-width: 150px;
+    max-height: 100px;
+    margin-top: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border-light);
+}
+
+.admin-guidance-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.guidance-card {
+    background-color: var(--background-card);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+}
+
+.guidance-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+}
+
+.guidance-card .card-image img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.guidance-card .card-content {
+    padding: 1rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.guidance-card .card-content h3 {
+    margin: 0.5rem 0;
+    font-size: 1.1rem;
+}
+
+.guidance-card .card-actions {
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-light);
+    display: flex;
+    gap: 0.5rem;
+}
+
+.guidance-card .card-actions .btn-sm {
+    padding: 0.4rem 0.8rem;
+}

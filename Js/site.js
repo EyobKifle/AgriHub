@@ -1,5 +1,5 @@
-import { loadHeader, initializeHeaderScripts } from "./header.js"; // Assumes header.js uses absolute paths
-import { loadFooter } from "./footer.js"; // Assumes footer.js uses absolute paths
+import { loadHeader, initializeHeaderScripts } from "./header.js"; 
+import { loadFooter } from "./footer.js"; 
 import { initializeImageSlider } from "./imageSlider.js";
 import {
   initializeI18n,
@@ -7,11 +7,7 @@ import {
   updateLangSwitcher,
 } from "./i18n.js";
 import { highlightActiveLink } from "./navigation.js";
-import {
-  initializeGuidancePage,
-  initializeGuidanceCategoryPage,
-  initializeArticlePage,
-} from "./guidance.js";
+import { initializeArticlePage} from "./guidance.js";
 import { initializeNewsPage } from "./news.js"; // This will now point to the new, simpler file.
 
 /**
@@ -120,12 +116,6 @@ const initializeSite = async () => {
       break;
     case "News.php":
       initializeNewsPage();
-      break;
-    case "Farming-Guidance.php":
-      initializeGuidancePage();
-      break;
-    case "Farming-Guidance-Category.php":
-      initializeGuidanceCategoryPage();
       break;
     case "Farming-Guidance-Article.php":
       initializeArticlePage();

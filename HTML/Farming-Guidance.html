@@ -1,7 +1,3 @@
-<?php
-
-require_once __DIR__ . '/../php/config.php';
-?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -16,8 +12,7 @@ require_once __DIR__ . '/../php/config.php';
 </head>
 
 <body>
-  <div id="header-placeholder">
-    </div>
+  <div id="header-placeholder"></div>
 
   <main class="guidance-container">
     <header class="guidance-header">
@@ -27,21 +22,17 @@ require_once __DIR__ . '/../php/config.php';
 
     <div class="search-bar-container">
       <i class="fa-solid fa-search search-icon"></i>
-      <input type="search" id="category-search-input" placeholder="Search for categories like 'Teff', 'Cattle'..." data-i18n-key="guidance.searchPlaceholder">
+      <input type="search" id="category-search-input" placeholder="Search for categories like 'Teff', 'Cattle'..." data-i18n-placeholder-key="guidance.searchPlaceholder" />
     </div>
 
     <div id="guidance-categories-placeholder">
-      <div class="loading-spinner">Loading categories...</div>
+      <!-- This placeholder will be filled by Js/guidance.js after fetching data from get-guidance-categories.php -->
+      <div class="loading-spinner"></div>
     </div>
   </main>
 
-  <div id="footer-placeholder">
-    </div>
-
-  <script type="module">
-    import { initializeGuidancePage } from '/AgriHub/Js/guidance.js'; 
-    initializeGuidancePage();
-  </script>
+  <div id="footer-placeholder"></div>
+  <script type="module" src="/AgriHub/Js/site.js"></script>
 </body>
 
 </html>

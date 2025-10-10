@@ -29,6 +29,7 @@ async function renderGuidanceCategories() {
   if (!placeholder) return;
 
   try {
+    // This assumes your file structure is /AgriHub/Js/guidance.js and the PHP is in /AgriHub/php/
     const response = await fetch('/AgriHub/php/get-guidance-categories.php');
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -87,9 +88,14 @@ function filterCategories() {
     let visibleCardsInSection = 0;
 
     cards.forEach(card => {
-      const categoryName = card.querySelector('.category-card-content span').textContent.toLowerCase();
+      // Assuming the category name is within the <span>
+      const categoryNameElement = card.querySelector('.category-card-content span');
+      if (!categoryNameElement) return;
+
+      const categoryName = categoryNameElement.textContent.toLowerCase();
+
       if (categoryName.includes(searchTerm)) {
-        card.style.display = 'block';
+        card.style.display = 'flex'; // Use flex as it's a card/grid item
         visibleCardsInSection++;
       } else {
         card.style.display = 'none';
@@ -97,7 +103,12 @@ function filterCategories() {
     });
 
     // Hide the entire section if no cards are visible
-    if (visibleCardsInSection === 0) {
+    const sectionTitle = section.querySelector('.category-section-title');
+    // We only hide a section if all its children are hidden AND the search term is not in the section title
+    const sectionTitleText = sectionTitle ? sectionTitle.textContent.toLowerCase() : '';
+    const sectionMatchesSearch = sectionTitleText.includes(searchTerm);
+
+    if (visibleCardsInSection === 0 && !sectionMatchesSearch) {
       section.style.display = 'none';
     } else {
       section.style.display = 'block';
@@ -155,8 +166,12 @@ async function renderCategoryPage() {
   const slug = params.get('slug');
   const sort = document.getElementById('sort-articles')?.value || 'newest';
 
+  // Clear articles list on load/sort change
+  articlesPlaceholder.innerHTML = '<div class="loading-spinner"></div>';
+
   if (!slug) {
     headerPlaceholder.innerHTML = '<h1>Category not found</h1><p>No category was specified.</p>';
+    articlesPlaceholder.innerHTML = '';
     return;
   }
 
@@ -169,6 +184,7 @@ async function renderCategoryPage() {
 
     if (!data.success || !data.category) {
       headerPlaceholder.innerHTML = `<h1>Category "${slug}" not found</h1>`;
+      articlesPlaceholder.innerHTML = '';
       return;
     }
 
@@ -238,6 +254,11 @@ async function renderArticlePage() {
     return;
   }
 
+  // Display loading indicator
+  placeholder.innerHTML = '<div class="loading-spinner"></div>';
+  const relatedSection = document.getElementById('related-articles-section');
+  if (relatedSection) relatedSection.style.display = 'none'; // Hide related until loaded
+
   try {
     const response = await fetch(`/AgriHub/php/get-article.php?id=${articleId}`);
     if (!response.ok) {
@@ -258,7 +279,8 @@ async function renderArticlePage() {
     });
 
     // Format views for readability
-    const views = article.views > 0 ? new Intl.NumberFormat('en-US').format(article.views + 1) : 1; // Add 1 for the current view
+    // The server should update the view count, but the JS logic also adds +1 for the current view
+    const views = article.views > 0 ? new Intl.NumberFormat('en-US').format(article.views + 1) : 1; 
     const viewText = `${views} view${(article.views + 1) !== 1 ? 's' : ''}`;
 
     // Note: Using innerHTML for article.content assumes the content is trusted
@@ -289,10 +311,11 @@ async function renderArticlePage() {
 
     // Render related articles if they exist
     if (data.related_articles && data.related_articles.length > 0) {
-      const relatedSection = document.getElementById('related-articles-section');
       const relatedGrid = document.getElementById('related-articles-grid');
       relatedGrid.innerHTML = data.related_articles.map(createRelatedArticleCard).join('');
       relatedSection.style.display = 'block';
+    } else {
+       if (relatedSection) relatedSection.style.display = 'none';
     }
 
     // Apply translations to the newly added content
@@ -301,6 +324,7 @@ async function renderArticlePage() {
   } catch (error) {
     console.error("Failed to fetch or render article:", error);
     placeholder.innerHTML = '<p class="error-message">Could not load the article. Please try again later.</p>';
+    if (relatedSection) relatedSection.style.display = 'none';
   }
 }
 

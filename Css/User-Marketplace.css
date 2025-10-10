@@ -142,6 +142,7 @@ img {
   color: var(--text-secondary-light);
   font-weight: 500;
   border-left: 4px solid transparent;
+  gap: 15px; /* Add space between icon and text */
   transition: all 0.3s;
 }
 
