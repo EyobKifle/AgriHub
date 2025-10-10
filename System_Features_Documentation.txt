@@ -50,17 +50,6 @@ This document provides a detailed explanation of the features, APIs, and functio
   - `POST` with `action=delete_listing`: Deletes a specified product from the `products` table, verifying ownership first.
 - Tables: `products`, `product_images`, `categories`, `completed_sales`.
 
-2.3. Order & Checkout (To Be Implemented)
-- Flow:
-  1. "Add to Cart" buttons on product cards will add a product ID and quantity to a client-side cart (e.g., in `localStorage` or a session).
-  2. A dedicated cart page will display items, allowing users to adjust quantities or remove items.
-  3. The checkout process will collect a `delivery_address`.
-  4. On confirmation, the frontend will send the cart contents and address to a new API endpoint.
-  5. This endpoint will call the `sp_CreateOrder` stored procedure, passing the buyer's ID, address, and a JSON array of order items.
-- Stored Procedure: `sp_CreateOrder` handles the entire order creation logic within a transaction, including decrementing stock in the `products` table and creating records in `orders` and `order_items`.
-- Tables: `orders`, `order_items`, `products`
-
-
 3. Community & Discussions
 --------------------------
 
