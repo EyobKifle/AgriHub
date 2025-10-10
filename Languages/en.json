@@ -25,7 +25,6 @@
 
   "nav.home": "Home",
   "nav.marketplace": "Marketplace",
-  "nav.guidance": "Farming Guidance",
   "nav.news": "News",
   "nav.community": "Community",
 
@@ -241,13 +240,6 @@
   "user.settings.language.preferred": "Preferred Language",
   "lang.amFull": "Amharic (አማርኛ)",
   "user.settings.language.desc": "Choose the language for your dashboard interface.",
-
-  "article.related.title": "Related Articles",
-  "article.backToNews": "Back to News",
-
-  "user.account.title": "My Account",
-  "user.account.subtitle": "Manage your personal information, farm details, and account settings.",
-  "user.account.savedSuccess": "Your settings have been saved successfully.",
   "header.toggleDarkMode": "Toggle dark mode",
 
   "footer.about.title": "AgriHub",
@@ -258,10 +250,6 @@
   "marketplace.title": "Marketplace",
   "marketplace.subtitle": "Browse fresh produce, seeds, and equipment from sellers across the nation.",
   "marketplace.categories": "Categories",
-
-  "guidance.title": "Farming Guidance",
-  "guidance.subtitle": "Explore categories to find articles, tips, and discussions.",
-  "guidance.searchPlaceholder": "Search for categories like 'Teff', 'Cattle'...",
 
   "community.page.title": "Community Forum",
   "community.page.subtitle": "Connect with fellow farmers, share knowledge, and get answers to your questions",
@@ -315,9 +303,6 @@
   "discussion.reportModal.detailsLabel": "Additional Details (optional):",
   "discussion.reportModal.detailsPlaceholder": "Provide more information...",
   "discussion.reportModal.submit": "Submit Report",
-
-  "guidance.page.title": "Farming Guidance",
-  "guidance.page.subtitle": "Master content map for Ethiopian farming: crops, livestock, techniques, health & safety, business, innovation, and policy. Click any topic to open details.",
 
   "login.subtitle": "Welcome to AgriHub. Login to your account",
   "login.emailLabel": "Email Address",
@@ -444,17 +429,12 @@
   "marketplace.pageTitleTag": "Marketplace - AgriHub",
   "marketplace.allProducts": "All Products",
   "marketplace.emptyState": "No products found in this category.",
-  "guidance.pageTitleTag": "Farming Guidance - AgriHub",
   "user.dashboard.pageTitle": "Dashboard - AgriHub",
   "user.dashboard.welcome": "Welcome back, {name}!",
   "user.dashboard.activity.viewAll": "View All Activity",
   "user.dashboard.recentListings.title": "Your Recent Listings",
   "user.dashboard.recentListings.none": "You have not created any listings yet.",
-  "user.account.pageTitle": "My Account - AgriHub",
   "user.profile.farmInfo.title": "Farm & Business Information",
-  "user.article.pageTitleSuffix": " - AgriHub Dashboard",
-  "error.article.invalidId": "Invalid article ID provided.",
-  "error.article.notFound": "The article you are looking for could not be found.",
   "user.listings.pageTitle": "My Listings - AgriHub",
   "user.listings.modal.imageLabel": "Product Images (first image will be primary)",
   "user.listings.modal.imageHelp": "You can select multiple images. For updates, new images will be added to the existing ones.",

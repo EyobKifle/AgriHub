@@ -20,7 +20,6 @@
 
   "nav.home": "መእተዊ",
   "nav.marketplace": "መገዲ",
-  "nav.guidance": "ምምሕዳር ሕርሻ",
   "nav.news": "ዜና",
   "nav.community": "ማሕበረሰብ",
 
@@ -39,7 +38,7 @@
   "home.features.community.text": "ምስ ካልኦት ሓረስታይ ተተሓሓዝ፣ ሕቶታት ሕተፍ፣ ፍልጠት ኣካፍል፣ ሓያል ኣጋይሽ መረብ ህንጸ።",
 
   "home.how.title": "ክትጅምር ቀሊል እዩ",
-  "home.how.subtitle": "ብሰለስተ ቀሊል ስጉምትታት ኣብ መረብና ተጸንበር።",
+  "home.how.subtitle": "ብሰለስተ ቀሊል ስጉምታት ኣብ መረብና ተጸንበር።",
   "home.how.step1.title": "1. ኣካውንትካ ፍጠር",
   "home.how.step1.text": "ብነጻ ኣብ ደቒቃታት ተመዝገብ። ብዛዕባ ሕርሻኻን እንታይ ከም ዘምርት ወይ እንታይ ከም ዘድልየካን ነግረና።",
   "home.how.step2.title": "2. ፍርያት ዝርዝር ወይ ረክብ",
@@ -150,7 +149,7 @@
   "news.article3.desc": "መጽናዕቲታት ኣብ ኢንስቲትዩት መጽናዕቲ ሕርሻ ኢትዮጵያ 30% ዝያዳ ማይ ዘድልዮ ሓድሽ ዓይነት ጣፍ ኣላዊቶም።",
   "news.article3.author": "ኢመር",
   "news.article3.time": "ካብ 1 መዓልቲ ቅድሚ ሕጂ",
-  "news.article4.title": "ኣፕ ሞባይል ሓረስቶት ብቀጥታ ምስ ኣጠሓሕታ ኩነታት ኣየር ይተሓሓዝ",
+  "news.article4.title": "ኣፕ ሞባይል ሓረስቶት ብቀጥታ ምስ ኣጠሓሕታ ኩነታት ኣየር ይተሓሓዙ",
   "news.article4.desc": "ሓድሽ ኣፕ ሞባይል ንልዕሊ 50,000 ሓረስቶት ኣብ ከልከል ኦሮሚያ ናይ ቅጽበት ትንበያ ኩነታት ኣየርን ኣጠሓሕታ ጎፈንን ይህብ።",
   "news.article4.author": "ኣግሪቴክ ታደይ",
   "news.article4.time": "ካብ 2 መዓልቲ ቅድሚ ሕጂ",
@@ -262,11 +261,6 @@
   "marketplace.subtitle": "ካብ መጻርሕቲ ኣብ መላእ ሃገር ሙቅ ፍርያት፣ ዘርኢን መሳርሒታትን ርአ።",
   "marketplace.categories": "መደባት",
 
-  "guidance.title": "ምምሕዳር ሕርሻ",
-  "guidance.subtitle": "ኣንተጻዕቲ፣ ምኽርን ውይይትን ንምርካብ መደባት ድለይ።",
-  "guidance.searchPlaceholder": "ን'ጣፍ'፣ 'እንስሳ' ዝኣመሰሉ መደባት ድለይ...",
-  "guidance.page.title": "ምምሕዳር ሕርሻ",
-  "guidance.page.subtitle": "ናይ ቁልፊ ካርታ ይዕትት ሕርሻ ኢትዮጵያ፡ ኣትክልቲ፣ እንስሳታት፣ ኣገባባት፣ ጥዕናን ድሕንነትን፣ ንግዲ፣ ልዕሊነት፣ ፖሊሲ። ዝርዝራት ንምክፋት ዝዀነ ይኹን ርእሲ ጠውቕ።",
 
   "community.page.title": "መድረኽ ማሕበረሰብ",
   "community.page.subtitle": "ምስ ካልኦት ሓረስቶት ተተሓሓዝ፣ ፍልጠት ኣካፍል፣ ንሕቶታትካ መልስታት ረክብ",
@@ -446,7 +440,6 @@
   "marketplace.pageTitleTag": "መገዲ - ኣግሪሁብ",
   "marketplace.allProducts": "ኩሉ ፍርያት",
   "marketplace.emptyState": "ኣብዚ መደብ ውሽጢ ፍርያት ኣይተረኽቡን።",
-  "guidance.pageTitleTag": "ምምሕዳር ሕርሻ - ኣግሪሁብ",
   "user.dashboard.pageTitle": "ዳሽቦርድ - ኣግሪሁብ",
   "user.dashboard.welcome": "ብደሓን መጻእኩም፣ {name}!",
   "user.dashboard.activity.viewAll": "ኩሉ ንጥፈታት ርአ",

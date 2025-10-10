@@ -7,7 +7,6 @@ import {
   updateLangSwitcher,
 } from "./i18n.js";
 import { highlightActiveLink } from "./navigation.js";
-import { initializeArticlePage} from "./guidance.js";
 import { initializeNewsPage } from "./news.js"; // This will now point to the new, simpler file.
 
 /**
@@ -108,7 +107,7 @@ const initializeSite = async () => {
   // This improves performance by only executing the code needed for the current page.
   const currentPage = window.location.pathname.split("/").pop();
 
-  switch (currentPage) {
+  switch (currentPage) { // Note: Some pages like Farming-Guidance.php are handled by their own inline scripts.
     case "HomePage.html":
       initializeImageSlider();
       break;
@@ -116,9 +115,6 @@ const initializeSite = async () => {
       break;
     case "News.php":
       initializeNewsPage();
-      break;
-    case "Farming-Guidance-Article.php":
-      initializeArticlePage();
       break;
   }
 };

@@ -140,57 +140,6 @@ CREATE TABLE `discussion_tags` (
     CONSTRAINT `fk_discussion_tags_tag_id` FOREIGN KEY (`tag_id`) REFERENCES `tags`(`id`) ON DELETE CASCADE
 );
 
-CREATE TABLE `content_categories` (
-    `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    `type` ENUM('news','guidance') NOT NULL,
-    `name` VARCHAR(100) NOT NULL,
-    `name_key` VARCHAR(100) NOT NULL,
-    `slug` VARCHAR(120) NOT NULL,
-    `description` TEXT,
-    `description_key` VARCHAR(255) DEFAULT NULL,
-    `article_count` INT UNSIGNED NOT NULL DEFAULT 0,
-    `display_order` SMALLINT NOT NULL DEFAULT 0,
-    `image_url` VARCHAR(512) DEFAULT NULL,
-    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE `uq_content_cat_slug_type` (`slug`,`type`)
-);
-
-CREATE TABLE `articles` (
-    `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    `category_id` INT UNSIGNED NOT NULL,
-    `author_id` INT UNSIGNED NOT NULL,
-    `title` VARCHAR(255) NOT NULL,
-    `content` LONGTEXT NOT NULL,
-    `excerpt` TEXT,
-    `image_url` VARCHAR(512) DEFAULT NULL,
-    `status` ENUM('published','draft','archived') NOT NULL DEFAULT 'draft',
-    `view_count` INT UNSIGNED NOT NULL DEFAULT 0,
-    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    CONSTRAINT `fk_articles_category_id` FOREIGN KEY (`category_id`) REFERENCES `content_categories`(`id`) ON DELETE RESTRICT,
-    CONSTRAINT `fk_articles_author_id` FOREIGN KEY (`author_id`) REFERENCES `users`(`id`) ON DELETE RESTRICT,
-    INDEX `idx_articles_author_id` (`author_id`),
-    FULLTEXT INDEX `idx_articles_content` (`title`,`content`)
-);
-
-CREATE TABLE `article_tags` (
-    `article_id` INT UNSIGNED NOT NULL,
-    `tag_id` INT UNSIGNED NOT NULL,
-    PRIMARY KEY (`article_id`,`tag_id`),
-    CONSTRAINT `fk_article_tags_article_id` FOREIGN KEY (`article_id`) REFERENCES `articles`(`id`) ON DELETE CASCADE,
-    CONSTRAINT `fk_article_tags_tag_id` FOREIGN KEY (`tag_id`) REFERENCES `tags`(`id`) ON DELETE CASCADE
-);
-
-CREATE TABLE `article_media` (
-    `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    `article_id` INT UNSIGNED NOT NULL,
-    `media_type` ENUM('image','video') NOT NULL,
-    `url` VARCHAR(512) NOT NULL,
-    `caption` VARCHAR(255) DEFAULT NULL,
-    `display_order` SMALLINT NOT NULL DEFAULT 0,
-    CONSTRAINT `fk_article_media_article_id` FOREIGN KEY (`article_id`) REFERENCES `articles`(`id`) ON DELETE CASCADE
-);
-
 CREATE TABLE `conversations` (
     `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     `subject` VARCHAR(255) DEFAULT NULL,
@@ -321,20 +270,6 @@ BEGIN
     UPDATE discussion_categories SET discussion_count = GREATEST(0, discussion_count - 1) WHERE id = OLD.category_id;
 END//
 
-CREATE TRIGGER after_article_insert
-AFTER INSERT ON articles
-FOR EACH ROW
-BEGIN
-    UPDATE content_categories SET article_count = article_count + 1 WHERE id = NEW.category_id;
-END//
-
-CREATE TRIGGER after_article_delete
-AFTER DELETE ON articles
-FOR EACH ROW
-BEGIN
-    UPDATE content_categories SET article_count = GREATEST(0, article_count - 1) WHERE id = OLD.category_id;
-END//
-
 DELIMITER ;
 INSERT INTO users (
     email,
@@ -399,17 +334,3 @@ VALUES
 (LAST_INSERT_ID(), 'Animal Health', 'animal_health', 'animal-health', 'desc_health', 'https://images.unsplash.com/photo-vet-animal.jpg', 1),
 (LAST_INSERT_ID(), 'Pasture Management', 'pasture', 'pasture', 'desc_pasture', 'https://images.unsplash.com/photo-pasture.jpg', 1),
 (LAST_INSERT_ID(), 'Livestock Equipment', 'livestock_equipment', 'livestock-equipment', 'desc_equipment', 'https://images.unsplash.com/photo-livestock-equipment.jpg', 1);
-
--- Insert guidance categories into content_categories
-INSERT INTO content_categories (type, name, name_key, slug, description, description_key, display_order, image_url) VALUES
-('guidance', 'Crops', 'crops', 'crops', 'Guidance on cultivating various crops.', 'crops_desc', 1, '/AgriHub/images/guidance/crops.jpg'),
-('guidance', 'Livestock', 'livestock', 'livestock', 'Best practices for raising healthy livestock.', 'livestock_desc', 2, '/AgriHub/images/guidance/livestock.jpg'),
-('guidance', 'Soil Health', 'soil_health', 'soil-health', 'Techniques for maintaining and improving soil quality.', 'soil_health_desc', 3, '/AgriHub/images/guidance/soil.jpg'),
-('guidance', 'Pest Management', 'pest_management', 'pest-management', 'Integrated and organic pest control methods.', 'pest_management_desc', 4, '/AgriHub/images/guidance/pest.jpg'),
-('guidance', 'Water Management', 'water_management', 'water-management', 'Efficient irrigation and water conservation strategies.', 'water_management_desc', 5, '/AgriHub/images/guidance/water.jpg');
-
--- Insert sample articles
-INSERT INTO articles (category_id, author_id, title, content, excerpt, status) VALUES
-(1, 1, 'Introduction to Crop Farming', '<p>Crop farming is the cultivation of plants for food, fiber, and other products. It involves preparing the soil, planting seeds, and harvesting the crops.</p><p>Key steps include soil preparation, seed selection, irrigation, and pest control.</p>', 'Learn the basics of crop farming.', 'published'),
-(2, 1, 'Livestock Management Tips', '<p>Managing livestock requires knowledge of animal health, nutrition, and housing. Proper care ensures productivity and animal welfare.</p><p>Topics include feeding, vaccination, and breeding.</p>', 'Essential tips for managing livestock.', 'published'),
-(3, 1, 'Improving Soil Health', '<p>Soil health is crucial for successful farming. Practices like crop rotation, organic matter addition, and reduced tillage can improve soil structure and fertility.</p>', 'How to improve soil health for better yields.', 'published');

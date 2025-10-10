@@ -84,8 +84,13 @@ This document provides a detailed explanation of the features, APIs, and functio
 - Tables: `discussion_comments`, `discussions`, `users`, `reports`.
 
 3.3. Private Messaging (My Messages)
+- Feature: Users can engage in private, one-on-one or group conversations with other users. This is separate from the public community discussions.
 - Flow: Users can view their private conversation list and send new messages from their dashboard.
 - UI to DB Interaction: The frontend (`Js/User-Messages.js`) uses `/php/api/messages.php` to fetch conversation lists and send new messages.
+- API Actions:
+  - `action=get_conversations`: Fetches a list of all conversations the current user is a participant in.
+  - `action=get_messages`: Fetches all messages for a specific `conversation_id`.
+  - `action=send_message`: Creates a new message within a conversation.
 - Tables: `conversations`, `messages`
 
 

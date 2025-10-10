@@ -13,7 +13,6 @@ $links = [
 ];
 $siteLinks = [
     'User-Marketplace' => ['icon' => 'fa-basket-shopping', 'key' => 'nav.marketplace', 'text' => 'Marketplace', 'path' => 'User-Marketplace.php'],
-    'User-Farming-Guidance' => ['icon' => 'fa-book', 'key' => 'nav.guidance', 'text' => 'Farming Guidance', 'path' => 'User-Farming-Guidance.php'],
     'User-News' => ['icon' => 'fa-newspaper', 'key' => 'nav.news', 'text' => 'News', 'path' => 'User-News.php'],
 ];
 ?>
